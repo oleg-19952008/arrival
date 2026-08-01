@@ -1,31 +1,14 @@
 ```
 # Build artifacts
-*.exe
-*.dll
-*.pdb
-*.so
-*.dylib
-*.class
-*.o
-*.obj
-*.out
-*.a
+wwwroot/
 
 # Dependencies
 node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
+packages/
 
 # Logs and temp files
 *.log
 *.tmp
-*.swp
-*.swo
 
 # Environment
 .env
@@ -36,16 +19,7 @@ target/
 .vscode/
 .idea/
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Distribution
-dist/
-build/
-
-# System files
+# OS generated files
 .DS_Store
 Thumbs.db
 ```

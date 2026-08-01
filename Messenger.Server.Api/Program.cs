@@ -170,10 +170,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Порт 123 для клиентов
-app.Urls.Add("http://*:123");
+// Порт 748 для клиентов
+app.Urls.Add("http://*:748");
 
-Console.WriteLine("Server API started on port 123");
+Console.WriteLine("Server API started on port 748");
 
 // Создание папки для загрузок
 var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
