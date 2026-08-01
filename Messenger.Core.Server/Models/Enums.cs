@@ -8,7 +8,7 @@ public enum UserStatus
     /// <summary>
     /// Ожидает одобрения администратором
     /// </summary>
-    Pending = 0,
+    PendingApproval = 0,
     
     /// <summary>
     /// Активный пользователь
@@ -16,9 +16,14 @@ public enum UserStatus
     Active = 1,
     
     /// <summary>
-    /// Заблокирован или удалён
+    /// Заблокирован
     /// </summary>
-    Blocked = 2
+    Banned = 2,
+    
+    /// <summary>
+    /// Удалён
+    /// </summary>
+    Deleted = 3
 }
 
 /// <summary>
@@ -81,10 +86,10 @@ public enum NotificationType
     /// <summary>
     /// Пользователь заблокирован
     /// </summary>
-    UserBlocked = 4,
+    UserBanned = 4,
     
     /// <summary>
     /// Пользователь разблокирован
     /// </summary>
-    UserUnblocked = 5
+    UserUnbanned = 5
 }

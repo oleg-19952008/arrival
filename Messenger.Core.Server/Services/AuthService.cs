@@ -46,12 +46,12 @@ public class AuthService : IAuthService
             Username = username,
             PasswordHash = passwordHash,
             Role = UserRole.User,
-            Status = UserStatus.Pending, // Требуется одобрение администратора
+            Status = UserStatus.PendingApproval, // Требуется одобрение администратора
             CreatedAt = DateTime.UtcNow
         };
         
         await _userRepository.AddAsync(newUser);
-        ConsoleLogger.Info($"User '{username}' registered successfully with status Pending");
+        ConsoleLogger.Info($"User '{username}' registered successfully with status PendingApproval");
         
         return new OperationResult { Success = true };
     }
@@ -71,9 +71,9 @@ public class AuthService : IAuthService
         }
         
         // Проверка статуса
-        if (user.Status == UserStatus.Blocked)
+        if (user.Status == UserStatus.Banned)
         {
-            ConsoleLogger.Warn($"Login failed: user '{username}' is blocked");
+            ConsoleLogger.Warn($"Login failed: user '{username}' is banned");
             return new AuthResult 
             { 
                 Success = false, 
@@ -81,7 +81,7 @@ public class AuthService : IAuthService
             };
         }
         
-        if (user.Status == UserStatus.Pending)
+        if (user.Status == UserStatus.PendingApproval)
         {
             ConsoleLogger.Warn($"Login failed: user '{username}' is pending approval");
             return new AuthResult 

@@ -49,9 +49,9 @@ public class UserService : IUserService
         // Уведомление об изменении статуса
         var notificationType = status switch
         {
-            UserStatus.Blocked => NotificationType.UserBlocked,
-            UserStatus.Active => NotificationType.UserUnblocked,
-            _ => NotificationType.UserUnblocked
+            UserStatus.Banned => NotificationType.UserBanned,
+            UserStatus.Active => NotificationType.UserUnbanned,
+            _ => NotificationType.UserUnbanned
         };
         
         await _notificationService.SendNotificationAsync(new Notification
@@ -79,18 +79,18 @@ public class UserService : IUserService
             };
         }
         
-        // Помечаем как заблокированного вместо физического удаления
-        user.Status = UserStatus.Blocked;
+        // Помечаем как удалённого вместо физического удаления
+        user.Status = UserStatus.Deleted;
         await _userRepository.UpdateAsync(user);
         
         await _notificationService.SendNotificationAsync(new Notification
         {
-            Type = NotificationType.UserBlocked,
+            Type = NotificationType.UserBanned,
             Data = $"Пользователь {user.Username} был удалён",
             CreatedAt = DateTime.UtcNow
         });
         
-        ConsoleLogger.Info($"User '{user.Username}' marked as deleted (blocked)");
+        ConsoleLogger.Info($"User '{user.Username}' marked as deleted");
         
         return new OperationResult { Success = true };
     }
@@ -108,9 +108,9 @@ public class UserService : IUserService
             };
         }
         
-        if (user.Status != UserStatus.Blocked)
+        if (user.Status != UserStatus.Banned)
         {
-            ConsoleLogger.Warn($"UnbanUser failed: user '{user.Username}' is not blocked");
+            ConsoleLogger.Warn($"UnbanUser failed: user '{user.Username}' is not banned");
             return new OperationResult 
             { 
                 Success = false, 
@@ -123,7 +123,7 @@ public class UserService : IUserService
         
         await _notificationService.SendNotificationAsync(new Notification
         {
-            Type = NotificationType.UserUnblocked,
+            Type = NotificationType.UserUnbanned,
             Data = $"Пользователь {user.Username} был разблокирован",
             CreatedAt = DateTime.UtcNow
         });
@@ -152,7 +152,7 @@ public class UserService : IUserService
         
         await _notificationService.SendNotificationAsync(new Notification
         {
-            Type = NotificationType.UserUnblocked,
+            Type = NotificationType.UserUnbanned,
             Data = $"Пароль пользователя {user.Username} был изменён",
             CreatedAt = DateTime.UtcNow
         });

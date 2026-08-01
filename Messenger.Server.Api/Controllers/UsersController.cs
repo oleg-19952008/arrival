@@ -96,6 +96,35 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
+    /// Получить всех пользователей с фильтром по статусу (доступно всем авторизованным)
+    /// </summary>
+    [HttpGet("all")]
+    [Authorize]
+    public async Task<IActionResult> GetAllWithFilter([FromQuery] string? status = null)
+    {
+        var users = await _userService.GetAllUsersAsync();
+        
+        var query = users.AsQueryable();
+        if (!string.IsNullOrEmpty(status))
+        {
+            if (Enum.TryParse<UserStatus>(status, ignoreCase: true, out var userStatus))
+            {
+                query = query.Where(u => u.Status == userStatus);
+            }
+        }
+        
+        return Ok(query.Select(u => new 
+        {
+            id = u.Id,
+            username = u.Username,
+            role = u.Role.ToString(),
+            status = u.Status.ToString(),
+            createdAt = u.CreatedAt,
+            lastLoginAt = u.LastLoginAt
+        }));
+    }
+
+    /// <summary>
     /// Одобрить пользователя (изменить статус на Active)
     /// </summary>
     [HttpPost("{id}/approve")]
@@ -109,12 +138,25 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Заблокировать пользователя
+    /// Заблокировать пользователя (ban)
+    /// </summary>
+    [HttpPost("{id}/ban")]
+    public async Task<IActionResult> BanUser(int id)
+    {
+        var result = await _userService.UpdateUserStatusAsync(id, UserStatus.Banned);
+        if (!result.Success)
+            return BadRequest(new { message = result.ErrorMessage });
+        
+        return Ok(new { message = "Пользователь заблокирован" });
+    }
+
+    /// <summary>
+    /// Заблокировать пользователя (block - алиас для ban)
     /// </summary>
     [HttpPost("{id}/block")]
     public async Task<IActionResult> BlockUser(int id)
     {
-        var result = await _userService.UpdateUserStatusAsync(id, UserStatus.Blocked);
+        var result = await _userService.UpdateUserStatusAsync(id, UserStatus.Banned);
         if (!result.Success)
             return BadRequest(new { message = result.ErrorMessage });
         
