@@ -130,6 +130,30 @@ using (var scope = app.Services.CreateScope())
     
     using var cmd2 = new Microsoft.Data.Sqlite.SqliteCommand(createMessagesTable, connection);
     cmd2.ExecuteNonQuery();
+    
+    // Создание администратора по умолчанию, если он не существует
+    var checkAdmin = "SELECT COUNT(*) FROM Users WHERE Username = 'admin'";
+    using var cmdCheck = new Microsoft.Data.Sqlite.SqliteCommand(checkAdmin, connection);
+    var adminCount = Convert.ToInt32(cmdCheck.ExecuteScalar());
+    
+    if (adminCount == 0)
+    {
+        var passwordHasher = new Messenger.Core.Utils.PasswordHasher();
+        var adminPassword = passwordHasher.HashPassword("admin123");
+        var insertAdmin = @"
+            INSERT INTO Users (Username, PasswordHash, Role, Status, CreatedAt)
+            VALUES ('admin', @PasswordHash, 1, 1, @CreatedAt)";
+        
+        using var cmdInsert = new Microsoft.Data.Sqlite.SqliteCommand(insertAdmin, connection);
+        cmdInsert.Parameters.AddWithValue("@PasswordHash", adminPassword);
+        cmdInsert.Parameters.AddWithValue("@CreatedAt", DateTime.UtcNow.ToString("O"));
+        cmdInsert.ExecuteNonQuery();
+        
+        Console.WriteLine("=== DEFAULT ADMIN CREATED ===");
+        Console.WriteLine("Username: admin");
+        Console.WriteLine("Password: admin123");
+        Console.WriteLine("=============================");
+    }
 }
 
 app.UseCors("AllowLocalNetwork");
