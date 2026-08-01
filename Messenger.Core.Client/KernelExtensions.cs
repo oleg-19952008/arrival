@@ -1,0 +1,39 @@
+namespace Messenger.Core;
+
+/// <summary>
+/// Класс расширения для регистрации сервисов ядра
+/// </summary>
+public static class KernelExtensions
+{
+    /// <summary>
+    /// Регистрация серверных сервисов ядра (с поддержкой БД)
+    /// </summary>
+    public static IServiceCollection AddServerKernel(this IServiceCollection services, string connectionString)
+    {
+        // Репозитории
+        services.AddSingleton<IUserRepository>(sp => new UserRepository(connectionString));
+        services.AddSingleton<IMessageRepository>(sp => new MessageRepository(connectionString));
+        
+        // Сервисы
+        services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<IAuthService, AuthService>();
+        services.AddSingleton<IUserService, UserService>();
+        services.AddSingleton<IMessageService, MessageService>();
+        
+        return services;
+    }
+    
+    /// <summary>
+    /// Регистрация клиентских сервисов ядра (без поддержки БД)
+    /// </summary>
+    public static IServiceCollection AddClientKernel(this IServiceCollection services)
+    {
+        // Сервисы-заглушки для клиента
+        services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<IAuthService, AuthService>();
+        services.AddSingleton<IUserService, UserService>();
+        services.AddSingleton<IMessageService, MessageService>();
+        
+        return services;
+    }
+}
