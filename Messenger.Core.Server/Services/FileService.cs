@@ -107,6 +107,11 @@ public class FileService : IFileService
         return await _fileRepository.GetByIdAsync(fileId);
     }
     
+    public async Task<FileAttachment?> GetFileByFileIdAsync(string fileId)
+    {
+        return await _fileRepository.GetByFileIdAsync(fileId);
+    }
+    
     public async Task<(Stream FileStream, string ContentType, string FileName)?> DownloadFileAsync(int fileId)
     {
         var attachment = await _fileRepository.GetByIdAsync(fileId);
@@ -123,6 +128,26 @@ public class FileService : IFileService
             FileShare.Read);
         
         ConsoleLogger.Info($"File '{attachment.FileName}' downloaded (ID: {fileId})");
+        
+        return (stream, attachment.ContentType, attachment.FileName);
+    }
+    
+    public async Task<(Stream FileStream, string ContentType, string FileName)?> DownloadFileByFileIdAsync(string fileId)
+    {
+        var attachment = await _fileRepository.GetByFileIdAsync(fileId);
+        if (attachment == null || !File.Exists(attachment.FilePath))
+        {
+            ConsoleLogger.Warn($"DownloadFileByFileId failed: file with FileId {fileId} not found");
+            return null;
+        }
+        
+        var stream = new FileStream(
+            attachment.FilePath, 
+            FileMode.Open, 
+            FileAccess.Read, 
+            FileShare.Read);
+        
+        ConsoleLogger.Info($"File '{attachment.FileName}' downloaded (FileId: {fileId})");
         
         return (stream, attachment.ContentType, attachment.FileName);
     }

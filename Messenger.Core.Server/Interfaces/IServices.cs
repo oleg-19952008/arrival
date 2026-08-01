@@ -83,6 +83,11 @@ public interface IMessageService
     /// Удалить сообщение
     /// </summary>
     Task<OperationResult> DeleteMessageAsync(int messageId);
+    
+    /// <summary>
+    /// Получить сообщение по ID
+    /// </summary>
+    Task<Message?> GetMessageByIdAsync(int messageId);
 }
 
 /// <summary>
@@ -117,9 +122,19 @@ public interface IFileService
     Task<FileAttachment?> GetFileAsync(int fileId);
     
     /// <summary>
+    /// Получить файл по FileId (UUID)
+    /// </summary>
+    Task<FileAttachment?> GetFileByFileIdAsync(string fileId);
+    
+    /// <summary>
     /// Скачать файл
     /// </summary>
     Task<(Stream FileStream, string ContentType, string FileName)?> DownloadFileAsync(int fileId);
+    
+    /// <summary>
+    /// Скачать файл по FileId (UUID)
+    /// </summary>
+    Task<(Stream FileStream, string ContentType, string FileName)?> DownloadFileByFileIdAsync(string fileId);
     
     /// <summary>
     /// Удалить файл

@@ -72,7 +72,7 @@ public class MessageService : IMessageService
             // Личное сообщение - отправляем через WebSocket получателю
             if (_notificationService is NotificationService ns)
             {
-                await ns.SendMessageToUserAsync(recipientId.Value, content, senderId, sender.Username);
+                await ns.SendMessageToUserAsync(recipientId.Value, content, senderId, sender.Username, savedMessage.Id);
             }
             else
             {
@@ -114,6 +114,19 @@ public class MessageService : IMessageService
         return result;
     }
     
+    public async Task<Message?> GetMessageByIdAsync(int messageId)
+    {
+        var message = await _messageRepository.GetByIdAsync(messageId);
+        if (message == null || message.IsDeleted)
+        {
+            ConsoleLogger.Warn($"GetMessageById failed: message with ID {messageId} not found or deleted");
+            return null;
+        }
+        
+        ConsoleLogger.Info($"GetMessageById({messageId}) returned message from '{message.SenderName}'");
+        return message;
+    }
+    
     public async Task<OperationResult> DeleteMessageAsync(int messageId)
     {
         var message = await _messageRepository.GetByIdAsync(messageId);
@@ -125,6 +138,22 @@ public class MessageService : IMessageService
                 Success = false, 
                 ErrorMessage = "Сообщение не найдено" 
             };
+        }
+        
+        // Получаем все вложения файла для этого сообщения и удаляем их
+        var fileAttachments = await _fileAttachmentRepository.GetByMessageIdAsync(messageId);
+        foreach (var attachment in fileAttachments)
+        {
+            // Удаляем файл с диска
+            if (File.Exists(attachment.FilePath))
+            {
+                File.Delete(attachment.FilePath);
+                ConsoleLogger.Info($"File '{attachment.FileName}' deleted from disk during message deletion");
+            }
+            
+            // Удаляем запись из БД
+            await _fileAttachmentRepository.DeleteAsync(attachment.Id);
+            ConsoleLogger.Info($"File attachment #{attachment.Id} deleted from database during message deletion");
         }
         
         await _messageRepository.MarkAsDeletedAsync(messageId);

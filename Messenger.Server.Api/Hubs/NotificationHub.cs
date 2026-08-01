@@ -75,7 +75,8 @@ public class NotificationHub : Hub
         }
         _logger.LogInformation($"[WebSocket] Пользователь {userId} подключился. ConnectionId: {Context.ConnectionId}");
         
-        await Clients.All.SendAsync("UserConnected", new { userId, connectionId = Context.ConnectionId });
+        // Отправляем событие user_joined всем кроме отправителя
+        await Clients.Others.SendAsync("user_joined", new { userId, username = userId });
         await base.OnConnectedAsync();
     }
 
@@ -84,6 +85,8 @@ public class NotificationHub : Hub
     /// </summary>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        int disconnectedUserId = 0;
+        
         // Удаляем пользователя из списка подключений
         lock (UserConnections)
         {
@@ -91,29 +94,40 @@ public class NotificationHub : Hub
             if (userToRemove != 0)
             {
                 UserConnections.Remove(userToRemove);
+                disconnectedUserId = userToRemove;
                 _logger.LogInformation($"[WebSocket] Пользователь {userToRemove} отключился.");
             }
         }
         
-        await Clients.All.SendAsync("UserDisconnected", Context.ConnectionId);
+        // Отправляем событие user_left всем кроме уже отключившегося
+        if (disconnectedUserId != 0)
+        {
+            await Clients.Others.SendAsync("user_left", new { userId = disconnectedUserId });
+        }
+        
         await base.OnDisconnectedAsync(exception);
     }
 
     /// <summary>
     /// Отправить личное сообщение через WebSocket
     /// </summary>
-    public async Task SendMessage(int recipientId, string content, int senderId, string senderName)
+    public async Task SendMessage(int recipientId, string content, int senderId, string senderName, int messageId)
     {
-        // Отправляем сообщение получателю
-        await Clients.Group($"user_{recipientId}").SendAsync("MessageReceived", new
+        // Отправляем сообщение получателю в формате ТЗ
+        var messageData = new
         {
-            senderId,
-            senderName,
-            content,
-            receivedAt = DateTime.UtcNow
-        });
+            type = "message",
+            id = messageId,
+            senderId = senderId,
+            senderName = senderName,
+            text = content,
+            timestamp = DateTime.UtcNow.ToString("o"),
+            isDeleted = false
+        };
         
-        _logger.LogInformation($"[WebSocket] Сообщение от {senderName} отправлено пользователю {recipientId}");
+        await Clients.Group($"user_{recipientId}").SendAsync("message", messageData);
+        
+        _logger.LogInformation($"[WebSocket] Сообщение #{messageId} от {senderName} отправлено пользователю {recipientId}");
     }
 
     /// <summary>

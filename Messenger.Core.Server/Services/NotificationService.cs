@@ -42,15 +42,21 @@ public class NotificationService : INotificationService
     /// <summary>
     /// Отправить сообщение конкретному пользователю через WebSocket
     /// </summary>
-    public async Task SendMessageToUserAsync(int recipientId, string content, int senderId, string senderName)
+    public async Task SendMessageToUserAsync(int recipientId, string content, int senderId, string senderName, int messageId = 0)
     {
-        await _hubContext.Clients.Group($"user_{recipientId}").SendAsync("MessageReceived", new
+        // Формат сообщения согласно ТЗ
+        var messageData = new
         {
-            senderId,
-            senderName,
-            content,
-            receivedAt = DateTime.UtcNow
-        });
+            type = "message",
+            id = messageId,
+            senderId = senderId,
+            senderName = senderName,
+            text = content,
+            timestamp = DateTime.UtcNow.ToString("o"),
+            isDeleted = false
+        };
+        
+        await _hubContext.Clients.Group($"user_{recipientId}").SendAsync("message", messageData);
         
         ConsoleLogger.Info($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
     }

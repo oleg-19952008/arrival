@@ -1,20 +1,23 @@
 ```
 # Build artifacts
-*.o
-*.obj
+bin/
+obj/
 *.exe
 *.dll
+*.pdb
 *.so
-*.a
-*.out
+*.dylib
+*.class
 
 # Dependencies
 packages/
-bin/
-obj/
+node_modules/
+.nuget/
+.npm/
 
 # Logs
 *.log
+logs/
 
 # Environment
 .env
@@ -26,14 +29,18 @@ obj/
 .idea/
 *.swp
 *.swo
-*.tmp
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Test and coverage
+coverage/
+htmlcov/
+.coverage
+*.coverage
+
+# Temporary files
+*.tmp
+*.temp
 ```

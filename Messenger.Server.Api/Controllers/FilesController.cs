@@ -26,7 +26,7 @@ public class FilesController : ControllerBase
     /// Загрузить файл
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] int messageId)
+    public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] int? messageId = null)
     {
         var userId = GetCurrentUserId();
         if (userId == null)
@@ -35,11 +35,21 @@ public class FilesController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "Файл не предоставлен" });
 
-        // Создание сообщения с типом File
-        var message = await _messageService.SendMessageAsync(
-            userId.Value, 
-            MessageType.File, 
-            $"Файл: {file.FileName}");
+        int msgId;
+        
+        // Если messageId не указан, создаём новое сообщение
+        if (!messageId.HasValue)
+        {
+            var message = await _messageService.SendMessageAsync(
+                userId.Value, 
+                MessageType.File, 
+                $"Файл: {file.FileName}");
+            msgId = message.Id;
+        }
+        else
+        {
+            msgId = messageId.Value;
+        }
 
         // Загрузка файла
         using (var stream = file.OpenReadStream())
@@ -48,17 +58,18 @@ public class FilesController : ControllerBase
                 stream, 
                 file.FileName, 
                 file.ContentType, 
-                message.Id);
+                msgId);
 
             if (attachment == null)
                 return BadRequest(new { message = "Ошибка при загрузке файла" });
 
             return Ok(new
             {
-                messageId = message.Id,
+                messageId = msgId,
                 file = new
                 {
                     id = attachment.Id,
+                    fileId = attachment.FileId,  // Возвращаем UUID
                     fileName = attachment.FileName,
                     contentType = attachment.ContentType,
                     fileSize = attachment.FileSize,
@@ -69,12 +80,12 @@ public class FilesController : ControllerBase
     }
 
     /// <summary>
-    /// Скачать файл по ID
+    /// Скачать файл по FileId (UUID)
     /// </summary>
-    [HttpGet("download/{id}")]
-    public async Task<IActionResult> DownloadFile(int id)
+    [HttpGet("download/{fileId}")]
+    public async Task<IActionResult> DownloadFile(string fileId)
     {
-        var result = await _fileService.DownloadFileAsync(id);
+        var result = await _fileService.DownloadFileByFileIdAsync(fileId);
         
         if (result == null)
             return NotFound(new { message = "Файл не найден" });

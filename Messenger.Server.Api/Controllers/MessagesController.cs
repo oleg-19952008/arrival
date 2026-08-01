@@ -23,13 +23,15 @@ public class MessagesController : ControllerBase
     }
 
     /// <summary>
-    /// Получить все сообщения
+    /// Получить все сообщения с поддержкой пагинации
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int limit = 50, [FromQuery] int offset = 0)
     {
         var messages = await _messageService.GetAllMessagesAsync();
-        return Ok(messages.Select(m => new 
+        var paginatedMessages = messages.Skip(offset).Take(limit);
+        
+        return Ok(paginatedMessages.Select(m => new 
         {
             id = m.Id,
             senderId = m.SenderId,
@@ -107,7 +109,7 @@ public class MessagesController : ControllerBase
     }
 
     /// <summary>
-    /// Удалить сообщение
+    /// Удалить сообщение (мягкое удаление с удалением файлов)
     /// </summary>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
@@ -117,6 +119,29 @@ public class MessagesController : ControllerBase
             return BadRequest(new { message = result.ErrorMessage });
         
         return Ok(new { message = "Сообщение удалено" });
+    }
+
+    /// <summary>
+    /// Получить сообщение по ID
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var message = await _messageService.GetMessageByIdAsync(id);
+        if (message == null)
+            return NotFound(new { message = "Сообщение не найдено" });
+        
+        return Ok(new 
+        {
+            id = message.Id,
+            senderId = message.SenderId,
+            senderName = message.SenderName,
+            recipientId = message.RecipientId,
+            type = message.Type.ToString(),
+            content = message.Content,
+            createdAt = message.CreatedAt,
+            isDeleted = message.IsDeleted
+        });
     }
 
     private int? GetCurrentUserId()
