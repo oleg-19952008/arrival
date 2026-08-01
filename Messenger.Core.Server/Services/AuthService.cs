@@ -140,13 +140,13 @@ public class AuthService : IAuthService
             Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
         
         var claims = new[]
-        {
+       {
             new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
             new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.Username),
-            new System.Security.Claims.Claim("Role", user.Role.ToString()),
+            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role.ToString()),
             new System.Security.Claims.Claim("Status", user.Status.ToString())
         };
-        
+
         var tokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
         {
             Subject = new System.Security.Claims.ClaimsIdentity(claims),
