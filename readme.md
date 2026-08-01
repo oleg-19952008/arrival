@@ -10,7 +10,7 @@ markdown
 
 - Консольное приложение (.NET 8.0, Windows)
 - Поднимает ASP.NET Core Kestrel на двух портах одновременно
-- REST API для клиентов (порт 123)
+- REST API для клиентов (порт 748)
 - REST API для администратора (порт 228, только localhost)
 - WebSocket для real-time сообщений
 - SQLite БД для хранения данных
@@ -18,7 +18,7 @@ markdown
 ### Запуск
 
 Messenger.Core.Server.exe
-→ [INFO] Server started on port 123
+→ [INFO] Server started on port 748
 → [INFO] Admin panel on port 228
 → (консоль остаётся открытой, выводит логи)
 → Остановка: Ctrl+C
@@ -114,7 +114,7 @@ Messenger.Core.Server.exe
 
 #### Подключение
 
-- Клиент подключается к `ws://server:123/ws`
+- Клиент подключается к `ws://server:748/ws`
 - Передаёт JWT token в query параметре или заголовке
 - Сервер валидирует token, иначе отказывает в подключении
 - Сервер хранит соединение в памяти (WebSocketManager)
@@ -215,7 +215,7 @@ CREATE INDEX idx_fileattachments_messageid ON FileAttachments(MessageId);
 
 ## 4. REST API
 
-### 4.1 Публичный API (порт 123)
+### 4.1 Публичный API (порт 748)
 
 #### POST /api/auth/register
 
@@ -555,7 +555,7 @@ Content-Disposition: attachment; filename="photo.jpg"
 
 ### Подключение
 
-ws://server:123/ws?token=<JWT_TOKEN>
+ws://server:748/ws?token=<JWT_TOKEN>
 
 
 Или в заголовке:
@@ -656,7 +656,7 @@ Task DisconnectAsync(int userId)
 **Структура:**
 - Создание DbContext с SQLite
 - Регистрация всех сервисов (DI)
-- Конфигурация Kestrel для портов 123 и 228
+- Конфигурация Kestrel для портов 748 и 228
 - Инициализация БД (EnsureCreated или миграции)
 - Регистрация контроллеров
 - Регистрация WebSocket обработчика
@@ -668,7 +668,7 @@ Task DisconnectAsync(int userId)
 [INFO] Initializing database...
 [INFO] Database initialized successfully
 [INFO] Registering services...
-[INFO] Server started on port 123
+[INFO] Server started on port 748
 [INFO] Admin panel on port 228
 [INFO] Waiting for connections...
 [INFO] User registered: user1
@@ -760,7 +760,7 @@ Messenger.Core.Server/
 
 ## 11. Критерии приёма
 
-- ✅ Консольное приложение запускается, поднимает два сервера на портах 123 и 228
+- ✅ Консольное приложение запускается, поднимает два сервера на портах 748 и 228
 - ✅ Логирование всех операций в консоль в реальном времени
 - ✅ Регистрация создаёт пользователя в статусе PendingApproval
 - ✅ Логин работает только если статус Active, возвращает JWT token
