@@ -1,4 +1,32 @@
 ```
-# Build artifacts
-*.sln
+# Build outputs
+wwwroot/
+
+# Dependencies
+node_modules/
+packages/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.config
+bin/
+obj/
 ```

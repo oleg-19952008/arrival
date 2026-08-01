@@ -1,17 +1,12 @@
-using Messenger.Admin.Web.Components;
-using Messenger.Admin.Web.Services;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Blazor Server services
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
-// Register HttpClient for API calls
-builder.Services.AddHttpClient<ApiService>();
-
-// Register ApiService as scoped
-builder.Services.AddScoped<ApiService>();
+// Configure Kestrel to listen on port 228
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(228);
+});
 
 var app = builder.Build();
 
@@ -21,14 +16,23 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
 }
 
-app.UseStaticFiles();
-app.UseAntiforgery();
+// Enable default content type provider for static files
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".webp"] = "image/webp";
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
 
-// Порт 228 для админки
-app.Urls.Add("http://*:228");
+// Serve index.html as default file
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    DefaultFileNames = new List<string> { "index.html" }
+});
+
+// Redirect root to index.html
+app.MapGet("/", () => Results.Redirect("/index.html"));
 
 Console.WriteLine("Admin Web started on port 228");
 app.Run();
