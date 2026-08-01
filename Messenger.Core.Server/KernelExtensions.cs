@@ -2,6 +2,8 @@ namespace Messenger.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 using Messenger.Core.Interfaces;
+using Messenger.Core.Services;
+using Messenger.Core.Data;
 
 /// <summary>
 /// Класс расширения для регистрации сервисов ядра

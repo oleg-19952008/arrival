@@ -154,7 +154,7 @@ public class AuthService : IAuthService
             SigningCredentials = credentials
         };
         
-        var handler = new Microsoft.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+        var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
         var token = handler.CreateToken(tokenDescriptor);
         
         return handler.WriteToken(token);
