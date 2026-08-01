@@ -30,8 +30,10 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 // JWT настройка
-var jwtKey = "YourSuperSecretKeyForMessengerCoreServer2024!";
+var jwtKey = "YourSuperSecretKeyForMessengerCoreServer2024WithMinimum32BytesLength!";
 var jwtIssuer = "Messenger.Server.Api";
+
+builder.Services.AddSingleton(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
