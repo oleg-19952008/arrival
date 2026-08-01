@@ -14,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Настройка SQLite
 var connectionString = "Data Source=messenger.db";
-builder.Services.AddSingleton(new SqliteConnection(connectionString));
 builder.Services.AddSingleton(connectionString);
 
 // Регистрация репозиториев
@@ -103,7 +102,8 @@ var app = builder.Build();
 // Инициализация БД
 using (var scope = app.Services.CreateScope())
 {
-    var connection = scope.ServiceProvider.GetRequiredService<SqliteConnection>();
+    var connectionString = scope.ServiceProvider.GetRequiredService<string>();
+    using var connection = new SqliteConnection(connectionString);
     connection.Open();
     
     var createUsersTable = @"
