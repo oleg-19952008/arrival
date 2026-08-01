@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions;
+using Microsoft.Extensions.DependencyInjection; // <--- Добавить это
 using Messenger.Core.Models;
-
 namespace Messenger.Core.Data;
 
 /// <summary>
