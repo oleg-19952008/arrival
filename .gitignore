@@ -1,50 +1,43 @@
-```
+```gitignore
 # Build artifacts
 bin/
 obj/
 *.dll
 *.exe
 *.pdb
-*.userprefs
-*.cache
-*.compiled
-*.nupkg
-*.snupkg
+*.so
+*.dylib
 
 # Dependencies
 packages/
 node_modules/
-bower_components/
+.nuget/
 
 # Logs
 *.log
-*.bak
-*.tmp
+logs/
 
-# Environment specific
-.vs/
-.vshost.exe
-.user
-.userosscache
-.usersuspended
-.localhistory
+# Environment
+.env
+.env.local
+*.env.*
 
-# IDE
-.vscode/
-.idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# OS generated
+# OS generated files
 .DS_Store
 Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
 
-# Testing
-TestResults/
+# Editor files
+.vs/
+.idea/
+*.swp
+*.swo
+
+# Test and coverage
 coverage/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
 ```

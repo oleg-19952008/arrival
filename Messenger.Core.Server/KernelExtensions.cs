@@ -1,4 +1,6 @@
 namespace Messenger.Core;
+
+using Microsoft.Extensions.DependencyInjection;
 using Messenger.Core.Interfaces;
 
 /// <summary>
