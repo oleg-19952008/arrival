@@ -9,8 +9,16 @@ using System.Text;
 using Messenger.Server.Api.Hubs;
 using Messenger.Server.Api.Middleware;
 using Messenger.Core.Utils;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Настройка Kestrel для прослушивания обоих портов
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(748); // API порт
+    options.ListenAnyIP(228); // Админ порт
+});
 
 // Настройка SQLite с абсолютным путем
 var dbPath = Path.Combine(AppContext.BaseDirectory, "messenger.db");
@@ -179,11 +187,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Порт 748 для клиентов
-app.Urls.Add("http://*:748");
-
-Console.WriteLine("Server API started on port 748");
-
 // Создание папки для загрузок
 var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 if (!Directory.Exists(uploadFolder))
@@ -200,4 +203,44 @@ app.UseWhen(
         appBuilder.UseMiddleware<AdminAuthMiddleware>();
     });
 
-app.Run();
+// Настройка раздачи статических файлов для админ-панели на порту 228
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".webp"] = "image/webp";
+
+// Обработка запросов на порт 228 (админ-панель)
+app.UseWhen(
+    context => context.Connection.LocalPort == 228,
+    appBuilder =>
+    {
+        appBuilder.UseStaticFiles(new StaticFileOptions
+        {
+            ContentTypeProvider = provider
+        });
+        appBuilder.UseDefaultFiles(new DefaultFilesOptions
+        {
+            DefaultFileNames = new List<string> { "index.html" }
+        });
+    });
+
+// Консольный интерфейс для управления сервером
+Console.WriteLine("===========================================");
+Console.WriteLine("Server started on ports 748 (API) and 228 (Admin).");
+Console.WriteLine("Type 'exit' to stop.");
+Console.WriteLine("===========================================");
+
+// Запуск в отдельном потоке для возможности обработки команд консоли
+var runTask = Task.Run(() => app.Run());
+
+// Обработка команд консоли
+while (true)
+{
+    var input = Console.ReadLine();
+    if (input?.Trim().ToLower() == "exit")
+    {
+        Console.WriteLine("Shutting down server...");
+        break;
+    }
+}
+
+// Остановка приложения
+await app.StopAsync();

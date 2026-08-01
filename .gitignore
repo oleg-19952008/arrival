@@ -1,49 +1,26 @@
 ```
 # Build artifacts
-bin/
-obj/
-*.dll
-*.exe
-*.pdb
-*.so
-*.dylib
-*.jar
-*.war
-*.class
+wwwroot/css/app.css
+wwwroot/index.html
 
 # Dependencies
-packages/
 node_modules/
-venv/
-.venv/
-__pycache__/
-*.egg-info/
-.Python
+vendor/
 
-# Logs
+# Logs and temp files
 *.log
-logs/
+*.tmp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# IDE
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
-
-# Test and coverage
-coverage/
-htmlcov/
-.coverage
-*.cover
-.nyc_output/
 ```
