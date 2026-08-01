@@ -13,9 +13,12 @@ using Messenger.Core.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Настройка SQLite с абсолютным путем
-var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "messenger.db");
-var connectionString = $"Data Source={dbPath}";
+var dbPath = Path.Combine(AppContext.BaseDirectory, "messenger.db");
+// Используем простой формат строки подключения без интерполяции для избежания проблем с кодировкой
+var connectionString = "Data Source=" + dbPath;
 Console.WriteLine($"Database path: {dbPath}");
+Console.WriteLine($"Connection string: {connectionString}");
+Console.WriteLine($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
 builder.Services.AddSingleton(connectionString);
 
 // Регистрация репозиториев

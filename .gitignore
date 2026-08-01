@@ -1,99 +1,50 @@
-```csharp
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
-
-# Visual Studio files
-*.user
-*.userosscache
-*.sln.docstates
-.vs/
-.vscode/
-
-# Build results
-*.exe
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
 *.dll
 *.so
-*.dylib
+*.exe
+*.class
+*.a
+*.out
 
-# Package manager caches
-packages/
-[Project name].packages.config
-*.nupkg
-
-# OS generated files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-._*
-
-# Log files
-*.log
-
-# Environment specific settings
+# Dependencies
+node_modules/
+venv/
+.venv/
 .env
 .env.local
-*.env.*
+.env.*
 
-# Testing
-TestResults/
-coverage/
-htmlcov/
-
-# Temporary files
+# Logs and temp files
+*.log
 *.tmp
-*.temp
-*.bak
+*.swp
+*.swo
 
-# Python artifacts (if any Python present)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
+# Editors
+.vscode/
+.idea/
 
-# Node.js (if any Node.js present)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Java/Maven (if any Java present)
+# Build directories
+dist/
+build/
 target/
 .gradle/
-*.class
-
-# Go (if any Go present)
-*.exe
-*.dll
-*.so
-*.dylib
-*.test
-*.prof
-vendor/
-
-# Ruby (if any Ruby present)
-*.gem
-*.rbc
+.mypy_cache/
+.pytest_cache/
 coverage/
-InstalledFiles
-pkg/
-spec/reports/
-test/tmp/
-test/version_tmp/
-tmp/
+htmlcov/
+.coverage
 
-# Compression
+# System files
+.DS_Store
+Thumbs.db
+
+# Compressed files
 *.zip
 *.gz
 *.tar
