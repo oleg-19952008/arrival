@@ -1,72 +1,46 @@
 ```
-# Build results
-**/bin/
-**/obj/
-**/Debug/
-**/Release/
+# Build artifacts
+bin/
+obj/
 *.dll
 *.exe
 *.pdb
-*.so
-*.dylib
-*.jar
-*.war
-*.class
+*.runtimeconfig.dev.json
 
 # Dependencies
-packages/
 node_modules/
-vendor/
-**/node_modules/
-.nuget/
-.npm/
-bower_components/
-
-# IDE
-.vs/
-.vscode/
-.idea/
-*.userprefs
-*.suo
-*.user
-*.aps
-*.pch
-*.vspscc
-*.vssscc
-build-stamp
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+packages/
 
 # Logs
 *.log
 
-# User-specific configurations
-appsettings.Development.json
-appsettings.Production.json
-*.local.settings.json
-
-# Environment specific settings
+# Environment
 .env
 .env.local
-.env.*
-!.env.example
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
 
 # Testing
-coverage/
-*.cover
-*.log
-*.tmp
-*.temp
+TestResults/
 
-# NuGet
-*.nupkg
-.nuget/
-.NuGet.Caches/
+# User-specific files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+Debug/
+Release/
+x64/
+x86/
 ```
