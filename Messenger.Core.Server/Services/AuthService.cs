@@ -150,6 +150,7 @@ public class AuthService : IAuthService
         var tokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
         {
             Subject = new System.Security.Claims.ClaimsIdentity(claims),
+            Issuer = "Messenger.Server.Api",
             Expires = DateTime.UtcNow.AddDays(7), // 7 дней как в ТЗ
             SigningCredentials = credentials
         };

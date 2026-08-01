@@ -1,35 +1,39 @@
-```
+```gitignore
 # Build artifacts
 bin/
 obj/
 *.dll
 *.exe
 *.pdb
-*.so
-*.dylib
-*.jar
-*.war
-*.class
+*.config
+*.manifest
 
 # Dependencies
 packages/
 node_modules/
-venv/
-.venv/
-.env
-.env.local
-*.env.*
 
 # Logs
 *.log
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# Environment
+.env
+.env.local
+*.env.*
 
-# IDE specific
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
+*.userprefs
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test results
+TestResults/
 ```
