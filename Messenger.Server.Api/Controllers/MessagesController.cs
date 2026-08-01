@@ -14,10 +14,12 @@ namespace Messenger.Server.Api.Controllers;
 public class MessagesController : ControllerBase
 {
     private readonly IMessageService _messageService;
+    private readonly IUserRepository _userRepository;
 
-    public MessagesController(IMessageService messageService)
+    public MessagesController(IMessageService messageService, IUserRepository userRepository)
     {
         _messageService = messageService;
+        _userRepository = userRepository;
     }
 
     /// <summary>
@@ -74,8 +76,23 @@ public class MessagesController : ControllerBase
         if (userId == null)
             return Unauthorized();
         
+        int? recipientId = null;
+        
+        // Определяем получателя: по ID или по логину
+        if (!string.IsNullOrEmpty(request.RecipientLogin))
+        {
+            var recipient = await _userRepository.GetByUsernameAsync(request.RecipientLogin);
+            if (recipient == null)
+                return BadRequest(new { message = $"Пользователь с логином '{request.RecipientLogin}' не найден" });
+            recipientId = recipient.Id;
+        }
+        else if (request.RecipientId.HasValue)
+        {
+            recipientId = request.RecipientId;
+        }
+        
         var messageType = request.Type.ToLower() == "file" ? MessageType.File : MessageType.Text;
-        var message = await _messageService.SendMessageAsync(userId.Value, messageType, request.Content, request.RecipientId);
+        var message = await _messageService.SendMessageAsync(userId.Value, messageType, request.Content, recipientId);
         
         return Ok(new 
         {
@@ -116,4 +133,5 @@ public class SendMessageRequest
     public string Content { get; set; } = string.Empty;
     public string Type { get; set; } = "text"; // text или file
     public int? RecipientId { get; set; } // ID получателя (null для общего чата)
+    public string? RecipientLogin { get; set; } // Логин получателя (альтернатива RecipientId)
 }

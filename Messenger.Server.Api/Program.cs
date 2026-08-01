@@ -126,11 +126,13 @@ using (var scope = app.Services.CreateScope())
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
             SenderId INTEGER NOT NULL,
             SenderName TEXT,
+            RecipientId INTEGER,
             Type INTEGER NOT NULL,
             Content TEXT NOT NULL,
             CreatedAt TEXT NOT NULL,
             IsDeleted INTEGER NOT NULL DEFAULT 0,
-            FOREIGN KEY (SenderId) REFERENCES Users(Id)
+            FOREIGN KEY (SenderId) REFERENCES Users(Id),
+            FOREIGN KEY (RecipientId) REFERENCES Users(Id)
         )";
     
     using var cmd1 = new Microsoft.Data.Sqlite.SqliteCommand(createUsersTable, connection);
