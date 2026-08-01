@@ -5,47 +5,29 @@ obj/
 *.dll
 *.exe
 *.pdb
-*.so
-*.dylib
-*.jar
-*.war
-*.class
+*.runtimeconfig.dev.json
 
 # Dependencies
 packages/
 node_modules/
-vendor/
 
 # Logs
 *.log
-logs/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# IDE
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
-
-# Testing
-coverage/
-htmlcov/
-*.coverage
-
-# Cache
-__pycache__/
-*.pyc
-*.pyo
-.Python
-*.swp
-*~
 ```
