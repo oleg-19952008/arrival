@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Настройка SQLite
 var connectionString = "Data Source=messenger.db";
 builder.Services.AddSingleton(new SqliteConnection(connectionString));
+builder.Services.AddSingleton(connectionString);
 
 // Регистрация репозиториев
 builder.Services.AddScoped<IUserRepository, UserRepository>();
