@@ -4,14 +4,17 @@ using System;
 using System.Text;
 using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Messenger.Console.Client;
 
 public class Program
 {
     private static readonly string BaseUrl = "http://localhost:748/api";
+    private static readonly string SignalRUrl = "http://localhost:748/notificationHub";
     private static string? _token;
     private static int? _currentUserId;
+    private static HubConnection? _hubConnection;
 
     public static async Task Main(string[] args)
     {
@@ -368,8 +371,8 @@ public class Program
                 
                 if (!string.IsNullOrEmpty(recipientUsername))
                 {
-                    // Ищем пользователя по логину
-                    var response = await httpClient.GetAsync($"{BaseUrl}/admin/users");
+                    // Ищем пользователя по логину через новый endpoint
+                    var response = await httpClient.GetAsync($"{BaseUrl}/users/list");
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -402,9 +405,9 @@ public class Program
             
             // Ввод текста сообщения
             System.Console.Write("Введите текст сообщения: ");
-            var text = System.Console.ReadLine();
+            var content = System.Console.ReadLine();
             
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(content))
             {
                 System.Console.WriteLine("✗ Сообщение не может быть пустым.");
                 return;
@@ -413,11 +416,13 @@ public class Program
             // Формируем запрос
             var request = new
             {
-                text,
-                recipientId
+                content,
+                type = "text",
+                recipientId,
+                recipientLogin = recipientId.HasValue ? null : null
             };
             
-            var sendResponse = await httpClient.PostAsJsonAsync($"{BaseUrl}/chat/messages", request);
+            var sendResponse = await httpClient.PostAsJsonAsync($"{BaseUrl}/messages", request);
             var sendContent = await sendResponse.Content.ReadAsStringAsync();
             
             if (sendResponse.IsSuccessStatusCode)
@@ -449,7 +454,7 @@ public class Program
         
         try
         {
-            var response = await httpClient.GetAsync($"{BaseUrl}/chat/messages");
+            var response = await httpClient.GetAsync($"{BaseUrl}/messages/my");
             
             if (response.IsSuccessStatusCode)
             {
@@ -468,7 +473,7 @@ public class Program
                     var id = msg.GetProperty("id").GetInt32();
                     var senderId = msg.GetProperty("senderId").GetInt32();
                     var senderName = msg.GetProperty("senderName").GetString();
-                    var text = msg.GetProperty("text").GetString();
+                    var textContent = msg.GetProperty("content").GetString();
                     var createdAt = msg.GetProperty("createdAt").GetDateTime().ToLocalTime();
                     
                     // Проверяем, личное ли это сообщение
@@ -476,7 +481,7 @@ public class Program
                                      recipientEl.ValueKind != JsonValueKind.Null;
                     
                     string prefix = isPersonal ? "[ЛИЧНОЕ]" : "[ОБЩЕЕ]";
-                    System.Console.WriteLine($"{prefix} [{createdAt:HH:mm}] {senderName}: {text}");
+                    System.Console.WriteLine($"{prefix} [{createdAt:HH:mm}] {senderName}: {textContent}");
                 }
             }
             else

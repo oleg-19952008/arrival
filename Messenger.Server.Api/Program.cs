@@ -33,6 +33,9 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+// SignalR для WebSocket уведомлений
+builder.Services.AddSignalR();
+
 // JWT настройка
 var jwtKey = "YourSuperSecretKeyForMessengerCoreServer2024WithMinimum32BytesLength!";
 var jwtIssuer = "Messenger.Server.Api";
@@ -98,9 +101,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
-// SignalR для WebSocket уведомлений
-builder.Services.AddSignalR();
 
 var app = builder.Build();
 

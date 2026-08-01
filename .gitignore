@@ -1,32 +1,51 @@
-```gitignore
+```
 # Build artifacts
-*.obj
-*.exe
+bin/
+obj/
 *.dll
+*.exe
+*.pdb
 *.so
-*.a
-*.out
+*.dylib
+*.jar
+*.war
+*.class
 
 # Dependencies
 packages/
-lib/
-bin/
-obj/
+node_modules/
+vendor/
 
 # Logs
 *.log
+logs/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
+# IDE
 .vscode/
 .idea/
-*.userprefs
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Testing
+coverage/
+htmlcov/
+*.coverage
+
+# Cache
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.swp
+*~
 ```

@@ -1,59 +1,56 @@
 using System.Collections.Concurrent;
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Messenger.Server.Api.Hubs;
+
 namespace Messenger.Core.Services;
 
 /// <summary>
-/// Сервис уведомлений (серверная реализация с WebSocket)
+/// Сервис уведомлений (серверная реализация с WebSocket через SignalR)
 /// </summary>
 public class NotificationService : INotificationService
 {
-    // Хранилище подключенных клиентов: userId -> connection
-    private readonly ConcurrentDictionary<int, object> _connectedClients = new();
+    private readonly IHubContext<NotificationHub> _hubContext;
     
-    // Хранилище всех подключений для широковещательной рассылки
-    private readonly List<object> _allConnections = new();
-    
-    public Task SendNotificationAsync(Notification notification)
+    public NotificationService(IHubContext<NotificationHub> hubContext)
     {
-        // В реальной реализации здесь будет отправка через WebSocket всем подключенным клиентам
-        // Для пока заглушка - логирование
+        _hubContext = hubContext;
+    }
+    
+    public async Task SendNotificationAsync(Notification notification)
+    {
+        // Отправка уведомления всем подключенным клиентам
+        await _hubContext.Clients.All.SendAsync("NotificationReceived", 
+            notification.Type.ToString(), 
+            notification.Data);
+        
         Console.WriteLine($"[Notification] {notification.Type}: {notification.Data}");
-        
-        return Task.CompletedTask;
     }
     
-    public Task SendNotificationToUserAsync(int userId, Notification notification)
+    public async Task SendNotificationToUserAsync(int userId, Notification notification)
     {
-        // В реальной реализации здесь будет отправка через WebSocket конкретному пользователю
+        // Отправка уведомления конкретному пользователю
+        await _hubContext.Clients.Group($"user_{userId}").SendAsync("NotificationReceived",
+            notification.Type.ToString(),
+            notification.Data);
+        
         Console.WriteLine($"[Notification to User {userId}] {notification.Type}: {notification.Data}");
+    }
+    
+    /// <summary>
+    /// Отправить сообщение конкретному пользователю через WebSocket
+    /// </summary>
+    public async Task SendMessageToUserAsync(int recipientId, string content, int senderId, string senderName)
+    {
+        await _hubContext.Clients.Group($"user_{recipientId}").SendAsync("MessageReceived", new
+        {
+            senderId,
+            senderName,
+            content,
+            receivedAt = DateTime.UtcNow
+        });
         
-        return Task.CompletedTask;
-    }
-    
-    /// <summary>
-    /// Регистрация подключенного клиента (для использования с WebSocket)
-    /// </summary>
-    public void RegisterClient(int userId, object connection)
-    {
-        _connectedClients.TryAdd(userId, connection);
-        lock (_allConnections)
-        {
-            _allConnections.Add(connection);
-        }
-    }
-    
-    /// <summary>
-    /// Удаление подключенного клиента
-    /// </summary>
-    public void UnregisterClient(int userId)
-    {
-        if (_connectedClients.TryRemove(userId, out var connection))
-        {
-            lock (_allConnections)
-            {
-                _allConnections.Remove(connection);
-            }
-        }
+        Console.WriteLine($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
     }
 }

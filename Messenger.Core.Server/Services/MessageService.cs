@@ -57,16 +57,23 @@ public class MessageService : IMessageService
         
         var savedMessage = await _messageRepository.AddAsync(message);
         
-        // Уведомление о новом сообщении
+        // Уведомление о новом сообщении через WebSocket
         if (recipientId.HasValue)
         {
-            // Личное сообщение - уведомляем только получателя
-            await _notificationService.SendNotificationToUserAsync(recipientId.Value, new Notification
+            // Личное сообщение - отправляем через WebSocket получателю
+            if (_notificationService is NotificationService ns)
             {
-                Type = NotificationType.NewMessage,
-                Data = $"Новое личное сообщение от {sender.Username}",
-                CreatedAt = DateTime.UtcNow
-            });
+                await ns.SendMessageToUserAsync(recipientId.Value, content, senderId, sender.Username);
+            }
+            else
+            {
+                await _notificationService.SendNotificationToUserAsync(recipientId.Value, new Notification
+                {
+                    Type = NotificationType.NewMessage,
+                    Data = $"Новое личное сообщение от {sender.Username}",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
         }
         else
         {

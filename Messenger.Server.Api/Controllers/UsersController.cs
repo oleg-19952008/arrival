@@ -81,6 +81,21 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
+    /// Получить всех пользователей (доступно всем авторизованным для выбора получателя)
+    /// </summary>
+    [HttpGet("list")]
+    [Authorize]
+    public async Task<IActionResult> GetUsersList()
+    {
+        var users = await _userService.GetAllUsersAsync();
+        return Ok(users.Where(u => u.Status == UserStatus.Active).Select(u => new 
+        {
+            id = u.Id,
+            username = u.Username
+        }));
+    }
+
+    /// <summary>
     /// Одобрить пользователя (изменить статус на Active)
     /// </summary>
     [HttpPost("{id}/approve")]
