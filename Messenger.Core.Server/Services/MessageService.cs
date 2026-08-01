@@ -1,5 +1,7 @@
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
+using Messenger.Core.Utils;
+
 namespace Messenger.Core.Services;
 
 /// <summary>
@@ -26,11 +28,13 @@ public class MessageService : IMessageService
         var sender = await _userRepository.GetByIdAsync(senderId);
         if (sender == null)
         {
+            ConsoleLogger.Error($"SendMessage failed: sender with ID {senderId} not found");
             throw new InvalidOperationException("Отправитель не найден");
         }
         
         if (sender.Status != UserStatus.Active)
         {
+            ConsoleLogger.Warn($"SendMessage failed: sender '{sender.Username}' is not active (status: {sender.Status})");
             throw new InvalidOperationException("Пользователь не активен");
         }
         
@@ -40,6 +44,7 @@ public class MessageService : IMessageService
             var recipient = await _userRepository.GetByIdAsync(recipientId.Value);
             if (recipient == null)
             {
+                ConsoleLogger.Error($"SendMessage failed: recipient with ID {recipientId.Value} not found");
                 throw new InvalidOperationException("Получатель не найден");
             }
         }
@@ -56,6 +61,7 @@ public class MessageService : IMessageService
         };
         
         var savedMessage = await _messageRepository.AddAsync(message);
+        ConsoleLogger.Info($"Message #{savedMessage.Id} from '{sender.Username}' saved to database");
         
         // Уведомление о новом сообщении через WebSocket
         if (recipientId.HasValue)
@@ -92,13 +98,17 @@ public class MessageService : IMessageService
     public async Task<IEnumerable<Message>> GetAllMessagesAsync()
     {
         var messages = await _messageRepository.GetAllAsync();
-        return messages.Where(m => !m.IsDeleted);
+        var result = messages.Where(m => !m.IsDeleted).ToList();
+        ConsoleLogger.Info($"GetAllMessages returned {result.Count} messages");
+        return result;
     }
     
     public async Task<IEnumerable<Message>> GetMessagesForUserAsync(int userId)
     {
         var messages = await _messageRepository.GetByRecipientIdAsync(userId);
-        return messages.Where(m => !m.IsDeleted);
+        var result = messages.Where(m => !m.IsDeleted).ToList();
+        ConsoleLogger.Info($"GetMessagesForUser({userId}) returned {result.Count} messages");
+        return result;
     }
     
     public async Task<OperationResult> DeleteMessageAsync(int messageId)
@@ -106,6 +116,7 @@ public class MessageService : IMessageService
         var message = await _messageRepository.GetByIdAsync(messageId);
         if (message == null)
         {
+            ConsoleLogger.Warn($"DeleteMessage failed: message with ID {messageId} not found");
             return new OperationResult 
             { 
                 Success = false, 
@@ -114,6 +125,7 @@ public class MessageService : IMessageService
         }
         
         await _messageRepository.MarkAsDeletedAsync(messageId);
+        ConsoleLogger.Info($"Message #{messageId} marked as deleted");
         
         await _notificationService.SendNotificationAsync(new Notification
         {

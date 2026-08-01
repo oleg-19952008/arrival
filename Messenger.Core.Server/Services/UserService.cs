@@ -1,5 +1,7 @@
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
+using Messenger.Core.Utils;
+
 namespace Messenger.Core.Services;
 
 /// <summary>
@@ -33,6 +35,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
+            ConsoleLogger.Warn($"UpdateUserStatus failed: user with ID {userId} not found");
             return new OperationResult 
             { 
                 Success = false, 
@@ -58,6 +61,8 @@ public class UserService : IUserService
             CreatedAt = DateTime.UtcNow
         });
         
+        ConsoleLogger.Info($"User '{user.Username}' status changed to {status}");
+        
         return new OperationResult { Success = true };
     }
     
@@ -66,6 +71,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
+            ConsoleLogger.Warn($"DeleteUser failed: user with ID {userId} not found");
             return new OperationResult 
             { 
                 Success = false, 
@@ -84,6 +90,8 @@ public class UserService : IUserService
             CreatedAt = DateTime.UtcNow
         });
         
+        ConsoleLogger.Info($"User '{user.Username}' marked as deleted (blocked)");
+        
         return new OperationResult { Success = true };
     }
     
@@ -92,6 +100,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
+            ConsoleLogger.Warn($"UnbanUser failed: user with ID {userId} not found");
             return new OperationResult 
             { 
                 Success = false, 
@@ -101,6 +110,7 @@ public class UserService : IUserService
         
         if (user.Status != UserStatus.Blocked)
         {
+            ConsoleLogger.Warn($"UnbanUser failed: user '{user.Username}' is not blocked");
             return new OperationResult 
             { 
                 Success = false, 
@@ -118,6 +128,8 @@ public class UserService : IUserService
             CreatedAt = DateTime.UtcNow
         });
         
+        ConsoleLogger.Info($"User '{user.Username}' has been unbanned");
+        
         return new OperationResult { Success = true };
     }
     
@@ -126,6 +138,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
+            ConsoleLogger.Warn($"ChangePassword failed: user with ID {userId} not found");
             return new OperationResult 
             { 
                 Success = false, 
@@ -143,6 +156,8 @@ public class UserService : IUserService
             Data = $"Пароль пользователя {user.Username} был изменён",
             CreatedAt = DateTime.UtcNow
         });
+        
+        ConsoleLogger.Info($"Password changed for user '{user.Username}'");
         
         return new OperationResult { Success = true };
     }

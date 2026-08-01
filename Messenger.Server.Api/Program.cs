@@ -22,12 +22,12 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // Настройка SQLite с абсолютным путем
 var dbPath = Path.Combine(AppContext.BaseDirectory, "messenger.db");
-Console.WriteLine($"Database path: {dbPath}");
+ConsoleLogger.Info($"Database path: {dbPath}");
 
 // Формируем строку подключения напрямую
 var connectionString = $"Data Source={dbPath}";
-Console.WriteLine($"Connection string: {connectionString}");
-Console.WriteLine($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
+ConsoleLogger.Info($"Connection string: {connectionString}");
+ConsoleLogger.Info($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
 
 // Регистрация репозиториев с передачей строки подключения
 builder.Services.AddScoped<IUserRepository>(sp => new UserRepository(connectionString));
@@ -167,10 +167,10 @@ using (var scope = app.Services.CreateScope())
         cmdInsert.Parameters.AddWithValue("@CreatedAt", DateTime.UtcNow.ToString("O"));
         cmdInsert.ExecuteNonQuery();
         
-        Console.WriteLine("=== DEFAULT ADMIN CREATED ===");
-        Console.WriteLine("Username: admin");
-        Console.WriteLine("Password: admin123");
-        Console.WriteLine("=============================");
+        ConsoleLogger.Info("=== DEFAULT ADMIN CREATED ===");
+        ConsoleLogger.Info("Username: admin");
+        ConsoleLogger.Info("Password: admin123");
+        ConsoleLogger.Info("=============================");
     }
 }
 
@@ -192,7 +192,7 @@ var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 if (!Directory.Exists(uploadFolder))
 {
     Directory.CreateDirectory(uploadFolder);
-    Console.WriteLine($"Upload folder created: {uploadFolder}");
+    ConsoleLogger.Info($"Upload folder created: {uploadFolder}");
 }
 
 // Middleware для проверки localhost на админских эндпоинтах
@@ -223,10 +223,10 @@ app.UseWhen(
     });
 
 // Консольный интерфейс для управления сервером
-Console.WriteLine("===========================================");
-Console.WriteLine("Server started on ports 748 (API) and 228 (Admin).");
-Console.WriteLine("Type 'exit' to stop.");
-Console.WriteLine("===========================================");
+ConsoleLogger.Info("===========================================");
+ConsoleLogger.Info("Server started on ports 748 (API) and 228 (Admin).");
+ConsoleLogger.Info("Type 'exit' to stop.");
+ConsoleLogger.Info("===========================================");
 
 // Запуск в отдельном потоке для возможности обработки команд консоли
 var runTask = Task.Run(() => app.Run());
@@ -237,7 +237,7 @@ while (true)
     var input = Console.ReadLine();
     if (input?.Trim().ToLower() == "exit")
     {
-        Console.WriteLine("Shutting down server...");
+        ConsoleLogger.Info("Shutting down server...");
         break;
     }
 }

@@ -1,5 +1,7 @@
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
+using Messenger.Core.Utils;
+
 namespace Messenger.Core.Services;
 
 /// <summary>
@@ -27,6 +29,7 @@ public class AuthService : IAuthService
         var existingUser = await _userRepository.GetByUsernameAsync(username);
         if (existingUser != null)
         {
+            ConsoleLogger.Warn($"Registration failed: user '{username}' already exists");
             return new OperationResult 
             { 
                 Success = false, 
@@ -48,6 +51,7 @@ public class AuthService : IAuthService
         };
         
         await _userRepository.AddAsync(newUser);
+        ConsoleLogger.Info($"User '{username}' registered successfully with status Pending");
         
         return new OperationResult { Success = true };
     }
@@ -58,6 +62,7 @@ public class AuthService : IAuthService
         var user = await _userRepository.GetByUsernameAsync(username);
         if (user == null)
         {
+            ConsoleLogger.Warn($"Login failed: user '{username}' not found");
             return new AuthResult 
             { 
                 Success = false, 
@@ -68,6 +73,7 @@ public class AuthService : IAuthService
         // Проверка статуса
         if (user.Status == UserStatus.Blocked)
         {
+            ConsoleLogger.Warn($"Login failed: user '{username}' is blocked");
             return new AuthResult 
             { 
                 Success = false, 
@@ -77,6 +83,7 @@ public class AuthService : IAuthService
         
         if (user.Status == UserStatus.Pending)
         {
+            ConsoleLogger.Warn($"Login failed: user '{username}' is pending approval");
             return new AuthResult 
             { 
                 Success = false, 
@@ -87,6 +94,7 @@ public class AuthService : IAuthService
         // Проверка пароля
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
+            ConsoleLogger.Warn($"Login failed: invalid password for user '{username}'");
             return new AuthResult 
             { 
                 Success = false, 
@@ -109,6 +117,8 @@ public class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow
         });
         
+        ConsoleLogger.Info($"User '{username}' logged in successfully");
+        
         return new AuthResult 
         { 
             Success = true, 
@@ -129,6 +139,7 @@ public class AuthService : IAuthService
                 Data = $"Пользователь {user.Username} вышел из системы",
                 CreatedAt = DateTime.UtcNow
             });
+            ConsoleLogger.Info($"User '{user.Username}' logged out");
         }
     }
     

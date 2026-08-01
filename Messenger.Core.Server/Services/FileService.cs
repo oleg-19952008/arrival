@@ -1,5 +1,7 @@
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
+using Messenger.Core.Utils;
+
 namespace Messenger.Core.Services;
 
 /// <summary>
@@ -24,6 +26,7 @@ public class FileService : IFileService
         if (!Directory.Exists(_uploadFolder))
         {
             Directory.CreateDirectory(_uploadFolder);
+            ConsoleLogger.Info($"Upload folder created: {_uploadFolder}");
         }
     }
     
@@ -33,6 +36,7 @@ public class FileService : IFileService
         var message = await _messageRepository.GetByIdAsync(messageId);
         if (message == null)
         {
+            ConsoleLogger.Warn($"UploadFile failed: message with ID {messageId} not found");
             return null;
         }
         
@@ -61,7 +65,10 @@ public class FileService : IFileService
             UploadedAt = DateTime.UtcNow
         };
         
-        return await _fileRepository.AddAsync(attachment);
+        var result = await _fileRepository.AddAsync(attachment);
+        ConsoleLogger.Info($"File '{fileName}' ({fileSize} bytes) uploaded successfully as attachment #{result?.Id}");
+        
+        return result;
     }
     
     public async Task<FileAttachment?> GetFileAsync(int fileId)
@@ -74,6 +81,7 @@ public class FileService : IFileService
         var attachment = await _fileRepository.GetByIdAsync(fileId);
         if (attachment == null || !File.Exists(attachment.FilePath))
         {
+            ConsoleLogger.Warn($"DownloadFile failed: file with ID {fileId} not found");
             return null;
         }
         
@@ -83,6 +91,8 @@ public class FileService : IFileService
             FileAccess.Read, 
             FileShare.Read);
         
+        ConsoleLogger.Info($"File '{attachment.FileName}' downloaded (ID: {fileId})");
+        
         return (stream, attachment.ContentType, attachment.FileName);
     }
     
@@ -91,6 +101,7 @@ public class FileService : IFileService
         var attachment = await _fileRepository.GetByIdAsync(fileId);
         if (attachment == null)
         {
+            ConsoleLogger.Warn($"DeleteFile failed: file with ID {fileId} not found");
             return false;
         }
         
@@ -98,10 +109,12 @@ public class FileService : IFileService
         if (File.Exists(attachment.FilePath))
         {
             File.Delete(attachment.FilePath);
+            ConsoleLogger.Info($"File '{attachment.FileName}' deleted from disk");
         }
         
         // Удаление записи из БД
         await _fileRepository.DeleteAsync(fileId);
+        ConsoleLogger.Info($"File attachment #{fileId} deleted from database");
         
         return true;
     }

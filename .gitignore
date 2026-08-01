@@ -1,15 +1,24 @@
 ```
 # Build artifacts
-wwwroot/css/app.css
-wwwroot/index.html
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+obj/
+bin/
+obj/
+Debug/
+Release/
 
 # Dependencies
+packages/
 node_modules/
 vendor/
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
 
 # Environment
 .env
@@ -19,8 +28,38 @@ vendor/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
+
+# Tests
+*.test.dll
+TestResults/
+
+# Compressed
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```

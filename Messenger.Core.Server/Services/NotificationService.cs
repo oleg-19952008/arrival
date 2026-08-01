@@ -3,6 +3,7 @@ using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Messenger.Server.Api.Hubs;
+using Messenger.Core.Utils;
 
 namespace Messenger.Core.Services;
 
@@ -25,7 +26,7 @@ public class NotificationService : INotificationService
             notification.Type.ToString(), 
             notification.Data);
         
-        Console.WriteLine($"[Notification] {notification.Type}: {notification.Data}");
+        ConsoleLogger.Info($"[Notification] {notification.Type}: {notification.Data}");
     }
     
     public async Task SendNotificationToUserAsync(int userId, Notification notification)
@@ -35,7 +36,7 @@ public class NotificationService : INotificationService
             notification.Type.ToString(),
             notification.Data);
         
-        Console.WriteLine($"[Notification to User {userId}] {notification.Type}: {notification.Data}");
+        ConsoleLogger.Info($"[Notification to User {userId}] {notification.Type}: {notification.Data}");
     }
     
     /// <summary>
@@ -51,6 +52,6 @@ public class NotificationService : INotificationService
             receivedAt = DateTime.UtcNow
         });
         
-        Console.WriteLine($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
+        ConsoleLogger.Info($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
     }
 }
