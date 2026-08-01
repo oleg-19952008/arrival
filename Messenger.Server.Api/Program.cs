@@ -16,20 +16,27 @@ var builder = WebApplication.CreateBuilder(args);
 var dbPath = Path.Combine(AppContext.BaseDirectory, "messenger.db");
 Console.WriteLine($"Database path: {dbPath}");
 
-// Используем SqliteConnectionStringBuilder для корректного формирования строки подключения
-var connectionStringBuilder = new SqliteConnectionStringBuilder
-{
-    DataSource = dbPath
-};
-string connectionString = connectionStringBuilder.ToString();
+// Формируем строку подключения напрямую
+var connectionString = $"Data Source={dbPath}";
 Console.WriteLine($"Connection string: {connectionString}");
 Console.WriteLine($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
-builder.Services.AddSingleton(connectionString);
 
-// Регистрация репозиториев
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddScoped<IFileAttachmentRepository, FileAttachmentRepository>();
+// Регистрация репозиториев с передачей строки подключения через фабрику
+builder.Services.AddScoped<IUserRepository>(sp => 
+{
+    var conn = new SqliteConnection(connectionString);
+    return new UserRepository(conn);
+});
+builder.Services.AddScoped<IMessageRepository>(sp => 
+{
+    var conn = new SqliteConnection(connectionString);
+    return new MessageRepository(conn);
+});
+builder.Services.AddScoped<IFileAttachmentRepository>(sp => 
+{
+    var conn = new SqliteConnection(connectionString);
+    return new FileAttachmentRepository(conn);
+});
 
 // Регистрация сервисов
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -112,8 +119,7 @@ var app = builder.Build();
 // Инициализация БД
 using (var scope = app.Services.CreateScope())
 {
-    var connString = scope.ServiceProvider.GetRequiredService<string>();
-    using var connection = new SqliteConnection(connString);
+    using var connection = new SqliteConnection(connectionString);
     connection.Open();
     
     var createUsersTable = @"
