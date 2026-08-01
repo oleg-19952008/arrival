@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Messenger.Core.Models;
-
+using Messenger.Core.Interfaces;
 namespace Messenger.Core.Data;
 
 /// <summary>

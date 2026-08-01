@@ -3,7 +3,7 @@ using Microsoft.Extensions;
 using Microsoft.Extensions.DependencyInjection; // <--- Добавить это
 using Messenger.Core.Models;
 namespace Messenger.Core.Data;
-
+using Messenger.Core.Interfaces;
 /// <summary>
 /// Репозиторий пользователей для работы с SQLite
 /// </summary>

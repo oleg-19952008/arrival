@@ -3,8 +3,44 @@
   "WorkspaceRootPath": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\kernelextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\kernelextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\data\\fileattachmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\data\\fileattachmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\data\\messagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\data\\messagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\data\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\data\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\messageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\messageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\interfaces\\irepositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\interfaces\\irepositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EE91EB50-9D0A-D42F-3DE0-C71D436AD699}|Messenger.Core.Client\\Messenger.Core.Client.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.client\\kernelextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -18,11 +54,128 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "NotificationService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\NotificationService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\NotificationService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\NotificationService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\NotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:47:03.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FileAttachmentRepository.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\FileAttachmentRepository.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Data\\FileAttachmentRepository.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\FileAttachmentRepository.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Data\\FileAttachmentRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:46:21.033Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MessageRepository.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\MessageRepository.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Data\\MessageRepository.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\MessageRepository.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Data\\MessageRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:46:17.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\UserService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\UserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:46:06.65Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MessageService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\MessageService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\MessageService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\MessageService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\MessageService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:45:58.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "KernelExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\KernelExtensions.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\KernelExtensions.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\KernelExtensions.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\KernelExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:45:45.576Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\AuthService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:45:39.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FileService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\FileService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\FileService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\FileService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\FileService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:45:22.171Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IRepositories.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Interfaces\\IRepositories.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Interfaces\\IRepositories.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Interfaces\\IRepositories.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Interfaces\\IRepositories.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAiwFoAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T13:43:52.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "KernelExtensions.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Client\\KernelExtensions.cs",
               "RelativeDocumentMoniker": "Messenger.Core.Client\\KernelExtensions.cs",
@@ -30,18 +183,17 @@
               "RelativeToolTip": "Messenger.Core.Client\\KernelExtensions.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-01T13:37:05.58Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-01T13:37:05.58Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\UserRepository.cs",
               "RelativeDocumentMoniker": "Messenger.Core.Server\\Data\\UserRepository.cs",
               "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Data\\UserRepository.cs",
               "RelativeToolTip": "Messenger.Core.Server\\Data\\UserRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-01T13:32:17.326Z",
               "EditorCaption": ""

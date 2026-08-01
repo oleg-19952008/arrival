@@ -1,4 +1,5 @@
 namespace Messenger.Core;
+using Messenger.Core.Interfaces;
 
 /// <summary>
 /// Класс расширения для регистрации сервисов ядра

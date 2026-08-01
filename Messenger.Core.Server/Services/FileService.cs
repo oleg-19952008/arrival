@@ -1,5 +1,5 @@
 using Messenger.Core.Models;
-
+using Messenger.Core.Interfaces;
 namespace Messenger.Core.Services;
 
 /// <summary>
