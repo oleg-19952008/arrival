@@ -306,4 +306,187 @@ public class Program
         }
         return "Неизвестная ошибка";
     }
+
+    private static async Task ShowUsers(HttpClient httpClient)
+    {
+        System.Console.WriteLine("\n=== Список пользователей ===");
+        
+        try
+        {
+            var response = await httpClient.GetAsync($"{BaseUrl}/admin/users");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var users = JsonDocument.Parse(content).RootElement;
+                
+                System.Console.WriteLine($"{"ID",-5} {"Логин",-20} {"Статус",-10} {"Роль",-10}");
+                System.Console.WriteLine(new string('-', 50));
+                
+                foreach (var user in users.EnumerateArray())
+                {
+                    var id = user.GetProperty("id").GetInt32();
+                    var username = user.GetProperty("username").GetString();
+                    var status = user.GetProperty("status").GetString();
+                    var role = user.GetProperty("role").GetString();
+                    
+                    System.Console.WriteLine($"{id,-5} {username,-20} {status,-10} {role,-10}");
+                }
+            }
+            else
+            {
+                System.Console.WriteLine("✗ Ошибка получения списка пользователей.");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
+        }
+    }
+
+    private static async Task SendMessage(HttpClient httpClient)
+    {
+        System.Console.WriteLine("\n=== Отправка сообщения ===");
+        
+        try
+        {
+            // Запрашиваем ID получателя
+            System.Console.Write("Введите ID получателя (оставьте пустым для общего чата): ");
+            var recipientIdInput = System.Console.ReadLine();
+            
+            int? recipientId = null;
+            if (!string.IsNullOrEmpty(recipientIdInput) && int.TryParse(recipientIdInput, out var id))
+            {
+                recipientId = id;
+            }
+            
+            // Если ID не указан, запрашиваем логин
+            if (!recipientId.HasValue)
+            {
+                System.Console.Write("Введите логин получателя (оставьте пустым для общего чата): ");
+                var recipientUsername = System.Console.ReadLine();
+                
+                if (!string.IsNullOrEmpty(recipientUsername))
+                {
+                    // Ищем пользователя по логину
+                    var response = await httpClient.GetAsync($"{BaseUrl}/admin/users");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var users = JsonDocument.Parse(content).RootElement;
+                        
+                        foreach (var user in users.EnumerateArray())
+                        {
+                            var username = user.GetProperty("username").GetString();
+                            if (username == recipientUsername)
+                            {
+                                recipientId = user.GetProperty("id").GetInt32();
+                                System.Console.WriteLine($"Найден пользователь: {username} (ID: {recipientId})");
+                                break;
+                            }
+                        }
+                        
+                        if (!recipientId.HasValue)
+                        {
+                            System.Console.WriteLine($"✗ Пользователь с логином '{recipientUsername}' не найден.");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("✗ Ошибка получения списка пользователей.");
+                        return;
+                    }
+                }
+            }
+            
+            // Ввод текста сообщения
+            System.Console.Write("Введите текст сообщения: ");
+            var text = System.Console.ReadLine();
+            
+            if (string.IsNullOrEmpty(text))
+            {
+                System.Console.WriteLine("✗ Сообщение не может быть пустым.");
+                return;
+            }
+            
+            // Формируем запрос
+            var request = new
+            {
+                text,
+                recipientId
+            };
+            
+            var sendResponse = await httpClient.PostAsJsonAsync($"{BaseUrl}/chat/messages", request);
+            var sendContent = await sendResponse.Content.ReadAsStringAsync();
+            
+            if (sendResponse.IsSuccessStatusCode)
+            {
+                if (recipientId.HasValue)
+                {
+                    System.Console.WriteLine("✓ Личное сообщение отправлено!");
+                }
+                else
+                {
+                    System.Console.WriteLine("✓ Сообщение отправлено в общий чат!");
+                }
+            }
+            else
+            {
+                var error = ParseErrorMessage(sendContent);
+                System.Console.WriteLine($"✗ Ошибка отправки: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
+        }
+    }
+
+    private static async Task GetMessages(HttpClient httpClient)
+    {
+        System.Console.WriteLine("\n=== Сообщения ===");
+        
+        try
+        {
+            var response = await httpClient.GetAsync($"{BaseUrl}/chat/messages");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var messagesDoc = JsonDocument.Parse(content);
+                var messagesArray = messagesDoc.RootElement.EnumerateArray().ToList();
+                
+                if (messagesArray.Count == 0)
+                {
+                    System.Console.WriteLine("Сообщений нет.");
+                    return;
+                }
+                
+                foreach (var msg in messagesArray)
+                {
+                    var id = msg.GetProperty("id").GetInt32();
+                    var senderId = msg.GetProperty("senderId").GetInt32();
+                    var senderName = msg.GetProperty("senderName").GetString();
+                    var text = msg.GetProperty("text").GetString();
+                    var createdAt = msg.GetProperty("createdAt").GetDateTime().ToLocalTime();
+                    
+                    // Проверяем, личное ли это сообщение
+                    bool isPersonal = msg.TryGetProperty("recipientId", out var recipientEl) && 
+                                     recipientEl.ValueKind != JsonValueKind.Null;
+                    
+                    string prefix = isPersonal ? "[ЛИЧНОЕ]" : "[ОБЩЕЕ]";
+                    System.Console.WriteLine($"{prefix} [{createdAt:HH:mm}] {senderName}: {text}");
+                }
+            }
+            else
+            {
+                System.Console.WriteLine("✗ Ошибка получения сообщений.");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
+        }
+    }
 }
