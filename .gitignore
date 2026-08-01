@@ -1,157 +1,39 @@
-```csharp
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Dd]eploy/
-[Bb]uild/
-bld/
-[Bb]in/
-[Oo]bj/
-
-# Visual Studio files
-*.user
-*.userosscache
-*.suo
-*.csproj.user
-*.vbproj.user
-*.fsproj.user
-*.userprefs
-
-# Visual Studio Code files
-.vscode/
-
-# ReSharper files
-_ReSharper*/
-*.[Rr]e[Ss]harper
-*.DotSettings.user
-*.DotSettings
-*.user.DotSettings
-
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-# NUNIT
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
-
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
-
-# Benchmark Results
-BenchmarkDotNet.Artifacts/
-
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
-
-# StyleCop
-StyleCopReport.xml
-
-# Files built by Visual Studio
-*_i.c
-*_p.c
-*_h.h
-*.ilk
-*.meta
+```
+# Build artifacts
+*.o
 *.obj
-*.iobj
-*.pch
-*.pdb
-*.ipdb
-*.pgc
-*.pgd
-*.rsp
-*.sbr
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.tmp_proj
-*_wpftmp.csproj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
+# Dependencies
+packages/
+bin/
+obj/
+
+# Logs
 *.log
-*.vspscc
-*.vssscc
-.builds
-*.pidb
-*.svclog
-*.scc
-
-# Chutzpah Test files
-_Chutzpah*
-
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opendb
-*.opensdf
-*.sdf
-*.cachefile
-*.VC.db
-*.VC.VC.opendb
-
-# Windows Installer files
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Android
-*.apk
-*.aab
-
-# iOS
-*.ipa
-*.dSYM.zip
-*.dSYM/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Logs
-*.log
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-*.nupkg
-[Nn]u[Pp]kg/
-[Nn]u[Pp]kg[s]/
-*.snupkg
-
-# IDE
-.vs/
+# Editors
+.vscode/
 .idea/
 *.swp
 *.swo
-
-# Temporary files
 *.tmp
-*.temp
-*.bak
-*.cache
-*.jar
 
-# Dependencies
-node_modules/
-packages/
-bin/
-obj/
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# OS
+.DS_Store
+Thumbs.db
 ```

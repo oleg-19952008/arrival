@@ -28,6 +28,7 @@ public class FileAttachmentRepository : IFileAttachmentRepository
             CREATE TABLE IF NOT EXISTS FileAttachments (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 MessageId INTEGER NOT NULL,
+                FileId TEXT UNIQUE NOT NULL,
                 FileName TEXT NOT NULL,
                 FilePath TEXT NOT NULL,
                 ContentType TEXT NOT NULL,
@@ -37,6 +38,12 @@ public class FileAttachmentRepository : IFileAttachmentRepository
             )";
 
         command.ExecuteNonQuery();
+        
+        // Создание индекса для быстрого поиска по MessageId
+        var createIndexCommand = connection.CreateCommand();
+        createIndexCommand.CommandText = "CREATE INDEX IF NOT EXISTS idx_fileattachments_messageid ON FileAttachments(MessageId)";
+        createIndexCommand.ExecuteNonQuery();
+        
         _initialized = true;
     }
 
@@ -107,13 +114,20 @@ public class FileAttachmentRepository : IFileAttachmentRepository
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
 
+        // Генерация UUID v4 для FileId если не установлен
+        if (string.IsNullOrEmpty(attachment.FileId))
+        {
+            attachment.FileId = Guid.NewGuid().ToString();
+        }
+
         var command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO FileAttachments (MessageId, FileName, FilePath, ContentType, FileSize, UploadedAt)
-            VALUES (@MessageId, @FileName, @FilePath, @ContentType, @FileSize, @UploadedAt);
+            INSERT INTO FileAttachments (MessageId, FileId, FileName, FilePath, ContentType, FileSize, UploadedAt)
+            VALUES (@MessageId, @FileId, @FileName, @FilePath, @ContentType, @FileSize, @UploadedAt);
             SELECT last_insert_rowid();";
 
         command.Parameters.AddWithValue("@MessageId", attachment.MessageId);
+        command.Parameters.AddWithValue("@FileId", attachment.FileId);
         command.Parameters.AddWithValue("@FileName", attachment.FileName);
         command.Parameters.AddWithValue("@FilePath", attachment.FilePath);
         command.Parameters.AddWithValue("@ContentType", attachment.ContentType);
@@ -145,11 +159,12 @@ public class FileAttachmentRepository : IFileAttachmentRepository
         {
             Id = reader.GetInt32(0),
             MessageId = reader.GetInt32(1),
-            FileName = reader.GetString(2),
-            FilePath = reader.GetString(3),
-            ContentType = reader.GetString(4),
-            FileSize = reader.GetInt64(5),
-            UploadedAt = DateTime.Parse(reader.GetString(6))
+            FileId = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
+            FileName = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
+            FilePath = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
+            ContentType = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
+            FileSize = reader.GetInt64(6),
+            UploadedAt = DateTime.Parse(reader.GetString(7))
         };
     }
 }

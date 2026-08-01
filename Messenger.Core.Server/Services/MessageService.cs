@@ -10,16 +10,19 @@ namespace Messenger.Core.Services;
 public class MessageService : IMessageService
 {
     private readonly IMessageRepository _messageRepository;
+    private readonly IFileAttachmentRepository _fileAttachmentRepository;
     private readonly IUserRepository _userRepository;
     private readonly INotificationService _notificationService;
     
     public MessageService(
         IMessageRepository messageRepository,
         IUserRepository userRepository,
+        IFileAttachmentRepository fileAttachmentRepository,
         INotificationService notificationService)
     {
         _messageRepository = messageRepository;
         _userRepository = userRepository;
+        _fileAttachmentRepository = fileAttachmentRepository;
         _notificationService = notificationService;
     }
     

@@ -40,6 +40,36 @@ public class FileService : IFileService
             return null;
         }
         
+        // Валидация типа файла (разрешённые MIME типы)
+        var allowedContentTypes = new[]
+        {
+            "image/jpeg", "image/png", "image/gif", "image/webp",
+            "application/pdf",
+            "text/plain",
+            "application/zip",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        };
+        
+        if (!allowedContentTypes.Contains(contentType))
+        {
+            ConsoleLogger.Warn($"UploadFile rejected: unsupported content type '{contentType}'");
+            return null;
+        }
+        
+        // Ограничение размера файла (10 MB)
+        const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        
+        if (memoryStream.Length > MaxFileSize)
+        {
+            ConsoleLogger.Warn($"UploadFile rejected: file size {memoryStream.Length} bytes exceeds limit {MaxFileSize} bytes");
+            return null;
+        }
+        
+        memoryStream.Position = 0;
+        
         // Генерация уникального имени файла
         var fileExtension = Path.GetExtension(fileName);
         var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
@@ -48,7 +78,7 @@ public class FileService : IFileService
         // Сохранение файла на диск
         using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
         {
-            await fileStream.CopyToAsync(fs);
+            await memoryStream.CopyToAsync(fs);
         }
         
         // Получение размера файла
@@ -58,6 +88,7 @@ public class FileService : IFileService
         var attachment = new FileAttachment
         {
             MessageId = messageId,
+            FileId = Guid.NewGuid().ToString(),
             FileName = fileName,
             FilePath = filePath,
             ContentType = contentType,
@@ -66,7 +97,7 @@ public class FileService : IFileService
         };
         
         var result = await _fileRepository.AddAsync(attachment);
-        ConsoleLogger.Info($"File '{fileName}' ({fileSize} bytes) uploaded successfully as attachment #{result?.Id}");
+        ConsoleLogger.Info($"File '{fileName}' ({fileSize} bytes) uploaded successfully as attachment #{result?.Id} (FileId: {result?.FileId})");
         
         return result;
     }

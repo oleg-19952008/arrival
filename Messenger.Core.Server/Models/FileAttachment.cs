@@ -16,6 +16,11 @@ public class FileAttachment
     public int MessageId { get; set; }
     
     /// <summary>
+    /// Уникальный идентификатор файла (UUID v4)
+    /// </summary>
+    public string FileId { get; set; } = string.Empty;
+    
+    /// <summary>
     /// Оригинальное имя файла
     /// </summary>
     public string FileName { get; set; } = string.Empty;
