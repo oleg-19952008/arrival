@@ -3,9 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>Messenger.Console.Client.Program</StartupObject>
+    <RootNamespace>Arrival.Test.Console</RootNamespace>
+    <AssemblyName>Arrival.Test.Console</AssemblyName>
+    <StartupObject>Arrival.Test.Console.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

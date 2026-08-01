@@ -1,11 +1,22 @@
 ```
 # Build artifacts
+*.obj
+*.exe
+*.dll
+*.pdb
+*.user
+*.userosscache
+*.suo
+*.cache
+*.nupkg
+*.snupkg
+*.zip
+*.tar.gz
+
+# Output directories
 bin/
 obj/
-*.dll
-*.exe
-*.pdb
-*.runtimeconfig.dev.json
+out/
 
 # Dependencies
 packages/
@@ -20,14 +31,17 @@ node_modules/
 *.env.*
 
 # Editors
+.vs/
 .vscode/
 .idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+*.swp
+*.swo
 
 # OS generated files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Test results
+TestResults/
 ```

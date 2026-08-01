@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Core.Server", "Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Server.Api", "Messenger.Server.Api\Messenger.Server.Api.csproj", "{6E18E770-F9DB-D5B1-299B-B8DCA9830DBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Console.Client", "Messenger.Console.Client\Messenger.Console.Client.csproj", "{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrival.Test.Console", "Arrival.Test.Console\Arrival.Test.Console.csproj", "{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

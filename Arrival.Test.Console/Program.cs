@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Messenger.Console.Client;
+namespace Arrival.Test.Console;
 
 public class Program
 {
@@ -19,8 +19,8 @@ public class Program
 
     public static async Task Main(string[] args)
     {
-        Console.WriteLine("=== Messenger Console Client ===");
-        Console.WriteLine();
+        System.Console.WriteLine("=== Messenger Console Client ===");
+        System.Console.WriteLine();
 
         using var httpClient = new HttpClient();
 
@@ -29,7 +29,7 @@ public class Program
             if (string.IsNullOrEmpty(_token))
             {
                 ShowMainMenu();
-                var choice = Console.ReadLine();
+                var choice = System.Console.ReadLine();
 
                 switch (choice)
                 {
@@ -40,17 +40,17 @@ public class Program
                         await Login(httpClient);
                         break;
                     case "3":
-                        Console.WriteLine("Выход из приложения...");
+                        System.Console.WriteLine("Выход из приложения...");
                         return;
                     default:
-                        Console.WriteLine("Неверный выбор. Попробуйте снова.");
+                        System.Console.WriteLine("Неверный выбор. Попробуйте снова.");
                         break;
                 }
             }
             else
             {
                 ShowLoggedInMenu();
-                var choice = Console.ReadLine();
+                var choice = System.Console.ReadLine();
 
                 switch (choice)
                 {
@@ -76,58 +76,58 @@ public class Program
                         await Logout(httpClient);
                         break;
                     case "8":
-                        Console.WriteLine("Выход из приложения...");
+                        System.Console.WriteLine("Выход из приложения...");
                         return;
                     default:
-                        Console.WriteLine("Неверный выбор. Попробуйте снова.");
+                        System.Console.WriteLine("Неверный выбор. Попробуйте снова.");
                         break;
                 }
             }
 
-            Console.WriteLine();
-            Console.WriteLine("Нажмите Enter для продолжения...");
-            Console.ReadLine();
-            Console.Clear();
+            System.Console.WriteLine();
+            System.Console.WriteLine("Нажмите Enter для продолжения...");
+            System.Console.ReadLine();
+            System.Console.Clear();
         }
     }
 
     private static void ShowMainMenu()
     {
-        Console.WriteLine("Главное меню:");
-        Console.WriteLine("1. Регистрация");
-        Console.WriteLine("2. Вход");
-        Console.WriteLine("3. Выход");
-        Console.Write("Выберите действие: ");
+        System.Console.WriteLine("Главное меню:");
+        System.Console.WriteLine("1. Регистрация");
+        System.Console.WriteLine("2. Вход");
+        System.Console.WriteLine("3. Выход");
+        System.Console.Write("Выберите действие: ");
     }
 
     private static void ShowLoggedInMenu()
     {
-        Console.WriteLine("Меню (авторизован):");
-        Console.WriteLine("1. Проверить статус аккаунта");
-        Console.WriteLine("2. Показать список пользователей");
-        Console.WriteLine("3. Отправить сообщение");
-        Console.WriteLine("4. Получить сообщения");
-        Console.WriteLine("5. Подключиться к WebSocket (real-time)");
-        Console.WriteLine("6. Отключиться от WebSocket");
-        Console.WriteLine("7. Выйти из аккаунта");
-        Console.WriteLine("8. Выход из приложения");
-        Console.Write("Выберите действие: ");
+        System.Console.WriteLine("Меню (авторизован):");
+        System.Console.WriteLine("1. Проверить статус аккаунта");
+        System.Console.WriteLine("2. Показать список пользователей");
+        System.Console.WriteLine("3. Отправить сообщение");
+        System.Console.WriteLine("4. Получить сообщения");
+        System.Console.WriteLine("5. Подключиться к WebSocket (real-time)");
+        System.Console.WriteLine("6. Отключиться от WebSocket");
+        System.Console.WriteLine("7. Выйти из аккаунта");
+        System.Console.WriteLine("8. Выход из приложения");
+        System.Console.Write("Выберите действие: ");
     }
 
     private static async Task Register(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Регистрация ===");
+        System.Console.WriteLine("\n=== Регистрация ===");
 
-        Console.Write("Введите имя пользователя: ");
-        var username = Console.ReadLine();
+        System.Console.Write("Введите имя пользователя: ");
+        var username = System.Console.ReadLine();
 
-        Console.Write("Введите пароль: ");
+        System.Console.Write("Введите пароль: ");
         var password = ReadPassword();
-        Console.WriteLine();
+        System.Console.WriteLine();
 
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            Console.WriteLine("Имя пользователя и пароль не могут быть пустыми.");
+            System.Console.WriteLine("Имя пользователя и пароль не могут быть пустыми.");
             return;
         }
 
@@ -140,37 +140,37 @@ public class Program
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("✓ Регистрация успешна!");
-                Console.WriteLine("Ожидайте одобрения администратора.");
-                Console.WriteLine("После одобрения вы сможете войти в систему.");
+                System.Console.WriteLine("✓ Регистрация успешна!");
+                System.Console.WriteLine("Ожидайте одобрения администратора.");
+                System.Console.WriteLine("После одобрения вы сможете войти в систему.");
             }
             else
             {
                 var error = ParseErrorMessage(content);
-                Console.WriteLine($"✗ Ошибка: {error}");
+                System.Console.WriteLine($"✗ Ошибка: {error}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка подключения: {ex.Message}");
-            Console.WriteLine("Убедитесь, что сервер запущен на http://localhost:748");
+            System.Console.WriteLine($"✗ Ошибка подключения: {ex.Message}");
+            System.Console.WriteLine("Убедитесь, что сервер запущен на http://localhost:748");
         }
     }
 
     private static async Task Login(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Вход ===");
+        System.Console.WriteLine("\n=== Вход ===");
 
-        Console.Write("Введите имя пользователя: ");
-        var username = Console.ReadLine();
+        System.Console.Write("Введите имя пользователя: ");
+        var username = System.Console.ReadLine();
 
-        Console.Write("Введите пароль: ");
+        System.Console.Write("Введите пароль: ");
         var password = ReadPassword();
-        Console.WriteLine();
+        System.Console.WriteLine();
 
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            Console.WriteLine("Имя пользователя и пароль не могут быть пустыми.");
+            System.Console.WriteLine("Имя пользователя и пароль не могут быть пустыми.");
             return;
         }
 
@@ -192,11 +192,11 @@ public class Program
                 var role = user.GetProperty("role").GetString();
                 var status = user.GetProperty("status").GetString();
 
-                Console.WriteLine("✓ Вход успешен!");
-                Console.WriteLine($"Пользователь: {_currentUsername}");
-                Console.WriteLine($"Роль: {role}");
-                Console.WriteLine($"Статус: {status}");
-                Console.WriteLine($"ID: {_currentUserId}");
+                System.Console.WriteLine("✓ Вход успешен!");
+                System.Console.WriteLine($"Пользователь: {_currentUsername}");
+                System.Console.WriteLine($"Роль: {role}");
+                System.Console.WriteLine($"Статус: {status}");
+                System.Console.WriteLine($"ID: {_currentUserId}");
 
                 // Сохраняем токен для последующих запросов
                 httpClient.DefaultRequestHeaders.Authorization = 
@@ -208,25 +208,25 @@ public class Program
             else
             {
                 var error = ParseErrorMessage(content);
-                Console.WriteLine($"✗ Ошибка входа: {error}");
+                System.Console.WriteLine($"✗ Ошибка входа: {error}");
                 
                 if (error.Contains("ожидает") || error.Contains("Pending"))
                 {
-                    Console.WriteLine("Ваш аккаунт ещё не одобрен администратором.");
-                    Console.WriteLine("Админ-панель: http://localhost:228 (admin/admin123)");
+                    System.Console.WriteLine("Ваш аккаунт ещё не одобрен администратором.");
+                    System.Console.WriteLine("Админ-панель: http://localhost:228 (admin/admin123)");
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка подключения: {ex.Message}");
-            Console.WriteLine("Убедитесь, что сервер запущен на http://localhost:748");
+            System.Console.WriteLine($"✗ Ошибка подключения: {ex.Message}");
+            System.Console.WriteLine("Убедитесь, что сервер запущен на http://localhost:748");
         }
     }
 
     private static async Task CheckStatus(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Статус аккаунта ===");
+        System.Console.WriteLine("\n=== Статус аккаунта ===");
         
         try
         {
@@ -240,21 +240,21 @@ public class Program
                 var usernameClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "username");
                 var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "role");
 
-                Console.WriteLine($"ID: {userIdClaim?.Value ?? "N/A"}");
-                Console.WriteLine($"Имя: {usernameClaim?.Value ?? "N/A"}");
-                Console.WriteLine($"Роль: {roleClaim?.Value ?? "N/A"}");
-                Console.WriteLine($"Токен действителен до: {jwtToken.ValidTo.ToLocalTime()}");
+                System.Console.WriteLine($"ID: {userIdClaim?.Value ?? "N/A"}");
+                System.Console.WriteLine($"Имя: {usernameClaim?.Value ?? "N/A"}");
+                System.Console.WriteLine($"Роль: {roleClaim?.Value ?? "N/A"}");
+                System.Console.WriteLine($"Токен действителен до: {jwtToken.ValidTo.ToLocalTime()}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка: {ex.Message}");
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
         }
     }
 
     private static async Task Logout(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Выход ===");
+        System.Console.WriteLine("\n=== Выход ===");
         
         // Отключаемся от WebSocket
         await DisconnectFromWebSocket();
@@ -265,16 +265,16 @@ public class Program
             
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("✓ Вы успешно вышли из системы.");
+                System.Console.WriteLine("✓ Вы успешно вышли из системы.");
             }
             else
             {
-                Console.WriteLine("⚠ Предупреждение при выходе (игнорируется).");
+                System.Console.WriteLine("⚠ Предупреждение при выходе (игнорируется).");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"⚠ Ошибка при выходе: {ex.Message}");
+            System.Console.WriteLine($"⚠ Ошибка при выходе: {ex.Message}");
         }
         finally
         {
@@ -290,21 +290,21 @@ public class Program
         var password = new StringBuilder();
         while (true)
         {
-            var key = Console.ReadKey(intercept: true);
+            var key = System.Console.ReadKey(intercept: true);
             if (key.Key == ConsoleKey.Enter)
             {
-                Console.WriteLine();
+                System.Console.WriteLine();
                 break;
             }
             if (key.Key == ConsoleKey.Backspace && password.Length > 0)
             {
                 password.Remove(password.Length - 1, 1);
-                Console.Write("\b \b");
+                System.Console.Write("\b \b");
             }
             else if (!char.IsControl(key.KeyChar))
             {
                 password.Append(key.KeyChar);
-                Console.Write("*");
+                System.Console.Write("*");
             }
         }
         return password.ToString();
@@ -329,7 +329,7 @@ public class Program
 
     private static async Task ShowUsers(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Список пользователей ===");
+        System.Console.WriteLine("\n=== Список пользователей ===");
         
         try
         {
@@ -340,8 +340,8 @@ public class Program
                 var content = await response.Content.ReadAsStringAsync();
                 var users = JsonDocument.Parse(content).RootElement;
                 
-                Console.WriteLine($"{"ID",-5} {"Логин",-20} {"Статус",-10} {"Роль",-10}");
-                Console.WriteLine(new string('-', 50));
+                System.Console.WriteLine($"{"ID",-5} {"Логин",-20} {"Статус",-10} {"Роль",-10}");
+                System.Console.WriteLine(new string('-', 50));
                 
                 foreach (var user in users.EnumerateArray())
                 {
@@ -350,29 +350,29 @@ public class Program
                     var status = user.GetProperty("status").GetString();
                     var role = user.GetProperty("role").GetString();
                     
-                    Console.WriteLine($"{id,-5} {username,-20} {status,-10} {role,-10}");
+                    System.Console.WriteLine($"{id,-5} {username,-20} {status,-10} {role,-10}");
                 }
             }
             else
             {
-                Console.WriteLine("✗ Ошибка получения списка пользователей.");
+                System.Console.WriteLine("✗ Ошибка получения списка пользователей.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка: {ex.Message}");
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
         }
     }
 
     private static async Task SendMessage(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Отправка сообщения ===");
+        System.Console.WriteLine("\n=== Отправка сообщения ===");
         
         try
         {
             // Запрашиваем ID получателя
-            Console.Write("Введите ID получателя (оставьте пустым для общего чата): ");
-            var recipientIdInput = Console.ReadLine();
+            System.Console.Write("Введите ID получателя (оставьте пустым для общего чата): ");
+            var recipientIdInput = System.Console.ReadLine();
             
             int? recipientId = null;
             string? recipientUsername = null;
@@ -384,8 +384,8 @@ public class Program
             else
             {
                 // Если ID не указан, запрашиваем логин
-                Console.Write("Введите логин получателя (оставьте пустым для общего чата): ");
-                recipientUsername = Console.ReadLine();
+                System.Console.Write("Введите логин получателя (оставьте пустым для общего чата): ");
+                recipientUsername = System.Console.ReadLine();
                 
                 if (!string.IsNullOrEmpty(recipientUsername))
                 {
@@ -402,32 +402,32 @@ public class Program
                             if (username == recipientUsername)
                             {
                                 recipientId = user.GetProperty("id").GetInt32();
-                                Console.WriteLine($"Найден пользователь: {username} (ID: {recipientId})");
+                                System.Console.WriteLine($"Найден пользователь: {username} (ID: {recipientId})");
                                 break;
                             }
                         }
                         
                         if (!recipientId.HasValue)
                         {
-                            Console.WriteLine($"✗ Пользователь с логином '{recipientUsername}' не найден.");
+                            System.Console.WriteLine($"✗ Пользователь с логином '{recipientUsername}' не найден.");
                             return;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("✗ Ошибка получения списка пользователей.");
+                        System.Console.WriteLine("✗ Ошибка получения списка пользователей.");
                         return;
                     }
                 }
             }
             
             // Ввод текста сообщения
-            Console.Write("Введите текст сообщения: ");
-            var content = Console.ReadLine();
+            System.Console.Write("Введите текст сообщения: ");
+            var content = System.Console.ReadLine();
             
             if (string.IsNullOrEmpty(content))
             {
-                Console.WriteLine("✗ Сообщение не может быть пустым.");
+                System.Console.WriteLine("✗ Сообщение не может быть пустым.");
                 return;
             }
             
@@ -447,11 +447,11 @@ public class Program
             {
                 if (recipientId.HasValue)
                 {
-                    Console.WriteLine("✓ Личное сообщение отправлено!");
+                    System.Console.WriteLine("✓ Личное сообщение отправлено!");
                 }
                 else
                 {
-                    Console.WriteLine("✓ Сообщение отправлено в общий чат!");
+                    System.Console.WriteLine("✓ Сообщение отправлено в общий чат!");
                 }
                 
                 // Если подключены к WebSocket и есть получатель, отправляем через SignalR
@@ -464,29 +464,29 @@ public class Program
                             content, 
                             _currentUserId.Value, 
                             _currentUsername ?? "Unknown");
-                        Console.WriteLine("✓ Сообщение также отправлено через WebSocket для мгновенной доставки.");
+                        System.Console.WriteLine("✓ Сообщение также отправлено через WebSocket для мгновенной доставки.");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"⚠ Не удалось отправить через WebSocket: {ex.Message}");
+                        System.Console.WriteLine($"⚠ Не удалось отправить через WebSocket: {ex.Message}");
                     }
                 }
             }
             else
             {
                 var error = ParseErrorMessage(sendContent);
-                Console.WriteLine($"✗ Ошибка отправки: {error}");
+                System.Console.WriteLine($"✗ Ошибка отправки: {error}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка: {ex.Message}");
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
         }
     }
 
     private static async Task GetMessages(HttpClient httpClient)
     {
-        Console.WriteLine("\n=== Сообщения ===");
+        System.Console.WriteLine("\n=== Сообщения ===");
         
         try
         {
@@ -500,7 +500,7 @@ public class Program
                 
                 if (messagesArray.Count == 0)
                 {
-                    Console.WriteLine("Сообщений нет.");
+                    System.Console.WriteLine("Сообщений нет.");
                     return;
                 }
                 
@@ -517,17 +517,17 @@ public class Program
                                      recipientEl.ValueKind != JsonValueKind.Null;
                     
                     string prefix = isPersonal ? "[ЛИЧНОЕ]" : "[ОБЩЕЕ]";
-                    Console.WriteLine($"{prefix} [{createdAt:HH:mm}] {senderName}: {textContent}");
+                    System.Console.WriteLine($"{prefix} [{createdAt:HH:mm}] {senderName}: {textContent}");
                 }
             }
             else
             {
-                Console.WriteLine("✗ Ошибка получения сообщений.");
+                System.Console.WriteLine("✗ Ошибка получения сообщений.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка: {ex.Message}");
+            System.Console.WriteLine($"✗ Ошибка: {ex.Message}");
         }
     }
 
@@ -535,19 +535,19 @@ public class Program
     {
         if (_isConnectedToHub)
         {
-            Console.WriteLine("✓ Уже подключено к WebSocket.");
+            System.Console.WriteLine("✓ Уже подключено к WebSocket.");
             return;
         }
 
         if (_currentUserId == null)
         {
-            Console.WriteLine("✗ Сначала войдите в систему.");
+            System.Console.WriteLine("✗ Сначала войдите в систему.");
             return;
         }
 
         try
         {
-            Console.WriteLine("\n=== Подключение к WebSocket ===");
+            System.Console.WriteLine("\n=== Подключение к WebSocket ===");
             
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl($"{SignalRUrl}?userId={_currentUserId}")
@@ -558,31 +558,31 @@ public class Program
             _hubConnection.On<string, string, string, DateTime>("MessageReceived", 
                 (senderId, senderName, content, receivedAt) =>
             {
-                Console.WriteLine();
-                Console.WriteLine($"[НОВОЕ СООБЩЕНИЕ] [{receivedAt.ToLocalTime():HH:mm}] {senderName}: {content}");
-                Console.WriteLine();
-                Console.Write("Нажмите Enter для обновления списка сообщений...");
+                System.Console.WriteLine();
+                System.Console.WriteLine($"[НОВОЕ СООБЩЕНИЕ] [{receivedAt.ToLocalTime():HH:mm}] {senderName}: {content}");
+                System.Console.WriteLine();
+                System.Console.Write("Нажмите Enter для обновления списка сообщений...");
             });
 
             // Обработчик уведомлений
             _hubConnection.On<string, string>("NotificationReceived", 
                 (type, data) =>
             {
-                Console.WriteLine();
-                Console.WriteLine($"[УВЕДОМЛЕНИЕ] {type}: {data}");
-                Console.WriteLine();
+                System.Console.WriteLine();
+                System.Console.WriteLine($"[УВЕДОМЛЕНИЕ] {type}: {data}");
+                System.Console.WriteLine();
             });
 
             await _hubConnection.StartAsync();
             _isConnectedToHub = true;
             
-            Console.WriteLine("✓ Успешно подключено к WebSocket для real-time сообщений!");
-            Console.WriteLine($"  Пользователь ID: {_currentUserId}");
+            System.Console.WriteLine("✓ Успешно подключено к WebSocket для real-time сообщений!");
+            System.Console.WriteLine($"  Пользователь ID: {_currentUserId}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка подключения к WebSocket: {ex.Message}");
-            Console.WriteLine("  Продолжение работы без real-time уведомлений.");
+            System.Console.WriteLine($"✗ Ошибка подключения к WebSocket: {ex.Message}");
+            System.Console.WriteLine("  Продолжение работы без real-time уведомлений.");
             _isConnectedToHub = false;
         }
     }
@@ -591,7 +591,7 @@ public class Program
     {
         if (!_isConnectedToHub || _hubConnection == null)
         {
-            Console.WriteLine("WebSocket не подключен.");
+            System.Console.WriteLine("WebSocket не подключен.");
             return;
         }
 
@@ -602,11 +602,11 @@ public class Program
             _hubConnection = null;
             _isConnectedToHub = false;
             
-            Console.WriteLine("✓ Отключено от WebSocket.");
+            System.Console.WriteLine("✓ Отключено от WebSocket.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"✗ Ошибка отключения: {ex.Message}");
+            System.Console.WriteLine($"✗ Ошибка отключения: {ex.Message}");
         }
     }
 }
