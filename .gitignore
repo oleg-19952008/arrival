@@ -1,0 +1,72 @@
+```
+# Build results
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.jar
+*.war
+*.class
+
+# Dependencies
+packages/
+node_modules/
+vendor/
+**/node_modules/
+.nuget/
+.npm/
+bower_components/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.userprefs
+*.suo
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+build-stamp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# User-specific configurations
+appsettings.Development.json
+appsettings.Production.json
+*.local.settings.json
+
+# Environment specific settings
+.env
+.env.local
+.env.*
+!.env.example
+
+# Testing
+coverage/
+*.cover
+*.log
+*.tmp
+*.temp
+
+# NuGet
+*.nupkg
+.nuget/
+.NuGet.Caches/
+```
