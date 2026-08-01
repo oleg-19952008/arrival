@@ -1,47 +1,49 @@
 ```
 # Build artifacts
-*.obj
-*.exe
-*.dll
-*.pdb
-*.user
-*.userosscache
-*.suo
-*.cache
-*.nupkg
-*.snupkg
-*.zip
-*.tar.gz
-
-# Output directories
 bin/
 obj/
-out/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.jar
+*.war
+*.class
 
 # Dependencies
 packages/
 node_modules/
+venv/
+.venv/
+__pycache__/
+*.egg-info/
+.Python
 
 # Logs
 *.log
+logs/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vs/
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Test results
-TestResults/
+# Test and coverage
+coverage/
+htmlcov/
+.coverage
+*.cover
+.nyc_output/
 ```

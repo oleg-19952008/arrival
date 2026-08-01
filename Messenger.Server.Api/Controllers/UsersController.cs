@@ -133,4 +133,38 @@ public class UsersController : ControllerBase
         
         return Ok(new { message = "Пользователь удалён" });
     }
+    
+    /// <summary>
+    /// Разблокировать пользователя
+    /// </summary>
+    [HttpPost("{id}/unban")]
+    public async Task<IActionResult> UnbanUser(int id)
+    {
+        var result = await _userService.UnbanUserAsync(id);
+        if (!result.Success)
+            return BadRequest(new { message = result.ErrorMessage });
+        
+        return Ok(new { message = "Пользователь разблокирован" });
+    }
+    
+    /// <summary>
+    /// Сменить пароль пользователя
+    /// </summary>
+    [HttpPost("{id}/password")]
+    public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordRequest request)
+    {
+        if (string.IsNullOrEmpty(request.NewPassword))
+            return BadRequest(new { message = "Пароль не может быть пустым" });
+        
+        var result = await _userService.ChangePasswordAsync(id, request.NewPassword);
+        if (!result.Success)
+            return BadRequest(new { message = result.ErrorMessage });
+        
+        return Ok(new { message = "Пароль изменён" });
+    }
+}
+
+public class ChangePasswordRequest
+{
+    public string NewPassword { get; set; }
 }

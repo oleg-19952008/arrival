@@ -47,6 +47,16 @@ public interface IUserService
     /// Удалить пользователя
     /// </summary>
     Task<OperationResult> DeleteUserAsync(int userId);
+    
+    /// <summary>
+    /// Разблокировать пользователя (Banned → Active)
+    /// </summary>
+    Task<OperationResult> UnbanUserAsync(int userId);
+    
+    /// <summary>
+    /// Сменить пароль пользователя
+    /// </summary>
+    Task<OperationResult> ChangePasswordAsync(int userId, string newPassword);
 }
 
 /// <summary>

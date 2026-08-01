@@ -9,7 +9,7 @@ namespace Messenger.Server.Api.Controllers;
 /// Контроллер управления файлами
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/upload")]
 [Authorize]
 public class FilesController : ControllerBase
 {
@@ -25,7 +25,7 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Загрузить файл
     /// </summary>
-    [HttpPost("upload")]
+    [HttpPost]
     public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] int messageId)
     {
         var userId = GetCurrentUserId();
@@ -71,7 +71,7 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Скачать файл по ID
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("download/{id}")]
     public async Task<IActionResult> DownloadFile(int id)
     {
         var result = await _fileService.DownloadFileAsync(id);
@@ -85,7 +85,7 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Удалить файл
     /// </summary>
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteFile(int id)
     {
         var success = await _fileService.DeleteFileAsync(id);

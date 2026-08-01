@@ -86,4 +86,64 @@ public class UserService : IUserService
         
         return new OperationResult { Success = true };
     }
+    
+    public async Task<OperationResult> UnbanUserAsync(int userId)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пользователь не найден" 
+            };
+        }
+        
+        if (user.Status != UserStatus.Blocked)
+        {
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пользователь не заблокирован" 
+            };
+        }
+        
+        user.Status = UserStatus.Active;
+        await _userRepository.UpdateAsync(user);
+        
+        await _notificationService.SendNotificationAsync(new Notification
+        {
+            Type = NotificationType.UserUnblocked,
+            Data = $"Пользователь {user.Username} был разблокирован",
+            CreatedAt = DateTime.UtcNow
+        });
+        
+        return new OperationResult { Success = true };
+    }
+    
+    public async Task<OperationResult> ChangePasswordAsync(int userId, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пользователь не найден" 
+            };
+        }
+        
+        var passwordHasher = new PasswordHasher();
+        user.PasswordHash = passwordHasher.HashPassword(newPassword);
+        await _userRepository.UpdateAsync(user);
+        
+        await _notificationService.SendNotificationAsync(new Notification
+        {
+            Type = NotificationType.UserUnblocked,
+            Data = $"Пароль пользователя {user.Username} был изменён",
+            CreatedAt = DateTime.UtcNow
+        });
+        
+        return new OperationResult { Success = true };
+    }
 }
