@@ -102,8 +102,8 @@ var app = builder.Build();
 // Инициализация БД
 using (var scope = app.Services.CreateScope())
 {
-    var connectionString = scope.ServiceProvider.GetRequiredService<string>();
-    using var connection = new SqliteConnection(connectionString);
+    var connString = scope.ServiceProvider.GetRequiredService<string>();
+    using var connection = new SqliteConnection(connString);
     connection.Open();
     
     var createUsersTable = @"

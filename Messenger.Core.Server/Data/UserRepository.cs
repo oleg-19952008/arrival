@@ -13,6 +13,11 @@ public class UserRepository : IUserRepository
     
     public UserRepository(string connectionString)
     {
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new ArgumentException("Connection string cannot be null or empty", nameof(connectionString));
+        }
+        
         _connectionString = connectionString;
         InitializeDatabase();
     }
