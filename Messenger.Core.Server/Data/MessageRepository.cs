@@ -29,6 +29,7 @@ public class MessageRepository : IMessageRepository
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 SenderId INTEGER NOT NULL,
                 SenderName TEXT NOT NULL,
+                RecipientId INTEGER,
                 Type INTEGER NOT NULL,
                 Content TEXT NOT NULL,
                 CreatedAt TEXT NOT NULL,
@@ -47,6 +48,27 @@ public class MessageRepository : IMessageRepository
 
         var command = connection.CreateCommand();
         command.CommandText = "SELECT * FROM Messages ORDER BY CreatedAt ASC";
+
+        var messages = new List<Message>();
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            messages.Add(MapToMessage(reader));
+        }
+
+        return messages;
+    }
+
+    public async Task<IEnumerable<Message>> GetByRecipientIdAsync(int recipientId)
+    {
+        EnsureDatabaseInitialized();
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM Messages WHERE RecipientId = @RecipientId OR RecipientId IS NULL ORDER BY CreatedAt ASC";
+        command.Parameters.AddWithValue("@RecipientId", recipientId);
 
         var messages = new List<Message>();
         using var reader = await command.ExecuteReaderAsync();
@@ -87,12 +109,13 @@ public class MessageRepository : IMessageRepository
 
         var command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO Messages (SenderId, SenderName, Type, Content, CreatedAt, IsDeleted)
-            VALUES (@SenderId, @SenderName, @Type, @Content, @CreatedAt, @IsDeleted);
+            INSERT INTO Messages (SenderId, SenderName, RecipientId, Type, Content, CreatedAt, IsDeleted)
+            VALUES (@SenderId, @SenderName, @RecipientId, @Type, @Content, @CreatedAt, @IsDeleted);
             SELECT last_insert_rowid();";
 
         command.Parameters.AddWithValue("@SenderId", message.SenderId);
         command.Parameters.AddWithValue("@SenderName", message.SenderName ?? string.Empty);
+        command.Parameters.AddWithValue("@RecipientId", message.RecipientId ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@Type", (int)message.Type);
         command.Parameters.AddWithValue("@Content", message.Content);
         command.Parameters.AddWithValue("@CreatedAt", message.CreatedAt.ToString("o"));
@@ -132,15 +155,17 @@ public class MessageRepository : IMessageRepository
 
     private Message MapToMessage(SqliteDataReader reader)
     {
+        int offset = reader.IsDBNull(3) ? 0 : 1;
         return new Message
         {
             Id = reader.GetInt32(0),
             SenderId = reader.GetInt32(1),
             SenderName = reader.GetString(2),
-            Type = (MessageType)reader.GetInt32(3),
-            Content = reader.GetString(4),
-            CreatedAt = DateTime.Parse(reader.GetString(5)),
-            IsDeleted = reader.GetInt32(6) == 1
+            RecipientId = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+            Type = (MessageType)reader.GetInt32(3 + offset),
+            Content = reader.GetString(4 + offset),
+            CreatedAt = DateTime.Parse(reader.GetString(5 + offset)),
+            IsDeleted = reader.GetInt32(6 + offset) == 1
         };
     }
 }

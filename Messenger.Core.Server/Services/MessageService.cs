@@ -21,7 +21,7 @@ public class MessageService : IMessageService
         _notificationService = notificationService;
     }
     
-    public async Task<Message> SendMessageAsync(int senderId, MessageType type, string content)
+    public async Task<Message> SendMessageAsync(int senderId, MessageType type, string content, int? recipientId = null)
     {
         var sender = await _userRepository.GetByIdAsync(senderId);
         if (sender == null)
@@ -34,10 +34,21 @@ public class MessageService : IMessageService
             throw new InvalidOperationException("Пользователь не активен");
         }
         
+        // Если указан получатель, проверяем его существование
+        if (recipientId.HasValue)
+        {
+            var recipient = await _userRepository.GetByIdAsync(recipientId.Value);
+            if (recipient == null)
+            {
+                throw new InvalidOperationException("Получатель не найден");
+            }
+        }
+        
         var message = new Message
         {
             SenderId = senderId,
             SenderName = sender.Username,
+            RecipientId = recipientId,
             Type = type,
             Content = content,
             CreatedAt = DateTime.UtcNow,
@@ -47,12 +58,26 @@ public class MessageService : IMessageService
         var savedMessage = await _messageRepository.AddAsync(message);
         
         // Уведомление о новом сообщении
-        await _notificationService.SendNotificationAsync(new Notification
+        if (recipientId.HasValue)
         {
-            Type = NotificationType.NewMessage,
-            Data = $"Новое сообщение от {sender.Username}",
-            CreatedAt = DateTime.UtcNow
-        });
+            // Личное сообщение - уведомляем только получателя
+            await _notificationService.SendNotificationToUserAsync(recipientId.Value, new Notification
+            {
+                Type = NotificationType.NewMessage,
+                Data = $"Новое личное сообщение от {sender.Username}",
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            // Общее сообщение - уведомляем всех
+            await _notificationService.SendNotificationAsync(new Notification
+            {
+                Type = NotificationType.NewMessage,
+                Data = $"Новое сообщение от {sender.Username}",
+                CreatedAt = DateTime.UtcNow
+            });
+        }
         
         return savedMessage;
     }
@@ -60,6 +85,12 @@ public class MessageService : IMessageService
     public async Task<IEnumerable<Message>> GetAllMessagesAsync()
     {
         var messages = await _messageRepository.GetAllAsync();
+        return messages.Where(m => !m.IsDeleted);
+    }
+    
+    public async Task<IEnumerable<Message>> GetMessagesForUserAsync(int userId)
+    {
+        var messages = await _messageRepository.GetByRecipientIdAsync(userId);
         return messages.Where(m => !m.IsDeleted);
     }
     

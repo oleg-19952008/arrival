@@ -57,12 +57,17 @@ public interface IMessageService
     /// <summary>
     /// Отправить сообщение
     /// </summary>
-    Task<Message> SendMessageAsync(int senderId, MessageType type, string content);
+    Task<Message> SendMessageAsync(int senderId, MessageType type, string content, int? recipientId = null);
     
     /// <summary>
     /// Получить все сообщения
     /// </summary>
     Task<IEnumerable<Message>> GetAllMessagesAsync();
+    
+    /// <summary>
+    /// Получить сообщения для пользователя (личные + общие)
+    /// </summary>
+    Task<IEnumerable<Message>> GetMessagesForUserAsync(int userId);
     
     /// <summary>
     /// Удалить сообщение

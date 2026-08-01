@@ -49,6 +49,11 @@ public interface IMessageRepository
     Task<IEnumerable<Message>> GetAllAsync();
     
     /// <summary>
+    /// Получить сообщения для получателя (личные + общие)
+    /// </summary>
+    Task<IEnumerable<Message>> GetByRecipientIdAsync(int recipientId);
+    
+    /// <summary>
     /// Получить сообщение по ID
     /// </summary>
     Task<Message?> GetByIdAsync(int id);

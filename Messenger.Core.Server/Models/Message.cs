@@ -21,6 +21,11 @@ public class Message
     public string? SenderName { get; set; }
     
     /// <summary>
+    /// Идентификатор получателя (null для общего чата)
+    /// </summary>
+    public int? RecipientId { get; set; }
+    
+    /// <summary>
     /// Тип сообщения
     /// </summary>
     public MessageType Type { get; set; }

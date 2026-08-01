@@ -32,6 +32,31 @@ public class MessagesController : ControllerBase
             id = m.Id,
             senderId = m.SenderId,
             senderName = m.SenderName,
+            recipientId = m.RecipientId,
+            type = m.Type.ToString(),
+            content = m.Content,
+            createdAt = m.CreatedAt,
+            isDeleted = m.IsDeleted
+        }));
+    }
+
+    /// <summary>
+    /// Получить сообщения для текущего пользователя (личные + общие)
+    /// </summary>
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyMessages()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null)
+            return Unauthorized();
+        
+        var messages = await _messageService.GetMessagesForUserAsync(userId.Value);
+        return Ok(messages.Select(m => new 
+        {
+            id = m.Id,
+            senderId = m.SenderId,
+            senderName = m.SenderName,
+            recipientId = m.RecipientId,
             type = m.Type.ToString(),
             content = m.Content,
             createdAt = m.CreatedAt,
@@ -50,13 +75,14 @@ public class MessagesController : ControllerBase
             return Unauthorized();
         
         var messageType = request.Type.ToLower() == "file" ? MessageType.File : MessageType.Text;
-        var message = await _messageService.SendMessageAsync(userId.Value, messageType, request.Content);
+        var message = await _messageService.SendMessageAsync(userId.Value, messageType, request.Content, request.RecipientId);
         
         return Ok(new 
         {
             id = message.Id,
             senderId = message.SenderId,
             senderName = message.SenderName,
+            recipientId = message.RecipientId,
             type = message.Type.ToString(),
             content = message.Content,
             createdAt = message.CreatedAt
@@ -89,4 +115,5 @@ public class SendMessageRequest
 {
     public string Content { get; set; } = string.Empty;
     public string Type { get; set; } = "text"; // text или file
+    public int? RecipientId { get; set; } // ID получателя (null для общего чата)
 }

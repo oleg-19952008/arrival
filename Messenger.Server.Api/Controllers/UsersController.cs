@@ -60,6 +60,27 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
+    /// Получить пользователя по имени (доступно всем авторизованным)
+    /// </summary>
+    [HttpGet("by-username/{username}")]
+    [Authorize]
+    public async Task<IActionResult> GetByUsername(string username)
+    {
+        var userRepository = HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+        var user = await userRepository.GetByUsernameAsync(username);
+        if (user == null)
+            return NotFound();
+
+        return Ok(new
+        {
+            id = user.Id,
+            username = user.Username,
+            role = user.Role.ToString(),
+            status = user.Status.ToString()
+        });
+    }
+
+    /// <summary>
     /// Одобрить пользователя (изменить статус на Active)
     /// </summary>
     [HttpPost("{id}/approve")]

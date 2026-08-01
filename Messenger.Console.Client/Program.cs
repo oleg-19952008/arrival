@@ -11,6 +11,7 @@ public class Program
 {
     private static readonly string BaseUrl = "http://localhost:748/api";
     private static string? _token;
+    private static int? _currentUserId;
 
     public static async Task Main(string[] args)
     {
@@ -53,9 +54,18 @@ public class Program
                         await CheckStatus(httpClient);
                         break;
                     case "2":
-                        await Logout(httpClient);
+                        await ShowUsers(httpClient);
                         break;
                     case "3":
+                        await SendMessage(httpClient);
+                        break;
+                    case "4":
+                        await GetMessages(httpClient);
+                        break;
+                    case "5":
+                        await Logout(httpClient);
+                        break;
+                    case "6":
                         System.Console.WriteLine("Выход из приложения...");
                         return;
                     default:
@@ -84,8 +94,11 @@ public class Program
     {
         System.Console.WriteLine("Меню (авторизован):");
         System.Console.WriteLine("1. Проверить статус аккаунта");
-        System.Console.WriteLine("2. Выйти из аккаунта");
-        System.Console.WriteLine("3. Выход из приложения");
+        System.Console.WriteLine("2. Показать список пользователей");
+        System.Console.WriteLine("3. Отправить сообщение");
+        System.Console.WriteLine("4. Получить сообщения");
+        System.Console.WriteLine("5. Выйти из аккаунта");
+        System.Console.WriteLine("6. Выход из приложения");
         System.Console.Write("Выберите действие: ");
     }
 
