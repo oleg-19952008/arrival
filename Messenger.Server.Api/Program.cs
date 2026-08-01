@@ -21,22 +21,10 @@ var connectionString = $"Data Source={dbPath}";
 Console.WriteLine($"Connection string: {connectionString}");
 Console.WriteLine($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
 
-// Регистрация репозиториев с передачей строки подключения через фабрику
-builder.Services.AddScoped<IUserRepository>(sp => 
-{
-    var conn = new SqliteConnection(connectionString);
-    return new UserRepository(conn);
-});
-builder.Services.AddScoped<IMessageRepository>(sp => 
-{
-    var conn = new SqliteConnection(connectionString);
-    return new MessageRepository(conn);
-});
-builder.Services.AddScoped<IFileAttachmentRepository>(sp => 
-{
-    var conn = new SqliteConnection(connectionString);
-    return new FileAttachmentRepository(conn);
-});
+// Регистрация репозиториев с передачей строки подключения
+builder.Services.AddScoped<IUserRepository>(sp => new UserRepository(connectionString));
+builder.Services.AddScoped<IMessageRepository>(sp => new MessageRepository(connectionString));
+builder.Services.AddScoped<IFileAttachmentRepository>(sp => new FileAttachmentRepository(connectionString));
 
 // Регистрация сервисов
 builder.Services.AddScoped<IAuthService, AuthService>();

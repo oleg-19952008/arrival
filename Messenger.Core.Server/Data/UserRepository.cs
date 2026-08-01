@@ -1,15 +1,15 @@
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions;
-using Microsoft.Extensions.DependencyInjection; // <--- Добавить это
 using Messenger.Core.Models;
 namespace Messenger.Core.Data;
 using Messenger.Core.Interfaces;
+
 /// <summary>
 /// Репозиторий пользователей для работы с SQLite
 /// </summary>
 public class UserRepository : IUserRepository
 {
     private readonly string _connectionString;
+    private bool _initialized = false;
     
     public UserRepository(string connectionString)
     {
@@ -19,11 +19,12 @@ public class UserRepository : IUserRepository
         }
         
         _connectionString = connectionString;
-        InitializeDatabase();
     }
     
-    private void InitializeDatabase()
+    private void EnsureDatabaseInitialized()
     {
+        if (_initialized) return;
+        
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
         
@@ -40,10 +41,12 @@ public class UserRepository : IUserRepository
             )";
         
         command.ExecuteNonQuery();
+        _initialized = true;
     }
     
     public async Task<IEnumerable<User>> GetAllAsync()
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -63,6 +66,7 @@ public class UserRepository : IUserRepository
     
     public async Task<User?> GetByIdAsync(int id)
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -82,6 +86,7 @@ public class UserRepository : IUserRepository
     
     public async Task<User?> GetByUsernameAsync(string username)
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -101,6 +106,7 @@ public class UserRepository : IUserRepository
     
     public async Task<User> AddAsync(User user)
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -125,6 +131,7 @@ public class UserRepository : IUserRepository
     
     public async Task<User> UpdateAsync(User user)
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -152,6 +159,7 @@ public class UserRepository : IUserRepository
     
     public async Task DeleteAsync(int id)
     {
+        EnsureDatabaseInitialized();
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         

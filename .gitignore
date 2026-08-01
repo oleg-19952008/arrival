@@ -1,52 +1,35 @@
 ```
 # Build artifacts
-*.obj
-*.exe
+bin/
+obj/
 *.dll
-*.so
-*.a
-*.lib
+*.exe
 *.pdb
-*.ilk
-*.exp
-*.manifest
-*.res
+*.so
+*.dylib
+*.jar
+*.war
+*.class
 
 # Dependencies
 packages/
-bin/
-obj/
-Debug/
-Release/
-x64/
-x86/
-*.user
-*.userosscache
-*.sln.docstates
-
-# Logs
-*.log
-
-# Environment
+node_modules/
+venv/
+.venv/
 .env
 .env.local
 *.env.*
 
-# Editors
-.vs/
-.vscode/
-*.swp
-*.swo
-*~
+# Logs
+*.log
 
 # OS generated files
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Testing
-TestResults/
-
-# NuGet packages
-*.nupkg
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
 ```
