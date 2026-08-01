@@ -19,26 +19,6 @@ public class NotificationService : INotificationService
         _hubContext = hubContext;
     }
     
-    public async Task SendNotificationAsync(Notification notification)
-    {
-        // Отправка уведомления всем подключенным клиентам
-        await _hubContext.Clients.All.SendAsync("NotificationReceived", 
-            notification.Type.ToString(), 
-            notification.Data);
-        
-        ConsoleLogger.Info($"[Notification] {notification.Type}: {notification.Data}");
-    }
-    
-    public async Task SendNotificationToUserAsync(int userId, Notification notification)
-    {
-        // Отправка уведомления конкретному пользователю
-        await _hubContext.Clients.Group($"user_{userId}").SendAsync("NotificationReceived",
-            notification.Type.ToString(),
-            notification.Data);
-        
-        ConsoleLogger.Info($"[Notification to User {userId}] {notification.Type}: {notification.Data}");
-    }
-    
     /// <summary>
     /// Отправить сообщение конкретному пользователю через WebSocket
     /// </summary>
@@ -59,5 +39,31 @@ public class NotificationService : INotificationService
         await _hubContext.Clients.Group($"user_{recipientId}").SendAsync("message", messageData);
         
         ConsoleLogger.Info($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
+    }
+    
+    /// <summary>
+    /// Отправить уведомление всем подключенным клиентам (broadcast)
+    /// </summary>
+    public async Task SendNotificationAsync(Notification notification)
+    {
+        // Отправка уведомления всем подключенным клиентам
+        await _hubContext.Clients.All.SendAsync("NotificationReceived", 
+            notification.Type.ToString(), 
+            notification.Data);
+        
+        ConsoleLogger.Info($"[Notification] {notification.Type}: {notification.Data}");
+    }
+    
+    /// <summary>
+    /// Отправить уведомление конкретному пользователю
+    /// </summary>
+    public async Task SendNotificationToUserAsync(int userId, Notification notification)
+    {
+        // Отправка уведомления конкретному пользователю
+        await _hubContext.Clients.Group($"user_{userId}").SendAsync("NotificationReceived",
+            notification.Type.ToString(),
+            notification.Data);
+        
+        ConsoleLogger.Info($"[Notification to User {userId}] {notification.Type}: {notification.Data}");
     }
 }

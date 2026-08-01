@@ -23,7 +23,7 @@ public class FilesController : ControllerBase
     }
 
     /// <summary>
-    /// Загрузить файл
+    /// Загрузить файл с валидацией размера и типа
     /// </summary>
     [HttpPost]
     public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] int? messageId = null)
@@ -34,6 +34,25 @@ public class FilesController : ControllerBase
 
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "Файл не предоставлен" });
+
+        // Валидация размера файла (10 MB)
+        const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
+        if (file.Length > MaxFileSize)
+            return StatusCode(413, new { message = $"Размер файла превышает лимит {MaxFileSize / 1024 / 1024} MB" });
+
+        // Валидация типа файла
+        var allowedContentTypes = new[]
+        {
+            "image/jpeg", "image/png", "image/gif", "image/webp",
+            "application/pdf",
+            "text/plain",
+            "application/zip",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        };
+        
+        if (!allowedContentTypes.Contains(file.ContentType))
+            return BadRequest(new { message = $"Неподдерживаемый тип файла: {file.ContentType}" });
 
         int msgId;
         

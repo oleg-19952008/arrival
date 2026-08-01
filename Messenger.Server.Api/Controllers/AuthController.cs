@@ -72,7 +72,7 @@ public class AuthController : ControllerBase
 
     private int? GetCurrentUserId()
     {
-        var claim = User.FindFirst("userId");
+        var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
         if (claim != null && int.TryParse(claim.Value, out var userId))
             return userId;
         return null;

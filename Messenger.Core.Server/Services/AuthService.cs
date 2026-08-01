@@ -37,7 +37,17 @@ public class AuthService : IAuthService
             };
         }
         
-        // Хеширование пароля
+        // Хеширование пароля с валидацией сложности
+        if (password.Length < 6)
+        {
+            ConsoleLogger.Warn($"Registration failed: password too short for user '{username}'");
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пароль должен быть не менее 6 символов" 
+            };
+        }
+        
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
         
         // Создание нового пользователя

@@ -41,7 +41,7 @@ public class MessagesController : ControllerBase
             content = m.Content,
             createdAt = m.CreatedAt,
             isDeleted = m.IsDeleted
-        }));
+        }).OrderBy(m => m.createdAt)); // Сортировка по времени (новые в конце)
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class MessagesController : ControllerBase
             content = m.Content,
             createdAt = m.CreatedAt,
             isDeleted = m.IsDeleted
-        }));
+        }).OrderBy(m => m.createdAt)); // Сортировка по времени (новые в конце)
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class MessagesController : ControllerBase
 
     private int? GetCurrentUserId()
     {
-        var claim = User.FindFirst("userId");
+        var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
         if (claim != null && int.TryParse(claim.Value, out var userId))
             return userId;
         return null;

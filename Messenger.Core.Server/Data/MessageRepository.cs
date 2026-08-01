@@ -155,17 +155,17 @@ public class MessageRepository : IMessageRepository
 
     private Message MapToMessage(SqliteDataReader reader)
     {
-        int offset = reader.IsDBNull(3) ? 0 : 1;
+        // Индексы колонок: 0=Id, 1=SenderId, 2=SenderName, 3=RecipientId, 4=Type, 5=Content, 6=CreatedAt, 7=IsDeleted
         return new Message
         {
             Id = reader.GetInt32(0),
             SenderId = reader.GetInt32(1),
             SenderName = reader.GetString(2),
             RecipientId = reader.IsDBNull(3) ? null : reader.GetInt32(3),
-            Type = (MessageType)reader.GetInt32(3 + offset),
-            Content = reader.GetString(4 + offset),
-            CreatedAt = DateTime.Parse(reader.GetString(5 + offset)),
-            IsDeleted = reader.GetInt32(6 + offset) == 1
+            Type = (MessageType)reader.GetInt32(4),
+            Content = reader.GetString(5),
+            CreatedAt = DateTime.Parse(reader.GetString(6)),
+            IsDeleted = reader.GetInt32(7) == 1
         };
     }
 }

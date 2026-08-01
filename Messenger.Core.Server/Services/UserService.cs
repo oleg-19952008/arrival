@@ -146,6 +146,17 @@ public class UserService : IUserService
             };
         }
         
+        // Валидация сложности пароля
+        if (newPassword.Length < 6)
+        {
+            ConsoleLogger.Warn($"ChangePassword failed: password too short for user '{user.Username}'");
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пароль должен быть не менее 6 символов" 
+            };
+        }
+        
         var passwordHasher = new PasswordHasher();
         user.PasswordHash = passwordHasher.HashPassword(newPassword);
         await _userRepository.UpdateAsync(user);
