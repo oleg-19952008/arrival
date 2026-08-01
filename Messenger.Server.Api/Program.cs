@@ -14,9 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Настройка SQLite с абсолютным путем
 var dbPath = Path.Combine(AppContext.BaseDirectory, "messenger.db");
-// Используем простой формат строки подключения без интерполяции для избежания проблем с кодировкой
-var connectionString = "Data Source=" + dbPath;
 Console.WriteLine($"Database path: {dbPath}");
+
+// Используем SqliteConnectionStringBuilder для корректного формирования строки подключения
+var connectionStringBuilder = new SqliteConnectionStringBuilder
+{
+    DataSource = dbPath
+};
+string connectionString = connectionStringBuilder.ToString();
 Console.WriteLine($"Connection string: {connectionString}");
 Console.WriteLine($"Connection string bytes: {string.Join(",", System.Text.Encoding.UTF8.GetBytes(connectionString))}");
 builder.Services.AddSingleton(connectionString);
