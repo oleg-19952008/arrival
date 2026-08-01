@@ -5,30 +5,46 @@ obj/
 *.dll
 *.exe
 *.pdb
-*.config
+*.userprefs
+*.cache
+*.compiled
 *.nupkg
-packages/
+*.snupkg
 
 # Dependencies
 packages/
 node_modules/
-vendor/
+bower_components/
 
 # Logs
 *.log
+*.bak
+*.tmp
 
-# Environment
-.env
-.env.local
-*.env.*
+# Environment specific
+.vs/
+.vshost.exe
+.user
+.userosscache
+.usersuspended
+.localhistory
 
-# Editors
+# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# OS
+# OS generated
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Testing
+TestResults/
+coverage/
 ```
