@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Messenger.Core.Interfaces;
 using Messenger.Core.Models;
 

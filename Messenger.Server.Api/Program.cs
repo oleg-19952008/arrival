@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Messenger.Server.Api.Hubs;
 using Messenger.Server.Api.Middleware;
+using Messenger.Core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 

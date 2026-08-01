@@ -1,55 +1,51 @@
-```csharp
-# Build artifacts and binaries
-bin/
-obj/
-*.dll
+```
+# Build artifacts
 *.exe
+*.dll
 *.pdb
 *.so
-*.a
+*.dylib
+*.class
 *.o
 *.obj
 *.out
+*.a
 
 # Dependencies
-packages/
 node_modules/
-.nuget/
-.nyc_output/
-coverage/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
 
-# IDE specific
-.vs/
-.vscode/
-.idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# OS generated files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
-
-# Logs
+# Logs and temp files
 *.log
-**/logs/
+*.tmp
+*.swp
+*.swo
 
-# Environment variables
+# Environment
 .env
 .env.local
-.env.*
-!env.example
+*.env.*
 
-# Temporary files
-*.tmp
-*.temp
-*~
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Distribution
+dist/
+build/
+
+# System files
+.DS_Store
+Thumbs.db
 ```
-
-Wait, let me reconsider this. The modified files are just C# source files (.cs), which shouldn't require adding general ignore patterns unless there are build artifacts in the change list. Since only source files were modified, I should not add default ignore patterns.
-
-(empty)
