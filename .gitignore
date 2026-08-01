@@ -1,32 +1,83 @@
-```
-# Build outputs
-wwwroot/
+```gitignore
+# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.so
+*.dylib
+*.jar
+*.war
+*.class
 
 # Dependencies
-node_modules/
 packages/
-
-# Logs
-*.log
-
-# Environment
+node_modules/
+venv/
+.venv/
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
+# Logs
+*.log
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Compiled files
-*.dll
-*.exe
-*.pdb
-*.config
-bin/
-obj/
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Testing
+coverage/
+htmlcov/
+.coverage
+
+# Distribution / packaging
+dist/
+build/
+*.tar.gz
+*.whl
+*.egg
+*.egg-info/
+
+# Compiled Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# MyPy
+.mypy_cache/
+.pytest_cache/
+
+# Java
+target/
+.gradle/
+
+# Dotnet
+**/bin/
+**/obj/
+**/out/
+**/Debug/
+**/Release/
+**/*.userprefs
+**/*.userosscache
+**/*.sln.docstates
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Configuration specific to deployment or local environment
+appsettings.Development.json
+appsettings.Production.json
 ```

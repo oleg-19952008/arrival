@@ -85,3 +85,29 @@ public interface INotificationService
     /// </summary>
     Task SendNotificationToUserAsync(int userId, Notification notification);
 }
+
+/// <summary>
+/// Сервис файлов
+/// </summary>
+public interface IFileService
+{
+    /// <summary>
+    /// Загрузить файл
+    /// </summary>
+    Task<FileAttachment?> UploadFileAsync(Stream fileStream, string fileName, string contentType, int messageId);
+    
+    /// <summary>
+    /// Получить файл по ID
+    /// </summary>
+    Task<FileAttachment?> GetFileAsync(int fileId);
+    
+    /// <summary>
+    /// Скачать файл
+    /// </summary>
+    Task<(Stream FileStream, string ContentType, string FileName)?> DownloadFileAsync(int fileId);
+    
+    /// <summary>
+    /// Удалить файл
+    /// </summary>
+    Task<bool> DeleteFileAsync(int fileId);
+}

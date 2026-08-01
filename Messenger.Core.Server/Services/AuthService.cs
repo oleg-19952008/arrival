@@ -10,18 +10,15 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private readonly INotificationService _notificationService;
     private readonly string _jwtSecret;
-    private readonly int _jwtExpirationHours;
     
     public AuthService(
         IUserRepository userRepository,
         INotificationService notificationService,
-        string jwtSecret = "DefaultSecretKeyForMessengerCore2024!",
-        int jwtExpirationHours = 24)
+        string jwtSecret = "YourSuperSecretKeyForMessengerCoreServer2024!")
     {
         _userRepository = userRepository;
         _notificationService = notificationService;
         _jwtSecret = jwtSecret;
-        _jwtExpirationHours = jwtExpirationHours;
     }
     
     public async Task<OperationResult> RegisterAsync(string username, string password)
@@ -153,7 +150,7 @@ public class AuthService : IAuthService
         var tokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
         {
             Subject = new System.Security.Claims.ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(_jwtExpirationHours),
+            Expires = DateTime.UtcNow.AddDays(7), // 7 дней как в ТЗ
             SigningCredentials = credentials
         };
         

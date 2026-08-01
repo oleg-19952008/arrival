@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Messenger.Server.Api.Hubs;
+using Messenger.Server.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +18,14 @@ builder.Services.AddSingleton(new SqliteConnection(connectionString));
 // Регистрация репозиториев
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IFileAttachmentRepository, FileAttachmentRepository>();
 
 // Регистрация сервисов
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 // JWT настройка
 var jwtKey = "YourSuperSecretKeyForMessengerCoreServer2024!";
@@ -146,4 +149,21 @@ if (app.Environment.IsDevelopment())
 app.Urls.Add("http://*:123");
 
 Console.WriteLine("Server API started on port 123");
+
+// Создание папки для загрузок
+var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadFolder))
+{
+    Directory.CreateDirectory(uploadFolder);
+    Console.WriteLine($"Upload folder created: {uploadFolder}");
+}
+
+// Middleware для проверки localhost на админских эндпоинтах
+app.UseWhen(
+    context => context.Request.Path.StartsWithSegments("/api/users"),
+    appBuilder =>
+    {
+        appBuilder.UseMiddleware<AdminAuthMiddleware>();
+    });
+
 app.Run();

@@ -68,3 +68,34 @@ public interface IMessageRepository
     /// </summary>
     Task MarkAsDeletedAsync(int id);
 }
+
+/// <summary>
+/// Репозиторий файловых вложений
+/// </summary>
+public interface IFileAttachmentRepository
+{
+    /// <summary>
+    /// Получить все вложения
+    /// </summary>
+    Task<IEnumerable<FileAttachment>> GetAllAsync();
+    
+    /// <summary>
+    /// Получить вложение по ID
+    /// </summary>
+    Task<FileAttachment?> GetByIdAsync(int id);
+    
+    /// <summary>
+    /// Получить вложения по сообщению
+    /// </summary>
+    Task<IEnumerable<FileAttachment>> GetByMessageIdAsync(int messageId);
+    
+    /// <summary>
+    /// Добавить вложение
+    /// </summary>
+    Task<FileAttachment> AddAsync(FileAttachment attachment);
+    
+    /// <summary>
+    /// Удалить вложение
+    /// </summary>
+    Task DeleteAsync(int id);
+}
