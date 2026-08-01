@@ -14,7 +14,7 @@ public class AuthService : IAuthService
     public AuthService(
         IUserRepository userRepository,
         INotificationService notificationService,
-        string jwtSecret = "YourSuperSecretKeyForMessengerCoreServer2024!")
+        string jwtSecret = "YourSuperSecretKeyForMessengerCoreServer2024WithLongEnoughSize!")
     {
         _userRepository = userRepository;
         _notificationService = notificationService;
