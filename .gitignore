@@ -1,43 +1,25 @@
 ```
 # Build artifacts
-obj/
-bin/
-*.dll
-*.exe
-*.pdb
-*.config
-*.manifest
-*.nupkg
+*.csproj.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Dependency directories
 packages/
+bin/
+obj/
 
 # Logs
 *.log
 
-# Environment specific
-.env
-.env.local
-.vscode/
-.idea/
+# Environment specific files
+.vs/
+.vshost.exe
+.vshost.exe.config
+.user
 
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# User-specific files
-*.user
-*.userosscache
-*.suo
-*.userprefs
-
-# Build results
-Debug/
-Release/
-x64/
-x86/
-build/
-dist/
-
-# Dependencies
-node_modules/
-packages/
 ```

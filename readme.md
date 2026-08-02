@@ -1,15 +1,14 @@
 markdown
 
-# Техническое Задание: Messenger.Core.Server
+# Техническое Задание: Messenger.Server.Api
 
 ## 1. Общее описание
 
-**Messenger.Core.Server** — ядро сервера для текстового мессенджера, предназначенное для работы в локальной сети с 3-4 пользователями. Консольное приложение Windows, которое поднимает веб-сервер и управляет пользователями, сообщениями и файлами.
+**Messenger.Server.Api** — сервер для текстового мессенджера, предназначенный для работы в локальной сети с 3-4 пользователями. ASP.NET Core Web API приложение (.NET 8.0), которое управляет пользователями, сообщениями и файлами, предоставляет REST API и WebSocket для real-time сообщений.
 
 ### Архитектура
 
-- Консольное приложение (.NET 8.0, Windows)
-- Поднимает ASP.NET Core Kestrel на двух портах одновременно
+- ASP.NET Core Web API (.NET 8.0)
 - REST API для клиентов (порт 748)
 - REST API для администратора (порт 228, только localhost)
 - WebSocket для real-time сообщений
@@ -17,10 +16,10 @@ markdown
 
 ### Запуск
 
-Messenger.Core.Server.exe
+dotnet run --project Messenger.Server.Api
+
 → [INFO] Server started on port 748
-→ [INFO] Admin panel on port 228
-→ (консоль остаётся открытой, выводит логи)
+→ [INFO] Admin API available on port 228 (localhost only)
 → Остановка: Ctrl+C
 
 
@@ -649,7 +648,7 @@ Task DisconnectAsync(int userId)
 
 ---
 
-## 7. Консольное приложение
+## 7. Web API приложение
 
 ### Program.cs (точка входа)
 
@@ -661,15 +660,14 @@ Task DisconnectAsync(int userId)
 - Регистрация контроллеров
 - Регистрация WebSocket обработчика
 - Запуск приложения
-- Блокирование главного потока (WaitHandle или Console.ReadLine)
 
-### Консольный вывод (примеры)
+### Логирование (примеры)
 
 [INFO] Initializing database...
 [INFO] Database initialized successfully
 [INFO] Registering services...
 [INFO] Server started on port 748
-[INFO] Admin panel on port 228
+[INFO] Admin API available on port 228 (localhost only)
 [INFO] Waiting for connections...
 [INFO] User registered: user1
 [WARN] Failed login attempt: user2 (invalid password)
@@ -701,8 +699,8 @@ Task DisconnectAsync(int userId)
 | Компонент | Версия |
 |-----------|--------|
 | .NET | 8.0 |
-| ОС | Windows |
-| Тип приложения | Консольное (Console Application) |
+| ОС | Windows / Linux / macOS |
+| Тип приложения | ASP.NET Core Web API |
 | Framework | ASP.NET Core (Kestrel) |
 | БД | SQLite |
 | ORM | Entity Framework Core |
@@ -715,9 +713,9 @@ Task DisconnectAsync(int userId)
 
 ## 10. Структура проекта
 
-Messenger.Core.Server/
+Messenger.Server.Api/
 ├── Program.cs ← точка входа, конфигурация Kestrel
-├── Messenger.Core.Server.csproj ← файл проекта
+├── Messenger.Server.Api.csproj ← файл проекта
 │
 ├── Data/
 │ ├── MessengerDbContext.cs ← DbContext
@@ -750,7 +748,7 @@ Messenger.Core.Server/
 ├── Utils/
 │ ├── JwtTokenGenerator.cs
 │ ├── PasswordHasher.cs
-│ └── Logger.cs ← логирование в консоль
+│ └── Logger.cs ← логирование
 │
 ├── uploads/ ← папка для загруженных файлов (создаётся автоматически)
 └── messenger.db ← SQLite БД (создаётся автоматически)
@@ -760,13 +758,13 @@ Messenger.Core.Server/
 
 ## 11. Критерии приёма
 
-- ✅ Консольное приложение запускается, поднимает два сервера на портах 748 и 228
+- ✅ Web API приложение запускается, поднимает два сервера на портах 748 и 228
 - ✅ Логирование всех операций в консоль в реальном времени
 - ✅ Регистрация создаёт пользователя в статусе PendingApproval
 - ✅ Логин работает только если статус Active, возвращает JWT token
 - ✅ Сообщения сохраняются в БД и broadcastятся по WebSocket всем подключённым
 - ✅ Файлы загружаются на диск в папку uploads/, скачиваются по fileId
-- ✅ Админ-панель (порт 228) доступна только с localhost (127.0.0.1)
+- ✅ Админ API (порт 228) доступен только с localhost (127.0.0.1)
 - ✅ Админ может одобрять, банить, разбанивать, удалять пользователей и менять пароли
 - ✅ БД создаётся автоматически при первом запуске (messenger.db)
 - ✅ Graceful shutdown на Ctrl+C (закрытие соединений, сохранение данных)
