@@ -1,56 +1,32 @@
-```csharp
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Dd]epends/
-intermediate/
+```
+# Build artifacts
 bin/
 obj/
-
-# User-specific files
-*.user
-*.userosscache
-*.suo
+*.exe
+*.dll
+*.pdb
 *.userprefs
-*.sln.docstates
-*.userfileldump
 
-# Visual Studio Code
-.vscode/
+# Dependencies
+packages/
+node_modules/
 
-# Visual Studio cache/options
-.vs/
-*.VC.db
-*.VC.VC.opendb
+# Logs
+*.log
 
-# Windows thumbnail cache
-Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
-
-# Environment specific settings
+# Environment
 .env
 .env.local
 *.env.*
 
-# Log files
-*.log
-
-# Temporary files
-*.tmp
-*.temp
+# Editors
+.vs/
+.vshost.exe
+.user
+.vscode/
+.idea/
 
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 ```

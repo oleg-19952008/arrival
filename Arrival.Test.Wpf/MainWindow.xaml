@@ -4,6 +4,19 @@
         Title="Messenger WPF Client" Height="600" Width="800"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <!-- Цвета темной темы (ресурсы для DynamicResource) -->
+        <SolidColorBrush x:Key="WindowBackground" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="PanelBackground" Color="#252526"/>
+        <SolidColorBrush x:Key="InputBackground" Color="#3C3C3C"/>
+        <SolidColorBrush x:Key="InputForeground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="InputBorder" Color="#3E3E42"/>
+        <SolidColorBrush x:Key="MainText" Color="#F1F1F1"/>
+        <SolidColorBrush x:Key="SecondaryText" Color="#CCCCCC"/>
+        <SolidColorBrush x:Key="AccentColor" Color="#007ACC"/>
+        <SolidColorBrush x:Key="TabInactiveBackground" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="TabActiveBackground" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="TabHoverBackground" Color="#3C3C3C"/>
+        
         <!-- Базовый стиль для кнопок футера - общие геометрические свойства -->
         <Style x:Key="BaseFooterButton" TargetType="Button">
             <Setter Property="MinWidth" Value="140"/>
@@ -62,20 +75,36 @@
             </Style.Triggers>
         </Style>
         
-        <!-- Стили для кнопок -->
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#007ACC"/>
-            <Setter Property="Foreground" Value="White"/>
+        <!-- Стили для обычных кнопок (не футера) - применяются через DynamicResource -->
+        <SolidColorBrush x:Key="ButtonBackground" Color="#007ACC"/>
+        <SolidColorBrush x:Key="ButtonForeground" Color="White"/>
+        <SolidColorBrush x:Key="ButtonHoverBackground" Color="#006699"/>
+        <SolidColorBrush x:Key="ButtonPressedBackground" Color="#005580"/>
+        
+        <Style TargetType="Button" x:Key="AccentButtonStyle">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="5,5,5,5"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonPressedBackground}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         
-        <!-- Стили для TabControl и TabItem -->
+        <!-- Стиль по умолчанию для всех кнопок, кроме футера -->
+        <Style TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}"/>
+        
+        <!-- Стили для TabControl и TabItem с DynamicResource -->
         <Style TargetType="TabItem">
-            <Setter Property="Background" Value="#2D2D30"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Background" Value="{DynamicResource TabInactiveBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryText}"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Margin" Value="0,0,2,0"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -96,13 +125,13 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="#1E1E1E"/>
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#007ACC"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabActiveBackground}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
                                 <Setter TargetName="Border" Property="BorderThickness" Value="0,0,0,2"/>
-                                <Setter Property="Foreground" Value="#F1F1F1"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MainText}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="#3C3C3C"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabHoverBackground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -115,40 +144,40 @@
             <Setter Property="Margin" Value="0"/>
         </Style>
         
-        <!-- Стили для TextBox -->
+        <!-- Стили для TextBox с DynamicResource -->
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#3C3C3C"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Setter Property="Background" Value="{DynamicResource InputBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource InputForeground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
         
-        <!-- Стили для PasswordBox -->
+        <!-- Стили для PasswordBox с DynamicResource -->
         <Style TargetType="PasswordBox">
-            <Setter Property="Background" Value="#3C3C3C"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Setter Property="Background" Value="{DynamicResource InputBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource InputForeground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
         
-        <!-- Стили для ListBox -->
+        <!-- Стили для ListBox с DynamicResource -->
         <Style TargetType="ListBox">
-            <Setter Property="Background" Value="#252526"/>
-            <Setter Property="Foreground" Value="#F1F1F1"/>
-            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Setter Property="Background" Value="{DynamicResource PanelBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
         
-        <!-- Стили для TextBlock -->
+        <!-- Стили для TextBlock с DynamicResource -->
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#F1F1F1"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainText}"/>
         </Style>
         
-        <!-- Стили для Border -->
+        <!-- Стили для Border с DynamicResource -->
         <Style TargetType="Border">
-            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="Background" Value="{DynamicResource PanelBackground}"/>
         </Style>
     </Window.Resources>
     <Grid Margin="10" x:Name="MainGrid">
@@ -159,10 +188,10 @@
         </Grid.RowDefinitions>
 
         <!-- Header / Status -->
-        <Border Grid.Row="0" Padding="10" CornerRadius="5" Margin="0,0,0,10">
+        <Border Grid.Row="0" Padding="10" CornerRadius="5" Margin="0,0,0,10" Background="{DynamicResource PanelBackground}">
             <StackPanel>
                 <TextBlock x:Name="StatusTextBlock" FontSize="14" FontWeight="Bold" Text="Не авторизован"/>
-                <TextBlock x:Name="UserInfoTextBlock" FontSize="12" Foreground="#CCCCCC"/>
+                <TextBlock x:Name="UserInfoTextBlock" FontSize="12" Foreground="{DynamicResource SecondaryText}"/>
             </StackPanel>
         </Border>
 
@@ -242,7 +271,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Send Message Panel -->
-                    <Border Grid.Row="0" BorderBrush="#3E3E42" BorderThickness="1" Padding="10" CornerRadius="5" Margin="0,0,0,10">
+                    <Border Grid.Row="0" BorderBrush="{DynamicResource InputBorder}" BorderThickness="1" Padding="10" CornerRadius="5" Margin="0,0,0,10" Background="{DynamicResource PanelBackground}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -281,7 +310,7 @@
                     <!-- Refresh Button -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
                         <Button x:Name="RefreshMessagesButton" Content="Обновить сообщения" Click="RefreshMessagesButton_Click"/>
-                        <TextBlock x:Name="MessagesStatusTextBlock" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#CCCCCC"/>
+                        <TextBlock x:Name="MessagesStatusTextBlock" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource SecondaryText}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -325,7 +354,7 @@
 
                     <StackPanel Grid.Row="0" Orientation="Vertical">
                         <TextBlock x:Name="WebSocketStatusTextBlock" FontSize="14" FontWeight="Bold" Text="Статус: Не подключено"/>
-                        <TextBlock x:Name="WebSocketInfoTextBlock" FontSize="12" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+                        <TextBlock x:Name="WebSocketInfoTextBlock" FontSize="12" Foreground="{DynamicResource SecondaryText}" Margin="0,5,0,0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
