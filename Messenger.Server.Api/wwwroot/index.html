@@ -158,11 +158,6 @@
             color: white;
         }
         
-        .status-banned {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
         .status-blocked {
             background-color: #e74c3c;
             color: white;
@@ -243,7 +238,10 @@
         <div id="adminPanel" class="hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>Управление пользователями</h2>
-                <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button id="toggleRegistrationBtn" class="btn btn-warning">Регистрация: <span id="regStatus">ВКЛ</span></button>
+                    <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+                </div>
             </div>
             
             <div id="messageBox" class="hidden"></div>
@@ -272,11 +270,67 @@
     <script>
         const API_BASE = 'http://localhost:748/api';
         let authToken = localStorage.getItem('adminToken');
+        let usersPollingInterval = null;
+        let registrationEnabled = true;
         
         // Проверка авторизации при загрузке
         if (authToken) {
             showAdminPanel();
         }
+        
+        // Загрузка статуса регистрации
+        async function loadRegistrationStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/users/registration-status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    registrationEnabled = !data.isDisabled;
+                    updateRegistrationButton();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки статуса регистрации:', error);
+            }
+        }
+        
+        // Обновление кнопки регистрации
+        function updateRegistrationButton() {
+            const btn = document.getElementById('toggleRegistrationBtn');
+            const statusSpan = document.getElementById('regStatus');
+            if (registrationEnabled) {
+                statusSpan.textContent = 'ВКЛ';
+                btn.className = 'btn btn-warning';
+            } else {
+                statusSpan.textContent = 'ВЫКЛ';
+                btn.className = 'btn btn-danger';
+            }
+        }
+        
+        // Переключение регистрации
+        document.getElementById('toggleRegistrationBtn').addEventListener('click', async () => {
+            try {
+                const endpoint = registrationEnabled ? 'disable-registration' : 'enable-registration';
+                const response = await fetch(`${API_BASE}/users/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    registrationEnabled = !registrationEnabled;
+                    updateRegistrationButton();
+                    showMessage(registrationEnabled ? 'Регистрация включена' : 'Регистрация отключена', 'success');
+                } else {
+                    showMessage('Ошибка при переключении регистрации', 'error');
+                }
+            } catch (error) {
+                showMessage('Ошибка подключения к серверу', 'error');
+            }
+        });
         
         // Обработка формы входа
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -313,6 +367,13 @@
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('adminToken');
             authToken = null;
+            
+            // Останавливаем автообновление
+            if (usersPollingInterval) {
+                clearInterval(usersPollingInterval);
+                usersPollingInterval = null;
+            }
+            
             showLoginForm();
         });
         
@@ -331,6 +392,13 @@
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
             loadUsers();
+            loadRegistrationStatus(); // Загружаем статус регистрации
+            
+            // Запускаем автообновление списка пользователей каждые 5 секунд
+            if (usersPollingInterval) {
+                clearInterval(usersPollingInterval);
+            }
+            usersPollingInterval = setInterval(loadUsers, 5000);
         }
         
         async function loadUsers() {
@@ -375,12 +443,7 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            // Нормализуем статус (сервер может возвращать 'Banned', а CSS класс 'status-banned')
-            let statusClass = `status-${user.status.toLowerCase()}`;
-            if (user.status === 'Blocked') {
-                statusClass = 'status-banned'; // Для совместимости
-            }
-            
+            const statusClass = `status-${user.status.toLowerCase()}`;
             const lastLogin = user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString('ru-RU') : '—';
             
             row.innerHTML = `
@@ -391,9 +454,9 @@
                 <td>${new Date(user.createdAt).toLocaleString('ru-RU')}</td>
                 <td>${lastLogin}</td>
                 <td class="actions">
-                    ${user.status === 'PendingApproval' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
-                    ${user.status !== 'Banned' && user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
-                    ${user.status === 'Banned' || user.status === 'Blocked' ? `<button class="btn btn-success" onclick="unblockUser(${user.id})">🔓</button>` : ''}
+                    ${user.status === 'Pending' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
+                    ${user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
+                    ${user.status === 'Blocked' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
                     <button class="btn btn-danger" onclick="deleteUser(${user.id})">🗑</button>
                 </td>
             `;
@@ -435,26 +498,6 @@
                     loadUsers();
                 } else {
                     showMessage('Ошибка при блокировке пользователя', 'error');
-                }
-            } catch (error) {
-                showMessage('Ошибка подключения к серверу', 'error');
-            }
-        }
-        
-        async function unblockUser(userId) {
-            try {
-                const response = await fetch(`${API_BASE}/users/${userId}/unblock`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                
-                if (response.ok) {
-                    showMessage('Пользователь разблокирован', 'success');
-                    loadUsers();
-                } else {
-                    showMessage('Ошибка при разблокировке пользователя', 'error');
                 }
             } catch (error) {
                 showMessage('Ошибка подключения к серверу', 'error');
