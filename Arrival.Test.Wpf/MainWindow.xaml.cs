@@ -180,14 +180,11 @@ namespace Arrival.Test.Wpf
                     _httpClient.DefaultRequestHeaders.Authorization = 
                         new AuthenticationHeaderValue("Bearer", _token);
 
-                    // Обновляем UI
+                    // Обновляем UI и переключаемся на вкладку сообщений
                     UpdateLoggedInUI(_currentUsername, role, status);
                     
                     // Автоматически подключаемся к WebSocket
                     await ConnectToWebSocket();
-
-                    LoginMessageTextBlock.Foreground = System.Windows.Media.Brushes.Green;
-                    LoginMessageTextBlock.Text = "✓ Вход успешен!";
                     
                     LoginUsernameTextBox.Clear();
                     LoginPasswordBox.Clear();
@@ -215,7 +212,7 @@ namespace Arrival.Test.Wpf
         {
             StatusTextBlock.Text = "Авторизован";
             StatusTextBlock.Foreground = System.Windows.Media.Brushes.Green;
-            UserInfoTextBlock.Text = $"{username} | Роль: {role} | Статус: {status}";
+            UserInfoTextBlock.Text = $"{username} | ID: {_currentUserId} | Роль: {role} | Статус: {status}";
 
             // Включаем вкладки
             MessagesTabItem.IsEnabled = true;
@@ -224,6 +221,9 @@ namespace Arrival.Test.Wpf
 
             // Показываем кнопку выхода
             LogoutButton.Visibility = Visibility.Visible;
+            
+            // Переключаемся на вкладку сообщений
+            MainTabControl.SelectedItem = MessagesTabItem;
             
             // Запускаем таймер опроса сообщений
             _messagesPollingTimer?.Start();
