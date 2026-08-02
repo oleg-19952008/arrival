@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Arrival.Test.Wpf
@@ -37,6 +38,11 @@ namespace Arrival.Test.Wpf
         #region Auth Methods
 
         private async void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            await PerformRegistration();
+        }
+
+        private async Task PerformRegistration()
         {
             var username = RegisterUsernameTextBox.Text.Trim();
             var password = RegisterPasswordBox.Password;
@@ -84,7 +90,48 @@ namespace Arrival.Test.Wpf
             MainTabControl.SelectedItem = AuthTabItem;
         }
 
+        #region KeyDown Handlers for Enter key
+
+        private void RegisterUsername_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                RegisterPasswordBox.Focus();
+            }
+        }
+
+        private void RegisterPassword_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                _ = PerformRegistration();
+            }
+        }
+
+        private void LoginUsername_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                LoginPasswordBox.Focus();
+            }
+        }
+
+        private void LoginPassword_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                _ = PerformLogin();
+            }
+        }
+
+        #endregion
+
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            await PerformLogin();
+        }
+
+        private async Task PerformLogin()
         {
             var username = LoginUsernameTextBox.Text.Trim();
             var password = LoginPasswordBox.Password;
@@ -222,6 +269,19 @@ namespace Arrival.Test.Wpf
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
+            await SendMessage();
+        }
+
+        private async void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                await SendMessage();
+            }
+        }
+
+        private async Task SendMessage()
+        {
             var recipientInput = RecipientTextBox.Text.Trim();
             var content = MessageTextBox.Text.Trim();
 
@@ -238,38 +298,42 @@ namespace Arrival.Test.Wpf
 
                 if (!string.IsNullOrEmpty(recipientInput))
                 {
-                    // Пытаемся найти пользователя по логину
-                    var response = await _httpClient.GetAsync($"{_baseUrl}/users/list");
-                    if (response.IsSuccessStatusCode)
+                    // Проверяем, является ли ввод числом (ID)
+                    if (int.TryParse(recipientInput, out int parsedId))
                     {
-                        var readContent = await response.Content.ReadAsStringAsync();
-                        var users = JsonDocument.Parse(readContent).RootElement;
-
-                        foreach (var user in users.EnumerateArray())
-                        {
-                            var username = user.GetProperty("username").GetString();
-                            if (username == recipientInput)
-                            {
-                                recipientId = user.GetProperty("id").GetInt32();
-                                break;
-                            }
-                        }
-
-                        if (!recipientId.HasValue)
-                        {
-                            MessageBox.Show($"Пользователь с логином '{recipientInput}' не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            return;
-                        }
+                        recipientId = parsedId;
                     }
                     else
                     {
-                        MessageBox.Show("Ошибка получения списка пользователей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
+                        // Пытаемся найти пользователя по логину
+                        var response = await _httpClient.GetAsync($"{_baseUrl}/users");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var readContent = await response.Content.ReadAsStringAsync();
+                            var users = JsonDocument.Parse(readContent).RootElement;
+
+                            foreach (var user in users.EnumerateArray())
+                            {
+                                var username = user.GetProperty("username").GetString();
+                                if (username == recipientInput)
+                                {
+                                    recipientId = user.GetProperty("id").GetInt32();
+                                    break;
+                                }
+                            }
+
+                            if (!recipientId.HasValue)
+                            {
+                                MessageBox.Show($"Пользователь с логином '{recipientInput}' не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка получения списка пользователей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
                     }
-                }
-                else
-                {
-                    recipientLogin = null;
                 }
 
                 var request = new
@@ -294,24 +358,6 @@ namespace Arrival.Test.Wpf
                         MessageBoxImage.Information);
 
                     MessageTextBox.Clear();
-
-                    // Если подключены к WebSocket и есть получатель, отправляем через SignalR
-                    if (_isConnectedToHub && recipientId.HasValue && _hubConnection != null)
-                    {
-                        try
-                        {
-                            await _hubConnection.SendAsync("SendMessage", 
-                                recipientId.Value, 
-                                content, 
-                                _currentUserId.Value, 
-                                _currentUsername ?? "Unknown",
-                                0);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Не удалось отправить через WebSocket: {ex.Message}", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                    }
 
                     // Обновляем список сообщений
                     await LoadMessages();
@@ -397,7 +443,7 @@ namespace Arrival.Test.Wpf
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_baseUrl}/admin/users");
+                var response = await _httpClient.GetAsync($"{_baseUrl}/users");
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -471,12 +517,15 @@ namespace Arrival.Test.Wpf
                     .Build();
 
                 // Обработчик входящих сообщений
-                _hubConnection.On<string, string, string, DateTime>("MessageReceived", 
-                    (senderId, senderName, content, receivedAt) =>
+                _hubConnection.On<int, string, int, string, DateTime>("MessageReceived", 
+                    (messageId, senderName, senderId, content, receivedAt) =>
                 {
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.Invoke(async () =>
                     {
                         RealTimeMessagesListBox.Items.Add($"[{receivedAt.ToLocalTime():HH:mm}] {senderName}: {content}");
+                        
+                        // Автоматически обновляем список сообщений
+                        await LoadMessages();
                         
                         // Показываем уведомление
                         MessageBox.Show(
