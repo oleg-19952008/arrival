@@ -339,21 +339,8 @@ namespace Arrival.Test.Wpf
 
         private void AddThemeToggleButton()
         {
-            // Находим панель в footer и добавляем кнопку переключения темы
-            if (FindName("ExitButton") is Button exitButton && exitButton.Parent is StackPanel footerPanel)
-            {
-                var themeButton = new Button
-                {
-                    Content = _isDarkTheme ? "☀ Светлая" : "☾ Тёмная",
-                    Margin = new Thickness(10, 0, 10, 0),
-                    Name = "ThemeToggleButton"
-                };
-                themeButton.Click += ThemeToggleButton_Click;
-                
-                // Вставляем кнопку перед кнопкой Exit
-                int exitIndex = footerPanel.Children.IndexOf(exitButton);
-                footerPanel.Children.Insert(exitIndex, themeButton);
-            }
+            // Кнопка переключения темы теперь объявлена в XAML, этот метод больше не нужен
+            // Метод оставлен пустым для обратной совместимости
         }
 
         private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
@@ -366,6 +353,20 @@ namespace Arrival.Test.Wpf
             if (sender is Button btn)
             {
                 btn.Content = _isDarkTheme ? "☀ Светлая" : "☾ Тёмная";
+            }
+            
+            // Применяем стиль к кнопке в зависимости от темы
+            if (FindName("ThemeToggleButton") is Button themeButton)
+            {
+                var resources = Resources;
+                if (_isDarkTheme && resources.Contains("NeutralFooterButton"))
+                {
+                    themeButton.Style = (Style)resources["NeutralFooterButton"];
+                }
+                else if (!_isDarkTheme && resources.Contains("NeutralFooterButton"))
+                {
+                    themeButton.Style = (Style)resources["NeutralFooterButton"];
+                }
             }
         }
 

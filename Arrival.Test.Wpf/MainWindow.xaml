@@ -4,6 +4,64 @@
         Title="Messenger WPF Client" Height="600" Width="800"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <!-- Базовый стиль для кнопок футера - общие геометрические свойства -->
+        <Style x:Key="BaseFooterButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="140"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+        
+        <!-- Нейтральная кнопка (переключатель темы) -->
+        <Style x:Key="NeutralFooterButton" TargetType="Button" BasedOn="{StaticResource BaseFooterButton}">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A4A4A"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#5A5A5A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Outline-кнопка (вторичное действие - выход из аккаунта) -->
+        <Style x:Key="OutlineFooterButton" TargetType="Button" BasedOn="{StaticResource BaseFooterButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#007ACC"/>
+            <Setter Property="BorderBrush" Value="#007ACC"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1A007ACC"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2A007ACC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Danger-кнопка (деструктивное действие - выход из приложения) -->
+        <Style x:Key="DangerFooterButton" TargetType="Button" BasedOn="{StaticResource BaseFooterButton}">
+            <Setter Property="Background" Value="#C0392B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#C0392B"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#A93226"/>
+                    <Setter Property="BorderBrush" Value="#A93226"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#922B21"/>
+                    <Setter Property="BorderBrush" Value="#922B21"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
         <!-- Стили для кнопок -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#007ACC"/>
@@ -289,8 +347,9 @@
 
         <!-- Footer / Logout -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button x:Name="LogoutButton" Content="Выйти из аккаунта" Click="LogoutButton_Click" Visibility="Collapsed"/>
-            <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click"/>
+            <Button x:Name="LogoutButton" Content="Выйти из аккаунта" Click="LogoutButton_Click" Visibility="Collapsed" Style="{StaticResource OutlineFooterButton}"/>
+            <Button x:Name="ThemeToggleButton" Content="☀ Светлая" Style="{StaticResource NeutralFooterButton}" Click="ThemeToggleButton_Click"/>
+            <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click" Style="{StaticResource DangerFooterButton}"/>
         </StackPanel>
     </Grid>
 </Window>
