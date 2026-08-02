@@ -1,82 +1,12 @@
-```csharp
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Dd]epends/
-[Mm]erge/[Dd]ebug/
-[Mm]erge/[Rr]elease/
-bld/
-[Bb]in/
-[Oo]bj/
+```
+# Dependencies
+node_modules/
 
-# Visual Studio files
-*.user
-*.userosscache
-*.sln.docstates
-*.vcxproj.filters
-
-# Visual Studio Code files
+# Editors
 .vscode/
-
-# Rider files
-.idea/
-
-# Compiled Binary Files
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.dylib
-*.nib
-*.plist
-*.ilk
-*.manifest
-*.exp
-*.lib
-*.pdb
-*.ipdb
-*.iobj
-*.ipch
-*.pch
-*.res
-*.rsp
-*.pgc
-*.pgd
-*.metagen
-*.uncombined.meta
-
-# Logs
-*.log
 
 # Environment
 .env
 .env.local
-.env.*
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-*.nupkg
-[Nn]uget.exes
-[Nn]uget.targets
-[Nn]uget.packages.config
-
-# Testing
-*.testresults
-*.trx
-
-# Others
-*.VC.db
-*.VC.VC.opendb
+*.env.*
 ```

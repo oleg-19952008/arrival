@@ -477,7 +477,7 @@ namespace Arrival.Test.Wpf
             await LoadUsers();
         }
 
-        private async Task LoadUsers()
+        private async Task LoadUsers(bool showError = true)
         {
             try
             {
@@ -506,14 +506,17 @@ namespace Arrival.Test.Wpf
                         });
                     }
                 }
-                else
+                else if (showError)
                 {
                     MessageBox.Show("Ошибка получения списка пользователей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (showError)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
