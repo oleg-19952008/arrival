@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Arrival.Test.Wpf
@@ -26,6 +27,7 @@ namespace Arrival.Test.Wpf
         private string? _currentUsername;
         private HubConnection? _hubConnection;
         private bool _isConnectedToHub;
+        private DispatcherTimer? _messagesPollingTimer;
 
         public MainWindow()
         {
@@ -33,6 +35,13 @@ namespace Arrival.Test.Wpf
             
             _httpClient = new HttpClient();
             MainTabControl.SelectedIndex = 0;
+            
+            // Инициализация таймера для опроса сообщений каждые 5 секунд
+            _messagesPollingTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            _messagesPollingTimer.Tick += async (s, e) => await LoadMessages();
         }
 
         #region Auth Methods
@@ -207,6 +216,12 @@ namespace Arrival.Test.Wpf
 
             // Показываем кнопку выхода
             LogoutButton.Visibility = Visibility.Visible;
+            
+            // Запускаем таймер опроса сообщений
+            _messagesPollingTimer?.Start();
+            
+            // Загружаем сообщения сразу после входа
+            _ = LoadMessages();
         }
 
         private void ResetUI()
@@ -225,6 +240,12 @@ namespace Arrival.Test.Wpf
 
             // Переключаемся на вкладку авторизации
             MainTabControl.SelectedItem = AuthTabItem;
+            
+            // Останавливаем таймер опроса сообщений
+            _messagesPollingTimer?.Stop();
+            
+            // Очищаем список сообщений
+            MessagesListBox.Items.Clear();
         }
 
         #endregion
@@ -270,6 +291,9 @@ namespace Arrival.Test.Wpf
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             await SendMessage();
+            
+            // Сразу обновляем сообщения после отправки
+            await LoadMessages();
         }
 
         private async void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -349,17 +373,9 @@ namespace Arrival.Test.Wpf
 
                 if (sendResponse.IsSuccessStatusCode)
                 {
-                    MessageBox.Show(
-                        recipientId.HasValue 
-                            ? "✓ Личное сообщение отправлено!" 
-                            : "✓ Сообщение отправлено в общий чат!",
-                        "Успех", 
-                        MessageBoxButton.OK, 
-                        MessageBoxImage.Information);
-
                     MessageTextBox.Clear();
 
-                    // Обновляем список сообщений
+                    // Сразу обновляем список сообщений после отправки
                     await LoadMessages();
                 }
                 else
