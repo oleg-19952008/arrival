@@ -1,90 +1,116 @@
 ```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-*.dll
-*.so
-*.exe
-*.class
-*.out
-*.a
-
 # Dependencies
 node_modules/
-venv/
-.venv/
+vendor/
+
+# Build outputs
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+build/
+dist/
+wwwroot/css/
+wwwroot/js/
+wwwroot/lib/
+
+# Logs
+*.log
+
+# Environment specific
 .env
 .env.local
 .env.*
 
-# Build directories
-dist/
-build/
-target/
-.gradle/
+# OS generated
+.DS_Store
+Thumbs.db
 
-# Python specific
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-*.so
-.Python
-*.egg-info/
-.eggs/
-.mypy_cache/
-.pytest_cache/
-.coverage
-coverage/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-
-# Editors
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# System files
-.DS_Store
-Thumbs.db
-
-# Compression files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# Coverage reports
+# Testing
 coverage/
 htmlcov/
+.coverage
+*.coverage
 
-# Environment variables
-.env*
-!.env.example
+# Package management
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime
+*.dll
+*.exe
+*.so
+*.dylib
+
+# Python specific (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+
+# Node specific (if applicable)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.flowconfig
+.pnp/
+.pnp.js
+*.tsbuildinfo
+.next/
+.nuxt/
+.vuepress/dist/
+static/.nojekyll
+
+# Java specific (if applicable)
+*.class
+*.jar
+*.war
+*.ear
+target/
+.gradle/
+build/
+!src/main/**
+!src/test/**
+
+# C# specific (if applicable)
+*.user
+*.suo
+*.csproj.user
+*.vbproj.user
+*.userosscache
+*.sln.docstates
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]est[Rr]esult/
+[Tt]emp/
+_UpgradeReport_Files/
 ```

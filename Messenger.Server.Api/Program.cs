@@ -212,13 +212,13 @@ app.UseWhen(
     context => context.Connection.LocalPort == 228,
     appBuilder =>
     {
-        appBuilder.UseStaticFiles(new StaticFileOptions
-        {
-            ContentTypeProvider = provider
-        });
         appBuilder.UseDefaultFiles(new DefaultFilesOptions
         {
             DefaultFileNames = new List<string> { "index.html" }
+        });
+        appBuilder.UseStaticFiles(new StaticFileOptions
+        {
+            ContentTypeProvider = provider
         });
     });
 

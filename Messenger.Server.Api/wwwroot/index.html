@@ -381,7 +381,7 @@
                 <td>${new Date(user.createdAt).toLocaleString('ru-RU')}</td>
                 <td>${lastLogin}</td>
                 <td class="actions">
-                    ${user.status === 'Pending' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
+                    ${user.status === 'PendingApproval' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
                     ${user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
                     ${user.status === 'Blocked' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
                     <button class="btn btn-danger" onclick="deleteUser(${user.id})">🗑</button>
