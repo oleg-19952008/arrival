@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 
 namespace Messenger.Core.Hubs;
-
+using Microsoft.Extensions.Logging;
 /// <summary>
 /// WebSocket хаб для уведомлений и сообщений в реальном времени
 /// </summary>
