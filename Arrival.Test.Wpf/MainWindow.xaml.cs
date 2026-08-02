@@ -33,9 +33,25 @@ namespace Arrival.Test.Wpf
         private int _lastMessageCount;
         private double _lastScrollOffset = -1;
         
-        // Цвета тем
-        private static readonly Color DarkThemeColor = Color.FromRgb(0x32, 0x36, 0x3B);
+        // Цвета тем (новые цвета из ТЗ)
+        // Фон окна: #1E1E1E
+        private static readonly Color DarkWindowColor = Color.FromRgb(0x1E, 0x1E, 0x1E);
+        // Фон панелей/полей: #252526
+        private static readonly Color DarkPanelColor = Color.FromRgb(0x25, 0x25, 0x26);
+        // Поля ввода фон: #3C3C3C
+        private static readonly Color DarkInputColor = Color.FromRgb(0x3C, 0x3C, 0x3C);
+        // Основной текст: #F1F1F1
+        private static readonly Color DarkTextColor = Color.FromRgb(0xF1, 0xF1, 0xF1);
+        // Второстепенный текст: #CCCCCC
+        private static readonly Color DarkSecondaryTextColor = Color.FromRgb(0xCC, 0xCC, 0xCC);
+        // Акцент (кнопки/ссылки): #007ACC
+        private static readonly Color DarkAccentColor = Color.FromRgb(0x00, 0x7A, 0xCC);
+        // Бордер полей ввода: #3E3E42
+        private static readonly Color DarkInputBorder = Color.FromRgb(0x3E, 0x3E, 0x42);
+        
+        // Светлая тема (оставляем как запасную)
         private static readonly Color LightThemeColor = Color.FromRgb(0x34, 0x49, 0x5E);
+        
         private bool _isDarkTheme = true;
         private readonly string _configPath;
 
@@ -355,55 +371,122 @@ namespace Arrival.Test.Wpf
 
         private void ApplyTheme(bool isDark)
         {
-            var themeColor = isDark ? DarkThemeColor : LightThemeColor;
-            var brush = new SolidColorBrush(themeColor);
-            
-            // Применяем цвет к основному фону окна
-            Background = brush;
-            
-            // Применяем цвета ко всем элементам Grid
-            if (Content is Grid mainGrid)
+            if (isDark)
             {
-                ApplyThemeToElement(mainGrid, themeColor);
+                // Применяем темную тему с новыми цветами из ТЗ
+                Background = new SolidColorBrush(DarkWindowColor);
+                
+                // Стили уже заданы в XAML, но нужно применить их к динамически созданным элементам
+                // и обновить цвета для элементов, которые были созданы до применения темы
+                if (Content is Grid mainGrid)
+                {
+                    ApplyDarkThemeToElement(mainGrid);
+                }
+            }
+            else
+            {
+                // Светлая тема
+                var brush = new SolidColorBrush(LightThemeColor);
+                Background = brush;
+                
+                if (Content is Grid mainGrid)
+                {
+                    ApplyLightThemeToElement(mainGrid);
+                }
             }
         }
 
-        private void ApplyThemeToElement(DependencyObject element, Color themeColor)
+        private void ApplyDarkThemeToElement(DependencyObject element)
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
             {
                 var child = VisualTreeHelper.GetChild(element, i);
                 
+                // Применяем стили в зависимости от типа элемента
                 if (child is Border border)
                 {
-                    // Для Border меняем Background на более светлый/темный оттенок
-                    var bgBrush = new SolidColorBrush(Color.FromRgb(
-                        (byte)Math.Min(255, themeColor.R + 30),
-                        (byte)Math.Min(255, themeColor.G + 30),
-                        (byte)Math.Min(255, themeColor.B + 30)
-                    ));
-                    border.Background = bgBrush;
+                    // Фон панелей/полей: #252526
+                    border.Background = new SolidColorBrush(DarkPanelColor);
                 }
                 else if (child is TabControl tabControl)
                 {
-                    // Для TabControl устанавливаем прозрачный фон
                     tabControl.Background = Brushes.Transparent;
                 }
                 else if (child is TextBox textBox)
                 {
-                    // Для TextBox устанавливаем белый фон для читаемости
+                    // Поля ввода: фон #3C3C3C, текст #FFFFFF, бордер #3E3E42
+                    textBox.Background = new SolidColorBrush(DarkInputColor);
+                    textBox.Foreground = Brushes.White;
+                    textBox.BorderBrush = new SolidColorBrush(DarkInputBorder);
+                }
+                else if (child is PasswordBox passwordBox)
+                {
+                    passwordBox.Background = new SolidColorBrush(DarkInputColor);
+                    passwordBox.Foreground = Brushes.White;
+                    passwordBox.BorderBrush = new SolidColorBrush(DarkInputBorder);
+                }
+                else if (child is ListBox listBox)
+                {
+                    listBox.Background = new SolidColorBrush(DarkPanelColor);
+                    listBox.Foreground = new SolidColorBrush(DarkTextColor);
+                    listBox.BorderBrush = new SolidColorBrush(DarkInputBorder);
+                }
+                else if (child is Button button)
+                {
+                    // Акцентные кнопки: фон #007ACC, текст белый
+                    button.Background = new SolidColorBrush(DarkAccentColor);
+                    button.Foreground = Brushes.White;
+                }
+                else if (child is TextBlock textBlock)
+                {
+                    // Основной текст: #F1F1F1
+                    // Не меняем цвет ошибок (красный) и успеха (зеленый)
+                    var currentColor = textBlock.Foreground;
+                    if (currentColor != Brushes.Red && 
+                        currentColor != Brushes.Green &&
+                        !(currentColor is SolidColorBrush solidBrush && 
+                          (solidBrush.Color.R > 200 && solidBrush.Color.G < 100 && solidBrush.Color.B < 100)))
+                    {
+                        textBlock.Foreground = new SolidColorBrush(DarkTextColor);
+                    }
+                }
+                else if (child is Label label)
+                {
+                    label.Foreground = new SolidColorBrush(DarkTextColor);
+                }
+                
+                // Рекурсивно применяем тему к дочерним элементам
+                ApplyDarkThemeToElement(child);
+            }
+        }
+
+        private void ApplyLightThemeToElement(DependencyObject element)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i);
+                
+                if (child is TextBox textBox)
+                {
                     textBox.Background = Brushes.White;
+                    textBox.Foreground = Brushes.Black;
                 }
                 else if (child is PasswordBox passwordBox)
                 {
                     passwordBox.Background = Brushes.White;
+                    passwordBox.Foreground = Brushes.Black;
                 }
                 else if (child is ListBox listBox)
                 {
                     listBox.Background = Brushes.White;
+                    listBox.Foreground = Brushes.Black;
+                }
+                else if (child is TextBlock textBlock)
+                {
+                    textBlock.Foreground = Brushes.Black;
                 }
                 
-                ApplyThemeToElement(child, themeColor);
+                ApplyLightThemeToElement(child);
             }
         }
 
