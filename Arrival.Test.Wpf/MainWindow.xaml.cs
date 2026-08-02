@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -30,10 +32,26 @@ namespace Arrival.Test.Wpf
         private DispatcherTimer? _messagesPollingTimer;
         private int _lastMessageCount;
         private double _lastScrollOffset = -1;
+        
+        // Цвета тем
+        private static readonly Color DarkThemeColor = Color.FromRgb(0x32, 0x36, 0x3B);
+        private static readonly Color LightThemeColor = Color.FromRgb(0x34, 0x49, 0x5E);
+        private bool _isDarkTheme = true;
+        private readonly string _configPath;
 
         public MainWindow()
         {
             InitializeComponent();
+            
+            // Путь к файлу конфигурации рядом с исполняемым файлом
+            var appPath = AppDomain.CurrentDomain.BaseDirectory;
+            _configPath = Path.Combine(appPath, "config.cfg");
+            
+            // Загружаем тему из конфига
+            LoadThemeFromConfig();
+            
+            // Применяем тему
+            ApplyTheme(_isDarkTheme);
             
             _httpClient = new HttpClient
             {
@@ -50,6 +68,9 @@ namespace Arrival.Test.Wpf
                 Interval = TimeSpan.FromSeconds(5)
             };
             _messagesPollingTimer.Tick += async (s, e) => await LoadMessages();
+            
+            // Добавляем кнопку переключения темы в Footer
+            AddThemeToggleButton();
         }
 
         #region Auth Methods
@@ -294,6 +315,130 @@ namespace Arrival.Test.Wpf
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        #endregion
+
+        #region Theme Methods
+
+        private void AddThemeToggleButton()
+        {
+            // Находим панель в footer и добавляем кнопку переключения темы
+            if (FindName("ExitButton") is Button exitButton && exitButton.Parent is StackPanel footerPanel)
+            {
+                var themeButton = new Button
+                {
+                    Content = _isDarkTheme ? "☀ Светлая" : "☾ Тёмная",
+                    Margin = new Thickness(10, 0, 10, 0),
+                    Name = "ThemeToggleButton"
+                };
+                themeButton.Click += ThemeToggleButton_Click;
+                
+                // Вставляем кнопку перед кнопкой Exit
+                int exitIndex = footerPanel.Children.IndexOf(exitButton);
+                footerPanel.Children.Insert(exitIndex, themeButton);
+            }
+        }
+
+        private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isDarkTheme = !_isDarkTheme;
+            ApplyTheme(_isDarkTheme);
+            SaveThemeToConfig();
+            
+            // Обновляем текст кнопки
+            if (sender is Button btn)
+            {
+                btn.Content = _isDarkTheme ? "☀ Светлая" : "☾ Тёмная";
+            }
+        }
+
+        private void ApplyTheme(bool isDark)
+        {
+            var themeColor = isDark ? DarkThemeColor : LightThemeColor;
+            var brush = new SolidColorBrush(themeColor);
+            
+            // Применяем цвет к основному фону окна
+            Background = brush;
+            
+            // Применяем цвета ко всем элементам Grid
+            if (Content is Grid mainGrid)
+            {
+                ApplyThemeToElement(mainGrid, themeColor);
+            }
+        }
+
+        private void ApplyThemeToElement(DependencyObject element, Color themeColor)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i);
+                
+                if (child is Border border)
+                {
+                    // Для Border меняем Background на более светлый/темный оттенок
+                    var bgBrush = new SolidColorBrush(Color.FromRgb(
+                        (byte)Math.Min(255, themeColor.R + 30),
+                        (byte)Math.Min(255, themeColor.G + 30),
+                        (byte)Math.Min(255, themeColor.B + 30)
+                    ));
+                    border.Background = bgBrush;
+                }
+                else if (child is TabControl tabControl)
+                {
+                    // Для TabControl устанавливаем прозрачный фон
+                    tabControl.Background = Brushes.Transparent;
+                }
+                else if (child is TextBox textBox)
+                {
+                    // Для TextBox устанавливаем белый фон для читаемости
+                    textBox.Background = Brushes.White;
+                }
+                else if (child is PasswordBox passwordBox)
+                {
+                    passwordBox.Background = Brushes.White;
+                }
+                else if (child is ListBox listBox)
+                {
+                    listBox.Background = Brushes.White;
+                }
+                
+                ApplyThemeToElement(child, themeColor);
+            }
+        }
+
+        private void LoadThemeFromConfig()
+        {
+            try
+            {
+                if (File.Exists(_configPath))
+                {
+                    var content = File.ReadAllText(_configPath).Trim().ToLower();
+                    _isDarkTheme = content != "light";
+                }
+                else
+                {
+                    // По умолчанию темная тема
+                    _isDarkTheme = true;
+                }
+            }
+            catch
+            {
+                // При ошибке используем тему по умолчанию
+                _isDarkTheme = true;
+            }
+        }
+
+        private void SaveThemeToConfig()
+        {
+            try
+            {
+                File.WriteAllText(_configPath, _isDarkTheme ? "dark" : "light");
+            }
+            catch
+            {
+                // Игнорируем ошибки записи
+            }
         }
 
         #endregion
