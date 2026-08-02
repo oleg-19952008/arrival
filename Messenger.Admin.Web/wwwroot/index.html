@@ -238,7 +238,10 @@
         <div id="adminPanel" class="hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>Управление пользователями</h2>
-                <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button id="toggleRegistrationBtn" class="btn btn-warning">Регистрация: <span id="regStatus">ВКЛ</span></button>
+                    <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+                </div>
             </div>
             
             <div id="messageBox" class="hidden"></div>
@@ -268,11 +271,66 @@
         const API_BASE = 'http://localhost:748/api';
         let authToken = localStorage.getItem('adminToken');
         let usersPollingInterval = null;
+        let registrationEnabled = true;
         
         // Проверка авторизации при загрузке
         if (authToken) {
             showAdminPanel();
         }
+        
+        // Загрузка статуса регистрации
+        async function loadRegistrationStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/users/registration-status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    registrationEnabled = !data.isDisabled;
+                    updateRegistrationButton();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки статуса регистрации:', error);
+            }
+        }
+        
+        // Обновление кнопки регистрации
+        function updateRegistrationButton() {
+            const btn = document.getElementById('toggleRegistrationBtn');
+            const statusSpan = document.getElementById('regStatus');
+            if (registrationEnabled) {
+                statusSpan.textContent = 'ВКЛ';
+                btn.className = 'btn btn-warning';
+            } else {
+                statusSpan.textContent = 'ВЫКЛ';
+                btn.className = 'btn btn-danger';
+            }
+        }
+        
+        // Переключение регистрации
+        document.getElementById('toggleRegistrationBtn').addEventListener('click', async () => {
+            try {
+                const endpoint = registrationEnabled ? 'disable-registration' : 'enable-registration';
+                const response = await fetch(`${API_BASE}/users/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    registrationEnabled = !registrationEnabled;
+                    updateRegistrationButton();
+                    showMessage(registrationEnabled ? 'Регистрация включена' : 'Регистрация отключена', 'success');
+                } else {
+                    showMessage('Ошибка при переключении регистрации', 'error');
+                }
+            } catch (error) {
+                showMessage('Ошибка подключения к серверу', 'error');
+            }
+        });
         
         // Обработка формы входа
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -334,6 +392,7 @@
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
             loadUsers();
+            loadRegistrationStatus(); // Загружаем статус регистрации
             
             // Запускаем автообновление списка пользователей каждые 5 секунд
             if (usersPollingInterval) {

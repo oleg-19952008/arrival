@@ -217,6 +217,53 @@ public class UsersController : ControllerBase
         
         return Ok(new { message = "Пароль изменён" });
     }
+    
+    /// <summary>
+    /// Проверить статус регистрации
+    /// </summary>
+    [HttpGet("registration-status")]
+    public IActionResult GetRegistrationStatus()
+    {
+        var isDisabled = File.Exists("ВЫКЛ_РЕГУ");
+        return Ok(new { isDisabled });
+    }
+    
+    /// <summary>
+    /// Отключить регистрацию (создать файл ВЫКЛ_РЕГУ)
+    /// </summary>
+    [HttpPost("disable-registration")]
+    public IActionResult DisableRegistration()
+    {
+        try
+        {
+            File.WriteAllText("ВЫКЛ_РЕГУ", "Registration disabled by admin");
+            return Ok(new { message = "Регистрация отключена" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = $"Ошибка при отключении регистрации: {ex.Message}" });
+        }
+    }
+    
+    /// <summary>
+    /// Включить регистрацию (удалить файл ВЫКЛ_РЕГУ)
+    /// </summary>
+    [HttpPost("enable-registration")]
+    public IActionResult EnableRegistration()
+    {
+        try
+        {
+            if (File.Exists("ВЫКЛ_РЕГУ"))
+            {
+                File.Delete("ВЫКЛ_РЕГУ");
+            }
+            return Ok(new { message = "Регистрация включена" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = $"Ошибка при включении регистрации: {ex.Message}" });
+        }
+    }
 }
 
 public class ChangePasswordRequest
