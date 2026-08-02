@@ -25,6 +25,17 @@ public class AuthService : IAuthService
     
     public async Task<OperationResult> RegisterAsync(string username, string password)
     {
+        // Проверка флага выключения регистрации
+        if (File.Exists("ВЫКЛ_РЕГУ"))
+        {
+            ConsoleLogger.Warn($"Registration failed: registration is disabled via ВЫКЛ_РЕГУ file");
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Регистрация временно отключена" 
+            };
+        }
+
         // Проверка наличия пользователя
         var existingUser = await _userRepository.GetByUsernameAsync(username);
         if (existingUser != null)
