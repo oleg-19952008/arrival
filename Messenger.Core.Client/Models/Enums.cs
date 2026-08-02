@@ -16,9 +16,9 @@ public enum UserStatus
     Active = 1,
     
     /// <summary>
-    /// Заблокирован или удалён
+    /// Заблокирован (бан)
     /// </summary>
-    Blocked = 2
+    Banned = 2
 }
 
 /// <summary>

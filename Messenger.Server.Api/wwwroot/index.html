@@ -158,7 +158,7 @@
             color: white;
         }
         
-        .status-blocked {
+        .status-banned {
             background-color: #e74c3c;
             color: white;
         }
@@ -276,6 +276,7 @@
         // Проверка авторизации при загрузке
         if (authToken) {
             showAdminPanel();
+            loadRegistrationStatus();
         }
         
         // Загрузка статуса регистрации
@@ -355,6 +356,7 @@
                     localStorage.setItem('adminToken', authToken);
                     showAdminPanel();
                     loadUsers();
+                    loadRegistrationStatus();
                 } else {
                     showLoginError(data.message || 'Ошибка входа. Проверьте учётные данные.');
                 }
@@ -455,8 +457,8 @@
                 <td>${lastLogin}</td>
                 <td class="actions">
                     ${user.status === 'Pending' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
-                    ${user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
-                    ${user.status === 'Blocked' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
+                    ${user.status !== 'Banned' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
+                    ${user.status === 'Banned' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
                     <button class="btn btn-danger" onclick="deleteUser(${user.id})">🗑</button>
                 </td>
             `;
