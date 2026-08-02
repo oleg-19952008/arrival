@@ -190,6 +190,19 @@ public class UsersController : ControllerBase
     }
     
     /// <summary>
+    /// Разблокировать пользователя (unblock - алиас для unban)
+    /// </summary>
+    [HttpPost("{id}/unblock")]
+    public async Task<IActionResult> UnblockUser(int id)
+    {
+        var result = await _userService.UnbanUserAsync(id);
+        if (!result.Success)
+            return BadRequest(new { message = result.ErrorMessage });
+        
+        return Ok(new { message = "Пользователь разблокирован" });
+    }
+    
+    /// <summary>
     /// Сменить пароль пользователя
     /// </summary>
     [HttpPost("{id}/password")]

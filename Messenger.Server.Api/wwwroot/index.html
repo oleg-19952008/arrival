@@ -158,6 +158,11 @@
             color: white;
         }
         
+        .status-banned {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
         .status-blocked {
             background-color: #e74c3c;
             color: white;
@@ -370,7 +375,12 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            const statusClass = `status-${user.status.toLowerCase()}`;
+            // Нормализуем статус (сервер может возвращать 'Banned', а CSS класс 'status-banned')
+            let statusClass = `status-${user.status.toLowerCase()}`;
+            if (user.status === 'Blocked') {
+                statusClass = 'status-banned'; // Для совместимости
+            }
+            
             const lastLogin = user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString('ru-RU') : '—';
             
             row.innerHTML = `
@@ -382,8 +392,8 @@
                 <td>${lastLogin}</td>
                 <td class="actions">
                     ${user.status === 'PendingApproval' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
-                    ${user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
-                    ${user.status === 'Blocked' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
+                    ${user.status !== 'Banned' && user.status !== 'Blocked' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
+                    ${user.status === 'Banned' || user.status === 'Blocked' ? `<button class="btn btn-success" onclick="unblockUser(${user.id})">🔓</button>` : ''}
                     <button class="btn btn-danger" onclick="deleteUser(${user.id})">🗑</button>
                 </td>
             `;
@@ -425,6 +435,26 @@
                     loadUsers();
                 } else {
                     showMessage('Ошибка при блокировке пользователя', 'error');
+                }
+            } catch (error) {
+                showMessage('Ошибка подключения к серверу', 'error');
+            }
+        }
+        
+        async function unblockUser(userId) {
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}/unblock`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    showMessage('Пользователь разблокирован', 'success');
+                    loadUsers();
+                } else {
+                    showMessage('Ошибка при разблокировке пользователя', 'error');
                 }
             } catch (error) {
                 showMessage('Ошибка подключения к серверу', 'error');
