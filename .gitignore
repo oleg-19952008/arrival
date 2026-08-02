@@ -1,45 +1,41 @@
-```gitignore
+```
 # Build artifacts
-*.obj
-*.exe
+bin/
+obj/
 *.dll
+*.exe
 *.pdb
-*.userprefs
-*.cache
-*.log
+*.so
+*.dylib
+*.class
 
 # Dependencies
 packages/
 node_modules/
+.nuget/
+.npm/
 
-# IDE
-.vs/
-.ReSharper*/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# OS
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
-
-# Testing
-TestResults/
-
-# Output
-bin/
-obj/
-out/
-dist/
-build/
+# Logs
+*.log
 
 # Environment
 .env
 .env.local
-.env.*
-!*.env.example
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+coverage/
+htmlcov/
+.coverage
+*.cover
 ```

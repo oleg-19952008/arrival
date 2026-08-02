@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using Messenger.Core.Models;
 using Messenger.Core.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using Messenger.Server.Api.Hubs;
+using Messenger.Core.Hubs;
 using Messenger.Core.Utils;
 
 namespace Messenger.Core.Services;
