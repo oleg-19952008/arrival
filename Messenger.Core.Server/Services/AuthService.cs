@@ -36,6 +36,42 @@ public class AuthService : IAuthService
             };
         }
 
+        // Проверка длины ника (не более 32 символов)
+        if (string.IsNullOrEmpty(username) || username.Length > 32)
+        {
+            ConsoleLogger.Warn($"Registration failed: username length invalid");
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Имя пользователя должно быть не более 32 символов" 
+            };
+        }
+
+        // Проверка длины пароля (не более 32 символов)
+        if (password.Length > 32)
+        {
+            ConsoleLogger.Warn($"Registration failed: password too long for user '{username}'");
+            return new OperationResult 
+            { 
+                Success = false, 
+                ErrorMessage = "Пароль должен быть не более 32 символов" 
+            };
+        }
+
+        // Проверка пароля на наличие русских букв (только английские буквы и цифры)
+        foreach (char c in password)
+        {
+            if ((c >= 'а' && c <= 'я') || (c >= 'А' && c <= 'Я') || c == 'ё' || c == 'Ё')
+            {
+                ConsoleLogger.Warn($"Registration failed: password contains Russian letters for user '{username}'");
+                return new OperationResult 
+                { 
+                    Success = false, 
+                    ErrorMessage = "Пароль должен содержать только английские буквы" 
+                };
+            }
+        }
+
         // Проверка наличия пользователя
         var existingUser = await _userRepository.GetByUsernameAsync(username);
         if (existingUser != null)
