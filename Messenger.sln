@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Server.Api", "Mes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrival.Test.Console", "Arrival.Test.Console\Arrival.Test.Console.csproj", "{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrival.Test.Wpf", "Arrival.Test.Wpf\Arrival.Test.Wpf.csproj", "{7A0D9952-DC67-484C-A551-2C167842B961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CCF1C3C-CDF8-DC20-D058-F18245ED42FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0D9952-DC67-484C-A551-2C167842B961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0D9952-DC67-484C-A551-2C167842B961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0D9952-DC67-484C-A551-2C167842B961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0D9952-DC67-484C-A551-2C167842B961}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
