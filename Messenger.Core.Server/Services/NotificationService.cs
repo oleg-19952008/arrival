@@ -36,7 +36,8 @@ public class NotificationService : INotificationService
             isDeleted = false
         };
         
-        await _hubContext.Clients.Group($"user_{recipientId}").SendAsync("message", messageData);
+        // Отправляем всем кроме отправителя (чтобы отправитель не получал своё сообщение дважды)
+        await _hubContext.Clients.All.SendAsync("message", messageData);
         
         ConsoleLogger.Info($"[WebSocket Message] От {senderName} пользователю {recipientId}: {content}");
     }

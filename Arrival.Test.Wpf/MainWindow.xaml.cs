@@ -557,23 +557,40 @@ namespace Arrival.Test.Wpf
                     .WithAutomaticReconnect()
                     .Build();
 
-                // Обработчик входящих сообщений
-                _hubConnection.On<int, string, int, string, DateTime>("MessageReceived", 
-                    (messageId, senderName, senderId, content, receivedAt) =>
+                // Обработчик входящих сообщений (формат из NotificationHub.SendMessageToUserAsync)
+                _hubConnection.On<object>("message", 
+                    (messageData) =>
                 {
                     Dispatcher.Invoke(async () =>
                     {
-                        RealTimeMessagesListBox.Items.Add($"[{receivedAt.ToLocalTime():HH:mm}] {senderName}: {content}");
-                        
-                        // Автоматически обновляем список сообщений
-                        await LoadMessages();
-                        
-                        // Показываем уведомление
-                        MessageBox.Show(
-                            $"Новое сообщение от {senderName}:\n{content}",
-                            "Новое сообщение",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Information);
+                        try
+                        {
+                            var json = System.Text.Json.JsonSerializer.Serialize(messageData);
+                            using var doc = JsonDocument.Parse(json);
+                            var root = doc.RootElement;
+                            
+                            var messageId = root.TryGetProperty("id", out var idEl) ? idEl.GetInt32() : 0;
+                            var senderId = root.TryGetProperty("senderId", out var sidEl) ? sidEl.GetInt32() : 0;
+                            var senderName = root.TryGetProperty("senderName", out var snEl) ? snEl.GetString() : "Неизвестный";
+                            var text = root.TryGetProperty("text", out var tEl) ? tEl.GetString() : "";
+                            var timestamp = root.TryGetProperty("timestamp", out var tsEl) ? DateTime.Parse(tsEl.GetString()) : DateTime.Now;
+                            
+                            RealTimeMessagesListBox.Items.Add($"[{timestamp.ToLocalTime():HH:mm}] {senderName}: {text}");
+                            
+                            // Автоматически обновляем список сообщений
+                            await LoadMessages();
+                            
+                            // Показываем уведомление
+                            MessageBox.Show(
+                                $"Новое сообщение от {senderName}:\n{text}",
+                                "Новое сообщение",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            RealTimeMessagesListBox.Items.Add($"[Ошибка обработки сообщения] {ex.Message}");
+                        }
                     });
                 });
 

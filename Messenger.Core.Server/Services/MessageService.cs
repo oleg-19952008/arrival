@@ -108,8 +108,10 @@ public class MessageService : IMessageService
     
     public async Task<IEnumerable<Message>> GetMessagesForUserAsync(int userId)
     {
-        var messages = await _messageRepository.GetByRecipientIdAsync(userId);
-        var result = messages.Where(m => !m.IsDeleted).ToList();
+        var allMessages = await _messageRepository.GetAllAsync();
+        // Возвращаем все сообщения, которые пользователь отправил или получил + общие сообщения
+        var result = allMessages.Where(m => !m.IsDeleted && 
+            (m.RecipientId == null || m.RecipientId == userId || m.SenderId == userId)).ToList();
         ConsoleLogger.Info($"GetMessagesForUser({userId}) returned {result.Count} messages");
         return result;
     }
