@@ -41,7 +41,7 @@ public class MessageService : IMessageService
             throw new InvalidOperationException("Пользователь не активен");
         }
         
-        // Если указан получатель, проверяем его существование
+        // Если указан получатель, проверяем его существование и статус
         if (recipientId.HasValue)
         {
             var recipient = await _userRepository.GetByIdAsync(recipientId.Value);
@@ -49,6 +49,18 @@ public class MessageService : IMessageService
             {
                 ConsoleLogger.Error($"SendMessage failed: recipient with ID {recipientId.Value} not found");
                 throw new InvalidOperationException("Получатель не найден");
+            }
+            
+            if (recipient.Status == UserStatus.Banned)
+            {
+                ConsoleLogger.Warn($"SendMessage failed: recipient '{recipient.Username}' is banned");
+                throw new InvalidOperationException($"Пользователь '{recipient.Username}' заблокирован");
+            }
+            
+            if (recipient.Status == UserStatus.Deleted)
+            {
+                ConsoleLogger.Warn($"SendMessage failed: recipient '{recipient.Username}' is deleted");
+                throw new InvalidOperationException($"Пользователь '{recipient.Username}' удален");
             }
         }
         

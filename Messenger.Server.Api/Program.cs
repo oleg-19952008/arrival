@@ -203,6 +203,31 @@ app.UseWhen(
         appBuilder.UseMiddleware<AdminAuthMiddleware>();
     });
 
+// Поиск папки wwwroot на несколько уровней выше
+string? FindWwwRootPath()
+{
+    var currentDir = Directory.GetCurrentDirectory();
+    for (int i = 0; i < 5; i++)
+    {
+        var wwwRootPath = Path.Combine(currentDir, "wwwroot");
+        if (Directory.Exists(wwwRootPath))
+        {
+            ConsoleLogger.Info($"Found wwwroot at: {wwwRootPath}");
+            return wwwRootPath;
+        }
+        var parent = Directory.GetParent(currentDir);
+        if (parent == null) break;
+        currentDir = parent.FullName;
+    }
+    
+    // Если не нашли, используем локальную wwwroot
+    var localWwwRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+    ConsoleLogger.Info($"Using local wwwroot at: {localWwwRoot}");
+    return localWwwRoot;
+}
+
+var wwwRootPath = FindWwwRootPath();
+
 // Настройка раздачи статических файлов для админ-панели на порту 228
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings[".webp"] = "image/webp";
@@ -214,11 +239,13 @@ app.UseWhen(
     {
         appBuilder.UseDefaultFiles(new DefaultFilesOptions
         {
-            DefaultFileNames = new List<string> { "index.html" }
+            DefaultFileNames = new List<string> { "index.html" },
+            FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(wwwRootPath)
         });
         appBuilder.UseStaticFiles(new StaticFileOptions
         {
-            ContentTypeProvider = provider
+            ContentTypeProvider = provider,
+            FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(wwwRootPath)
         });
     });
 

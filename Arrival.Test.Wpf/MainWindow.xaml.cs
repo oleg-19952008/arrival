@@ -28,6 +28,8 @@ namespace Arrival.Test.Wpf
         private HubConnection? _hubConnection;
         private bool _isConnectedToHub;
         private DispatcherTimer? _messagesPollingTimer;
+        private int _lastMessageCount;
+        private double _lastScrollOffset = -1;
 
         public MainWindow()
         {
@@ -252,6 +254,10 @@ namespace Arrival.Test.Wpf
             
             // Очищаем поле сообщений
             MessagesTextBox.Clear();
+            
+            // Сбрасываем счетчики для прокрутки
+            _lastMessageCount = 0;
+            _lastScrollOffset = -1;
         }
 
         #endregion
@@ -419,12 +425,24 @@ namespace Arrival.Test.Wpf
                     var messagesDoc = JsonDocument.Parse(content);
                     var messagesArray = messagesDoc.RootElement.EnumerateArray().ToList();
 
+                    // Сохраняем текущую позицию прокрутки, если количество сообщений не изменилось
+                    bool shouldRestoreScroll = _lastMessageCount > 0 && 
+                                               messagesArray.Count == _lastMessageCount &&
+                                               _lastScrollOffset >= 0;
+                    
+                    double currentScrollOffset = 0;
+                    if (shouldRestoreScroll)
+                    {
+                        currentScrollOffset = MessagesTextBox.VerticalOffset;
+                    }
+
                     MessagesTextBox.Clear();
 
                     if (messagesArray.Count == 0)
                     {
                         MessagesTextBox.Text = "Сообщений нет.";
                         MessagesStatusTextBlock.Text = "";
+                        _lastMessageCount = 0;
                         return;
                     }
 
@@ -451,10 +469,19 @@ namespace Arrival.Test.Wpf
 
                     MessagesTextBox.Text = messagesText.ToString().TrimEnd();
                     
-                    // Прокрутка вниз к последнему сообщению
-                    MessagesTextBox.CaretIndex = MessagesTextBox.Text.Length;
-                    MessagesTextBox.ScrollToEnd();
+                    // Восстанавливаем позицию прокрутки, если сообщения не изменились
+                    if (shouldRestoreScroll)
+                    {
+                        MessagesTextBox.ScrollToVerticalOffset(currentScrollOffset);
+                    }
+                    else
+                    {
+                        // Прокрутка вниз к последнему сообщению только при новых сообщениях
+                        MessagesTextBox.CaretIndex = MessagesTextBox.Text.Length;
+                        MessagesTextBox.ScrollToEnd();
+                    }
                     
+                    _lastMessageCount = messagesArray.Count;
                     MessagesStatusTextBlock.Text = $"Загружено сообщений: {messagesArray.Count}";
                 }
                 else
