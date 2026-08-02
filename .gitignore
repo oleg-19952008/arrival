@@ -1,4 +1,4 @@
-```
+```gitignore
 # Build artifacts
 bin/
 obj/
@@ -9,24 +9,16 @@ obj/
 
 # Dependencies
 packages/
-node_modules/
 
 # Logs
 *.log
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vs/
-.vshost.exe
-.user
-.vscode/
-.idea/
-
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Visual Studio files
+*.user
+*.suo
+.vs/
 ```

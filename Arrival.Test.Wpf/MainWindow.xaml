@@ -124,14 +124,16 @@
                                               Margin="10,5"/>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <!-- Сначала обрабатываем IsMouseOver для неактивных вкладок -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabHoverBackground}"/>
+                            </Trigger>
+                            <!-- IsSelected имеет приоритет и переопределяет IsMouseOver -->
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabActiveBackground}"/>
                                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
                                 <Setter TargetName="Border" Property="BorderThickness" Value="0,0,0,2"/>
                                 <Setter Property="Foreground" Value="{DynamicResource MainText}"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource TabHoverBackground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
