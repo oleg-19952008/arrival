@@ -120,10 +120,15 @@
                         </Grid>
                     </Border>
 
-                    <!-- Messages List -->
-                    <ListBox x:Name="MessagesListBox" Grid.Row="1" 
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             SelectionMode="Single"/>
+                    <!-- Messages Display -->
+                    <TextBox x:Name="MessagesTextBox" Grid.Row="1" 
+                             IsReadOnly="True" 
+                             TextWrapping="Wrap" 
+                             VerticalScrollBarVisibility="Auto"
+                             FontFamily="Consolas"
+                             FontSize="13"
+                             Padding="5"
+                             AcceptsReturn="True"/>
 
                     <!-- Refresh Button -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">

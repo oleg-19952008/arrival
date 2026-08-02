@@ -250,8 +250,8 @@ namespace Arrival.Test.Wpf
             // Останавливаем таймер опроса сообщений
             _messagesPollingTimer?.Stop();
             
-            // Очищаем список сообщений
-            MessagesListBox.Items.Clear();
+            // Очищаем поле сообщений
+            MessagesTextBox.Clear();
         }
 
         #endregion
@@ -419,15 +419,17 @@ namespace Arrival.Test.Wpf
                     var messagesDoc = JsonDocument.Parse(content);
                     var messagesArray = messagesDoc.RootElement.EnumerateArray().ToList();
 
-                    MessagesListBox.Items.Clear();
+                    MessagesTextBox.Clear();
 
                     if (messagesArray.Count == 0)
                     {
-                        MessagesListBox.Items.Add("Сообщений нет.");
+                        MessagesTextBox.Text = "Сообщений нет.";
                         MessagesStatusTextBlock.Text = "";
                         return;
                     }
 
+                    var messagesText = new StringBuilder();
+                    
                     foreach (var msg in messagesArray)
                     {
                         var id = msg.GetProperty("id").GetInt32();
@@ -440,9 +442,19 @@ namespace Arrival.Test.Wpf
                                          recipientEl.ValueKind != JsonValueKind.Null;
 
                         string prefix = isPersonal ? "[ЛИЧНОЕ]" : "[ОБЩЕЕ]";
-                        MessagesListBox.Items.Add($"{prefix} [{createdAt:HH:mm}] {senderName}: {textContent}");
+                        string displayName = (senderId == _currentUserId) ? "Вы" : senderName;
+                        
+                        messagesText.AppendLine($"{prefix} [{createdAt:dd.MM.yyyy HH:mm:ss}] {displayName}:");
+                        messagesText.AppendLine(textContent);
+                        messagesText.AppendLine(new string('-', 80));
                     }
 
+                    MessagesTextBox.Text = messagesText.ToString().TrimEnd();
+                    
+                    // Прокрутка вниз к последнему сообщению
+                    MessagesTextBox.CaretIndex = MessagesTextBox.Text.Length;
+                    MessagesTextBox.ScrollToEnd();
+                    
                     MessagesStatusTextBlock.Text = $"Загружено сообщений: {messagesArray.Count}";
                 }
                 else
