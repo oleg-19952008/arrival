@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Messenger.Server.Api\Messenger.Server.Api.csproj" />
+  </ItemGroup>
+
 </Project>

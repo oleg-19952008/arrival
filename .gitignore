@@ -1,44 +1,45 @@
-```
-# Visual Studio
-.vs/
-*.user
-*.userosscache
-*.sln.docstates
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
-
-# Visual Studio Code
-.vscode/
-
-# Compiled files
+```gitignore
+# Build artifacts
 *.obj
 *.exe
 *.dll
 *.pdb
-*.ilk
-*.lib
-*.so
-*.dylib
-*.a
+*.userprefs
+*.cache
+*.log
+
+# Dependencies
+packages/
+node_modules/
+
+# IDE
+.vs/
+.ReSharper*/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Testing
+TestResults/
+
+# Output
+bin/
+obj/
+out/
+dist/
+build/
 
 # Environment
 .env
 .env.local
-*.env.*
-
-# Logs
-*.log
-
-# Package manager
-packages/
+.env.*
+!*.env.example
 ```

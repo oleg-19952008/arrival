@@ -394,8 +394,8 @@ public class Program
                     var response = await httpClient.GetAsync($"{BaseUrl}/users/list");
                     if (response.IsSuccessStatusCode)
                     {
-                        var content = await response.Content.ReadAsStringAsync();
-                        var users = JsonDocument.Parse(content).RootElement;
+                        var readContent = await response.Content.ReadAsStringAsync();
+                        var users = JsonDocument.Parse(readContent).RootElement;
                         
                         foreach (var user in users.EnumerateArray())
                         {
