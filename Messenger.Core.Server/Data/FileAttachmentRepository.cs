@@ -87,6 +87,26 @@ public class FileAttachmentRepository : IFileAttachmentRepository
         return null;
     }
 
+    public async Task<FileAttachment?> GetByFileIdAsync(string fileId)
+    {
+        EnsureDatabaseInitialized();
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM FileAttachments WHERE FileId = @FileId";
+        command.Parameters.AddWithValue("@FileId", fileId);
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return MapToAttachment(reader);
+        }
+
+        return null;
+    }
+
     public async Task<IEnumerable<FileAttachment>> GetByMessageIdAsync(int messageId)
     {
         EnsureDatabaseInitialized();

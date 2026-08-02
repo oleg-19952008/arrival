@@ -23,6 +23,11 @@ public interface IUserRepository
     Task<User?> GetByUsernameAsync(string username);
     
     /// <summary>
+    /// Получить пользователя по FileId
+    /// </summary>
+    Task<User?> GetByFileIdAsync(string fileId);
+    
+    /// <summary>
     /// Добавить пользователя
     /// </summary>
     Task<User> AddAsync(User user);
@@ -88,6 +93,11 @@ public interface IFileAttachmentRepository
     /// Получить вложение по ID
     /// </summary>
     Task<FileAttachment?> GetByIdAsync(int id);
+    
+    /// <summary>
+    /// Получить вложение по FileId
+    /// </summary>
+    Task<FileAttachment?> GetByFileIdAsync(string fileId);
     
     /// <summary>
     /// Получить вложения по сообщению

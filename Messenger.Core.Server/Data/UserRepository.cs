@@ -104,6 +104,13 @@ public class UserRepository : IUserRepository
         return null;
     }
     
+    public async Task<User?> GetByFileIdAsync(string fileId)
+    {
+        // Пользователи не имеют прямого связи с FileId, поэтому возвращаем null
+        // Этот метод может быть реализован позже, если потребуется связь пользователей с файлами
+        return null;
+    }
+    
     public async Task<User> AddAsync(User user)
     {
         EnsureDatabaseInitialized();
