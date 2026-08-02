@@ -33,7 +33,13 @@ namespace Arrival.Test.Wpf
         {
             InitializeComponent();
             
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(60)
+            };
+            // Увеличиваем буфер для больших запросов
+            _httpClient.DefaultRequestHeaders.ExpectContinue = false;
+            
             MainTabControl.SelectedIndex = 0;
             
             // Инициализация таймера для опроса сообщений каждые 5 секунд
@@ -368,7 +374,11 @@ namespace Arrival.Test.Wpf
                     recipientLogin
                 };
 
-                var sendResponse = await _httpClient.PostAsJsonAsync($"{_baseUrl}/messages", request);
+                // Используем StringContent с явным указанием UTF-8 для корректной отправки больших текстов
+                var jsonRequest = System.Text.Json.JsonSerializer.Serialize(request);
+                var stringContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                
+                var sendResponse = await _httpClient.PostAsync($"{_baseUrl}/messages", stringContent);
                 var sendContent = await sendResponse.Content.ReadAsStringAsync();
 
                 if (sendResponse.IsSuccessStatusCode)
