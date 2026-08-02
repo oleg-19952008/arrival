@@ -445,7 +445,16 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            const statusClass = `status-${user.status.toLowerCase()}`;
+            // Нормализуем статус для CSS класса (убираем "Pending" часть если есть)
+            let statusClass = 'status-active';
+            if (user.status === 'PendingApproval') {
+                statusClass = 'status-pending';
+            } else if (user.status === 'Banned') {
+                statusClass = 'status-banned';
+            } else if (user.status === 'Active') {
+                statusClass = 'status-active';
+            }
+            
             const lastLogin = user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString('ru-RU') : '—';
             
             row.innerHTML = `
@@ -456,8 +465,8 @@
                 <td>${new Date(user.createdAt).toLocaleString('ru-RU')}</td>
                 <td>${lastLogin}</td>
                 <td class="actions">
-                    ${user.status === 'Pending' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
-                    ${user.status !== 'Banned' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
+                    ${user.status === 'PendingApproval' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">✓</button>` : ''}
+                    ${user.status !== 'Banned' && user.status !== 'PendingApproval' ? `<button class="btn btn-warning" onclick="blockUser(${user.id})">⛔</button>` : ''}
                     ${user.status === 'Banned' ? `<button class="btn btn-success" onclick="approveUser(${user.id})">🔓</button>` : ''}
                     <button class="btn btn-danger" onclick="deleteUser(${user.id})">🗑</button>
                 </td>
