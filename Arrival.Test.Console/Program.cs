@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using System.Text.Json;
 using System.IdentityModel.Tokens.Jwt;
+
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Arrival.Test.Console;
