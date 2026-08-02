@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\services\\fileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.core.server\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C651C270-1190-D00E-4FE7-B436E374ED9F}|Messenger.Core.Server\\Messenger.Core.Server.csproj|solutionrelative:messenger.core.server\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -19,15 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "FileService.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\FileService.cs",
+              "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\FileService.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\FileService.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Services\\FileService.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAD4v2wAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-02T05:28:15.203Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "NotificationHub.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Hubs\\NotificationHub.cs",
               "RelativeDocumentMoniker": "Messenger.Core.Server\\Hubs\\NotificationHub.cs",
-              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Hubs\\NotificationHub.cs*",
-              "RelativeToolTip": "Messenger.Core.Server\\Hubs\\NotificationHub.cs*",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Hubs\\NotificationHub.cs",
+              "RelativeToolTip": "Messenger.Core.Server\\Hubs\\NotificationHub.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAlwBQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-02T05:27:07.795Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-02T05:27:07.795Z"
             }
           ]
         }

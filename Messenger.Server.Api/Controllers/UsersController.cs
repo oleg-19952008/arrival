@@ -224,7 +224,7 @@ public class UsersController : ControllerBase
     [HttpGet("registration-status")]
     public IActionResult GetRegistrationStatus()
     {
-        var isDisabled = File.Exists("ВЫКЛ_РЕГУ");
+        var isDisabled = System.IO.File.Exists("ВЫКЛ_РЕГУ");
         return Ok(new { isDisabled });
     }
     
@@ -236,7 +236,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            File.WriteAllText("ВЫКЛ_РЕГУ", "Registration disabled by admin");
+            System.IO.File.WriteAllText("ВЫКЛ_РЕГУ", "Registration disabled by admin");
             return Ok(new { message = "Регистрация отключена" });
         }
         catch (Exception ex)
@@ -253,9 +253,9 @@ public class UsersController : ControllerBase
     {
         try
         {
-            if (File.Exists("ВЫКЛ_РЕГУ"))
+            if (System.IO.File.Exists("ВЫКЛ_РЕГУ"))
             {
-                File.Delete("ВЫКЛ_РЕГУ");
+              System.IO.  File.Delete("ВЫКЛ_РЕГУ");
             }
             return Ok(new { message = "Регистрация включена" });
         }
