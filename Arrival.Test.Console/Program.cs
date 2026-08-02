@@ -464,7 +464,8 @@ public class Program
                             recipientId.Value, 
                             content, 
                             _currentUserId.Value, 
-                            _currentUsername ?? "Unknown");
+                            _currentUsername ?? "Unknown",
+                            0); // messageId = 0, сервер подставит реальный ID
                         System.Console.WriteLine("✓ Сообщение также отправлено через WebSocket для мгновенной доставки.");
                     }
                     catch (Exception ex)
@@ -551,10 +552,7 @@ public class Program
             System.Console.WriteLine("\n=== Подключение к WebSocket ===");
             
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl($"{SignalRUrl}?userId={_currentUserId}", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(_token);
-                })
+                .WithUrl($"{SignalRUrl}?userId={_currentUserId}&token={_token}")
                 .WithAutomaticReconnect()
                 .Build();
 
