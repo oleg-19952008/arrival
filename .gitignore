@@ -1,116 +1,32 @@
 ```
-# Dependencies
-node_modules/
-vendor/
-
-# Build outputs
+# Build artifacts
 bin/
 obj/
-Debug/
-Release/
-x64/
-x86/
-build/
-dist/
-wwwroot/css/
-wwwroot/js/
-wwwroot/lib/
+*.exe
+*.dll
+*.pdb
+*.nupkg
+
+# Dependencies
+packages/
+node_modules/
+vendor/
 
 # Logs
 *.log
 
-# Environment specific
+# Environment
 .env
 .env.local
-.env.*
+*.env.*
 
-# OS generated
-.DS_Store
-Thumbs.db
-
-# IDE
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Testing
-coverage/
-htmlcov/
-.coverage
-*.coverage
-
-# Package management
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime
-*.dll
-*.exe
-*.so
-*.dylib
-
-# Python specific (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
-.mypy_cache/
-.pytest_cache/
-.hypothesis/
-
-# Node specific (if applicable)
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-.flowconfig
-.pnp/
-.pnp.js
-*.tsbuildinfo
-.next/
-.nuxt/
-.vuepress/dist/
-static/.nojekyll
-
-# Java specific (if applicable)
-*.class
-*.jar
-*.war
-*.ear
-target/
-.gradle/
-build/
-!src/main/**
-!src/test/**
-
-# C# specific (if applicable)
-*.user
-*.suo
-*.csproj.user
-*.vbproj.user
-*.userosscache
-*.sln.docstates
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Tt]est[Rr]esult/
-[Tt]emp/
-_UpgradeReport_Files/
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

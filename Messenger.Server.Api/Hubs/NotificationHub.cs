@@ -27,8 +27,22 @@ public class NotificationHub : Hub
     public override async Task OnConnectedAsync()
     {
         var httpContext = Context.GetHttpContext();
-        var token = httpContext?.Request.Query["token"].ToString();
         var userIdParam = httpContext?.Request.Query["userId"].ToString();
+        
+        // Получаем JWT токен из заголовка Authorization
+        var authHeader = httpContext?.Request.Headers["Authorization"].ToString();
+        string? token = null;
+        
+        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+        {
+            token = authHeader.Substring(7);
+        }
+        
+        // Если в заголовке нет, пробуем получить из query параметра (для обратной совместимости)
+        if (string.IsNullOrEmpty(token))
+        {
+            token = httpContext?.Request.Query["token"].ToString();
+        }
         
         // Проверка JWT токена
         if (string.IsNullOrEmpty(token))

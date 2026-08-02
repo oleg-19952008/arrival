@@ -551,7 +551,10 @@ public class Program
             System.Console.WriteLine("\n=== Подключение к WebSocket ===");
             
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl($"{SignalRUrl}?userId={_currentUserId}")
+                .WithUrl($"{SignalRUrl}?userId={_currentUserId}", options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(_token);
+                })
                 .WithAutomaticReconnect()
                 .Build();
 
