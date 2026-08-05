@@ -10,8 +10,8 @@ namespace Arrival.Test.Console;
 
 public class Program
 {
-    private static readonly string BaseUrl = "http://localhost:748/api";
-    private static readonly string SignalRUrl = "http://localhost:748/notificationHub";
+    private static readonly string BaseUrl = "http://89.109.34.250:748/api";
+    private static readonly string SignalRUrl = "http://89.109.34.250:748/notificationHub";
     private static string? _token;
     private static int? _currentUserId;
     private static string? _currentUsername;

@@ -1,4 +1,4 @@
-```gitignore
+```
 # Build artifacts
 bin/
 obj/
@@ -6,19 +6,34 @@ obj/
 *.dll
 *.pdb
 *.userprefs
+*.cache
+*.compiled
+[Bb]in/
+[Oo]bj/
 
 # Dependencies
 packages/
+node_modules/
+*.sln.DotSettings.user
+*.userosscache
+*.unityproj.DotSettings.user
 
 # Logs
 *.log
+*.bak
+*.tmp
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Visual Studio files
+# User-specific files
+.vs/
+.vscode/
 *.user
 *.suo
-.vs/
+*.userosscache
+*.unityproj.DotSettings.user
+
+# Environment specific
+.env
+.env.local
+.env.*
+!env.example
 ```
