@@ -87,7 +87,7 @@
                            Foreground="#707579" HorizontalAlignment="Center" Margin="0,0,0,30"/>
                 
                 <!-- Панель входа -->
-                <StackPanel Grid.Row="3" x:Name="LoginPanel">
+                <StackPanel Grid.Row="3" x:Name="LoginPanel" Visibility="Visible">
                     <TextBlock Text="Имя пользователя" FontSize="13" FontWeight="SemiBold" 
                                Foreground="#555555" Margin="0,0,0,8"/>
                     <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,15">
@@ -174,7 +174,8 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBox Grid.Column="1" x:Name="RegisterUsernameTextBox" 
-                                     BorderThickness="0" Background="Transparent" FontSize="14"/>
+                                     BorderThickness="0" Background="Transparent" FontSize="14"
+                                     KeyDown="RegisterUsername_KeyDown"/>
                         </Grid>
                     </Border>
                     
@@ -189,7 +190,8 @@
                             <TextBlock Grid.Column="0" Text="🔒" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <PasswordBox Grid.Column="1" x:Name="RegisterPasswordBox" 
                                          BorderThickness="0" Background="Transparent" FontSize="14"
-                                         PasswordChar="•"/>
+                                         PasswordChar="•"
+                                         KeyDown="RegisterPassword_KeyDown"/>
                         </Grid>
                     </Border>
                     

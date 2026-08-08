@@ -1,46 +1,62 @@
 ```csharp
 # Build results
-[Bb]in/
-[Oo]bj/
 [Dd]ebug/
+[Dd]ebugPublic/
 [Rr]elease/
+[Rr]eleases/
 x64/
 x86/
-[Dd]ebug-[Nn][Ee][Tt]/
-[Rr]elease-[Nn][Ee][Tt]/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
 
-# User-specific files
+# Visual Studio files
+*.sln
+*.csproj
 *.user
 *.userosscache
 *.suo
-*.userprefs
 *.lock
-*.csproj.user
-*.vbproj.user
-*.fsproj.user
+*.vcxproj.filters
 
-# Visual Studio Code
+# Visual Studio Code files
 .vscode/
 
-# Visual Studio IntelliSense
-*.VC.db
-*.VC.VC.opendb
+# Rider files
+.idea/
 
-# Temporary files
-*.tmp
-*.temp
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.exe.config
+*.userprefs
+
+# Logs
 *.log
 
-# Environment files
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Environment specific settings
 .env
 .env.local
 *.env.*
 
-# OS generated files
-.DS_Store
-Thumbs.db
-desktop.ini
-$RECYCLE.BIN/
-ehthumbs.db
-Icon?
+# Test results
+*.testresults
+*.trx
+
+# NuGet packages
+*.nupkg
+packages/
 ```

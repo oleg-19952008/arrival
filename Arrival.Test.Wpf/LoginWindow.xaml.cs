@@ -70,6 +70,22 @@ namespace Arrival.Test.Wpf
             }
         }
 
+        private void RegisterUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterUsernameTextBox.Text))
+            {
+                RegisterPasswordBox.Focus();
+            }
+        }
+
+        private void RegisterPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterPasswordBox.Password))
+            {
+                RegisterButton_Click(this, new RoutedEventArgs());
+            }
+        }
+
         #endregion
 
         #region Auth Methods
