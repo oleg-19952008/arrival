@@ -43,8 +43,7 @@
                     <Button Grid.Column="1" Content="✕" Width="30" Height="30" 
                             Background="Transparent" BorderThickness="0"
                             Foreground="White" FontSize="14" Cursor="Hand"
-                            Click="CloseButton_Click"
-                            Style="{StaticResource {x:Null}}">
+                            Click="CloseButton_Click">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="15">
