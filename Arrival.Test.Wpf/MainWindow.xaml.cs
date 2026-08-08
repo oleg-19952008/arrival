@@ -21,6 +21,7 @@ using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using JsonValueKind = System.Text.Json.JsonValueKind;
 
 namespace Arrival.Test.Wpf
 {
@@ -140,11 +141,28 @@ namespace Arrival.Test.Wpf
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonDoc = JsonDocument.Parse(content);
-                    _token = jsonDoc.RootElement.GetProperty("token").GetString();
-                    _currentUserId = jsonDoc.RootElement.GetProperty("userId").GetInt32();
-                    _currentUsername = jsonDoc.RootElement.GetProperty("username").GetString();
-                    var role = jsonDoc.RootElement.GetProperty("role").GetString();
-                    var status = jsonDoc.RootElement.GetProperty("status").GetString();
+                    var root = jsonDoc.RootElement;
+                    
+                    if (!root.TryGetProperty("token", out var tokenEl) || tokenEl.ValueKind == JsonValueKind.Null)
+                    {
+                        LoginMessageTextBlock.Foreground = Brushes.LightCoral;
+                        LoginMessageTextBlock.Text = "✗ Ошибка входа: сервер не вернул токен";
+                        return;
+                    }
+                    
+                    _token = tokenEl.GetString();
+                    
+                    if (!root.TryGetProperty("userId", out var userIdEl) || userIdEl.ValueKind == JsonValueKind.Null)
+                    {
+                        LoginMessageTextBlock.Foreground = Brushes.LightCoral;
+                        LoginMessageTextBlock.Text = "✗ Ошибка входа: сервер не вернул userId";
+                        return;
+                    }
+                    _currentUserId = userIdEl.GetInt32();
+                    
+                    _currentUsername = root.TryGetProperty("username", out var usernameEl) ? usernameEl.GetString() : username;
+                    var role = root.TryGetProperty("role", out var roleEl) ? roleEl.GetString() : "User";
+                    var status = root.TryGetProperty("status", out var statusEl) ? statusEl.GetString() : "Online";
 
                     _httpClient.DefaultRequestHeaders.Authorization = 
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);

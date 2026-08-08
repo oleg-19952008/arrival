@@ -143,9 +143,6 @@
         
         <!-- Конвертер для цвета имени отправителя -->
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-        
-        <!-- Конвертер для переключения темы -->
-        <local:ThemeColorConverter x:Key="ThemeColorConverter"/>
     </Window.Resources>
     
     <Grid x:Name="MainGrid" Background="{DynamicResource WindowBackground}">
