@@ -9,12 +9,12 @@ using System.Windows.Media;
 
 namespace Arrival.Test.Wpf
 {
-    public partial class LoginWindow : Window
+    public partial class RegisterWindow : Window
     {
         private readonly string _baseUrl = "http://127.0.0.1:748/api";
         private readonly HttpClient _httpClient;
 
-        public LoginWindow()
+        public RegisterWindow()
         {
             InitializeComponent();
             _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
@@ -30,42 +30,14 @@ namespace Arrival.Test.Wpf
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
-        }
-
-        private void ShowRegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            var registerWindow = new RegisterWindow();
-            registerWindow.Show();
+            this.Close();
         }
 
         private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // Этот метод больше не нужен в LoginWindow, так как форма регистрации вынесена в отдельное окно
-            // Оставляем пустым для совместимости или можно удалить
-        }
-
-        private void LoginUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            // Очистка сообщения об ошибке при вводе
-            if (!string.IsNullOrEmpty(LoginUsernameTextBox.Text))
-                LoginMessageTextBlock.Text = "";
-        }
-
-        private void LoginUsername_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginUsernameTextBox.Text))
-            {
-                LoginPasswordBox.Focus();
-            }
-        }
-
-        private void LoginPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginPasswordBox.Password))
-            {
-                LoginButton_Click(this, new RoutedEventArgs());
-            }
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
         }
 
         private void RegisterUsername_KeyDown(object sender, KeyEventArgs e)
@@ -129,65 +101,6 @@ namespace Arrival.Test.Wpf
             {
                 AuthMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
                 AuthMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
-            }
-            finally
-            {
-                LoadingBorder.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            var username = LoginUsernameTextBox.Text.Trim();
-            var password = LoginPasswordBox.Password;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                LoginMessageTextBlock.Text = "Имя пользователя и пароль не могут быть пустыми.";
-                return;
-            }
-
-            try
-            {
-                LoadingBorder.Visibility = Visibility.Visible;
-                var request = new { username, password };
-                var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/auth/login", request);
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonDoc = JsonDocument.Parse(content);
-                    var token = jsonDoc.RootElement.GetProperty("token").GetString();
-                    var userId = jsonDoc.RootElement.GetProperty("userId").GetInt32();
-                    var currentUsername = jsonDoc.RootElement.GetProperty("username").GetString();
-                    var role = jsonDoc.RootElement.GetProperty("role").GetString();
-                    var status = jsonDoc.RootElement.GetProperty("status").GetString();
-
-                    // Сохраняем данные для MainWindow
-                    App.CurrentToken = token;
-                    App.CurrentUserId = userId;
-                    App.CurrentUsername = currentUsername;
-                    App.CurrentRole = role;
-                    App.CurrentStatus = status;
-
-                    LoginMessageTextBlock.Text = "";
-                    
-                    // Открываем главное окно
-                    var mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Close();
-                }
-                else
-                {
-                    var error = ParseErrorMessage(content);
-                    LoginMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
-                    LoginMessageTextBlock.Text = $"✗ Ошибка входа: {error}";
-                }
-            }
-            catch (Exception ex)
-            {
-                LoginMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
-                LoginMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
             }
             finally
             {

@@ -1,7 +1,7 @@
-<Window x:Class="Arrival.Test.Wpf.LoginWindow"
+<Window x:Class="Arrival.Test.Wpf.RegisterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Мессенджер - Вход" 
+        Title="Мессенджер - Регистрация" 
         Height="550" Width="420"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -28,7 +28,7 @@
             </Grid.RowDefinitions>
             
             <!-- Заголовок окна (для перетаскивания) -->
-            <Border Grid.Row="0" Background="#2481CC" CornerRadius="16,16,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Border Grid.Row="0" Background="#FF5722" CornerRadius="16,16,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -37,7 +37,7 @@
                     
                     <StackPanel Grid.Column="0" Margin="20,15">
                         <TextBlock Text="✈ Мессенджер" FontSize="20" FontWeight="Bold" Foreground="White"/>
-                        <TextBlock Text="Вход в аккаунт" FontSize="12" Foreground="#E3F2FD" Margin="0,4,0,0"/>
+                        <TextBlock Text="Регистрация аккаунта" FontSize="12" Foreground="#FFE0B2" Margin="0,4,0,0"/>
                     </StackPanel>
                     
                     <Button Grid.Column="1" Content="✕" Width="30" Height="30" 
@@ -73,21 +73,21 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Логотип -->
-                <Border Grid.Row="0" Width="80" Height="80" CornerRadius="40" Background="#2481CC" 
+                <Border Grid.Row="0" Width="80" Height="80" CornerRadius="40" Background="#FF5722" 
                         HorizontalAlignment="Center" Margin="0,0,0,20">
                     <TextBlock Text="✈" FontSize="40" Foreground="White" 
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 
                 <!-- Заголовок -->
-                <TextBlock Grid.Row="1" Text="Добро пожаловать!" FontSize="22" FontWeight="Bold" 
+                <TextBlock Grid.Row="1" Text="Создание аккаунта" FontSize="22" FontWeight="Bold" 
                            Foreground="#333333" HorizontalAlignment="Center" Margin="0,0,0,8"/>
                 
-                <TextBlock Grid.Row="2" Text="Войдите или зарегистрируйтесь" FontSize="13" 
+                <TextBlock Grid.Row="2" Text="Заполните данные для регистрации" FontSize="13" 
                            Foreground="#707579" HorizontalAlignment="Center" Margin="0,0,0,30"/>
                 
-                    <!-- Панель входа -->
-                <StackPanel Grid.Row="3" x:Name="LoginPanel">
+                <!-- Форма регистрации -->
+                <StackPanel Grid.Row="3">
                     <TextBlock Text="Имя пользователя" FontSize="13" FontWeight="SemiBold" 
                                Foreground="#555555" Margin="0,0,0,8"/>
                     <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,15">
@@ -97,36 +97,35 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                            <TextBox Grid.Column="1" x:Name="LoginUsernameTextBox" 
+                            <TextBox Grid.Column="1" x:Name="RegisterUsernameTextBox" 
                                      BorderThickness="0" Background="Transparent" FontSize="14"
-                                     TextChanged="LoginUsername_TextChanged"
-                                     KeyDown="LoginUsername_KeyDown"/>
+                                     KeyDown="RegisterUsername_KeyDown"/>
                         </Grid>
                     </Border>
                     
                     <TextBlock Text="Пароль" FontSize="13" FontWeight="SemiBold" 
                                Foreground="#555555" Margin="0,0,0,8"/>
-                    <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,15">
+                    <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,20">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="🔒" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                            <PasswordBox Grid.Column="1" x:Name="LoginPasswordBox" 
+                            <PasswordBox Grid.Column="1" x:Name="RegisterPasswordBox" 
                                          BorderThickness="0" Background="Transparent" FontSize="14"
                                          PasswordChar="•"
-                                         KeyDown="LoginPassword_KeyDown"/>
+                                         KeyDown="RegisterPassword_KeyDown"/>
                         </Grid>
                     </Border>
                     
-                    <TextBlock x:Name="LoginMessageTextBlock" FontSize="12" 
-                               Foreground="#F44336" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="AuthMessageTextBlock" FontSize="12" 
+                               Foreground="#4CAF50" Margin="0,0,0,15" TextWrapping="Wrap"/>
                     
-                    <Button Content="Войти" Click="LoginButton_Click" 
+                    <Button Content="Зарегистрироваться" Click="RegisterButton_Click" 
                             Background="#2481CC" Foreground="White" BorderThickness="0"
                             Padding="0,14" FontSize="15" FontWeight="SemiBold" Cursor="Hand"
-                            Margin="0,0,0,10">
+                            Margin="0,0,0,15">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
@@ -144,20 +143,17 @@
                         </Button.Template>
                     </Button>
                     
-                    <Button x:Name="RegisterButton" Content="➤ НЕТ АККАУНТА? ЗАРЕГИСТРИРОВАТЬСЯ" Click="ShowRegisterButton_Click"
-                            Background="#FF5722" Foreground="White" BorderThickness="0"
-                            FontSize="14" FontWeight="Bold" Cursor="Hand" Padding="0,12" Margin="0,15,0,0">
+                    <Button Content="Уже есть аккаунт? Войти" Click="ShowLoginButton_Click"
+                            Background="Transparent" Foreground="#2481CC" BorderThickness="0"
+                            FontSize="13" Cursor="Hand" Padding="0,8">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="10" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Border Background="{TemplateBinding Background}">
                                     <ContentPresenter HorizontalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#F4511E"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter Property="Background" Value="#E64A19"/>
+                                        <Setter Property="Foreground" Value="#1970B3"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
