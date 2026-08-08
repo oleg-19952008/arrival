@@ -22,6 +22,21 @@
         <SolidColorBrush x:Key="OtherMessageBackground" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="OnlineStatusColor" Color="#4CAF50"/>
         
+        <!-- Цвета темной темы -->
+        <SolidColorBrush x:Key="DarkWindowBackground" Color="#0f0f0f"/>
+        <SolidColorBrush x:Key="DarkChatListBackground" Color="#212121"/>
+        <SolidColorBrush x:Key="DarkChatItemBackground" Color="#212121"/>
+        <SolidColorBrush x:Key="DarkChatItemHoverBackground" Color="#2c2c2c"/>
+        <SolidColorBrush x:Key="DarkChatItemSelectedBackground" Color="#2b5278"/>
+        <SolidColorBrush x:Key="DarkMessageAreaBackground" Color="#0f0f0f"/>
+        <SolidColorBrush x:Key="DarkInputBackground" Color="#212121"/>
+        <SolidColorBrush x:Key="DarkInputForeground" Color="#ffffff"/>
+        <SolidColorBrush x:Key="DarkInputBorder" Color="#3a3a3a"/>
+        <SolidColorBrush x:Key="DarkMainText" Color="#ffffff"/>
+        <SolidColorBrush x:Key="DarkSecondaryText" Color="#aaaaaa"/>
+        <SolidColorBrush x:Key="DarkMyMessageBackground" Color="#2b5278"/>
+        <SolidColorBrush x:Key="DarkOtherMessageBackground" Color="#212121"/>
+        
         <!-- Стили для кнопок -->
         <Style x:Key="IconButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -128,9 +143,12 @@
         
         <!-- Конвертер для цвета имени отправителя -->
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <!-- Конвертер для переключения темы -->
+        <local:ThemeColorConverter x:Key="ThemeColorConverter"/>
     </Window.Resources>
     
-    <Grid Background="{DynamicResource WindowBackground}">
+    <Grid x:Name="MainGrid" Background="{DynamicResource WindowBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320" MinWidth="250" MaxWidth="450"/>
             <ColumnDefinition Width="*"/>
@@ -155,6 +173,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         
                         <StackPanel Grid.Column="0">
@@ -165,7 +184,12 @@
                                        Margin="0,4,0,0"/>
                         </StackPanel>
                         
-                        <Button Grid.Column="1" x:Name="LogoutButton" Content="🚪" 
+                        <Button Grid.Column="1" x:Name="ThemeToggleButton" Content="🌙" 
+                                Style="{StaticResource IconButton}"
+                                Click="ThemeToggleButton_Click"
+                                ToolTip="Переключить тему"
+                                Margin="0,0,8,0"/>
+                        <Button Grid.Column="2" x:Name="LogoutButton" Content="🚪" 
                                 Style="{StaticResource IconButton}"
                                 Click="LogoutButton_Click"
                                 ToolTip="Выйти"/>
