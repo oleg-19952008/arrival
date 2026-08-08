@@ -5,40 +5,22 @@
 *.dll
 *.pdb
 *.user
+*.sln.docstates
+*.userosscache
 *.suo
-*.cache
-*.ilk
-*.exp
-*.lib
-*.iobj
-*.ipdb
-*.builds
-*.gch
-*.pch
 
 # Output directories
 bin/
 obj/
-Debug/
-Release/
-x64/
-x86/
-Debug*/
-Release*/
+out/
 
 # Dependencies
 packages/
 node_modules/
+.nuget/
 
 # Logs
 *.log
-
-# User-specific files
-.vs/
-*.userprefs
-*.[Cc]ache
-*.VC.db
-*.VC.VC.opendb
 
 # Environment
 .env
@@ -46,7 +28,7 @@ node_modules/
 *.env.*
 
 # Editors
-.vscode/
+.vs/
 .idea/
 *.swp
 *.swo
