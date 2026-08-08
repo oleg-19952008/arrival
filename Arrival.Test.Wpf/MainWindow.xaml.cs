@@ -11,11 +11,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
+using Brush = System.Windows.Media.Brush;
+using Application = System.Windows.Application;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
 namespace Arrival.Test.Wpf
 {
@@ -490,7 +493,7 @@ namespace Arrival.Test.Wpf
                                 Visible = true,
                                 BalloonTipTitle = "Новое сообщение",
                                 BalloonTipText = $"{senderName}: {text}",
-                                BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info
+                                BalloonTipIcon = (System.Windows.Forms.ToolTipIcon)1
                             };
                             notify.ShowBalloonTip(3000);
                             
