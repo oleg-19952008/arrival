@@ -46,13 +46,10 @@ public class AuthController : ControllerBase
         return Ok(new 
         { 
             token = result.Token,
-            user = new 
-            {
-                id = result.User!.Id,
-                username = result.User.Username,
-                role = result.User.Role.ToString(),
-                status = result.User.Status.ToString()
-            }
+            userId = result.User!.Id,
+            username = result.User.Username,
+            role = result.User.Role.ToString(),
+            status = result.User.Status.ToString()
         });
     }
 

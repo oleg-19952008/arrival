@@ -1,37 +1,523 @@
-```
-# Build artifacts
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
 *.obj
 *.exe
 *.dll
-*.pdb
-*.userprefs
-*.cache
-*.log
-*.tmp
+*.so
+*.a
+*.out
+obj/
+bin/
+out/
 
 # Dependencies
-packages/
 node_modules/
+venv/
+.venv/
+.env
+.env.local
+.env.*
 
-# IDE specific
-.vs/
-.vshistory/
-.suo
-.user
-.userosscache
-.vspscc
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors
+.vscode/
+.idea/
+*.userprefs
 
 # OS generated files
 .DS_Store
 Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
+
+# Build outputs
+dist/
+build/
+target/
+release/
+debug/
 
 # Testing
-TestResults/
+.coverage
+coverage/
+htmlcov/
+.nyc_output/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
 
-# NuGet
-*.nupkg
-.nuget/
-```
+# Package managers
+.npm/
+.yarn/
+.pip/
+.wafpickle-*
+poetry.lock
+
+# IDE specific
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+*.zst
+
+# Windows
+*.bat
+*.cmd
+Desktop.ini
+
+# Linux
+*~
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*:*
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.egg
+
+# JavaScript
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+jspm_packages/
+typings/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+.recommenders
+
+# C#
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+**/bin/
+**/obj/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Ruby
+*.gem
+*.rbc
+.rbx/
+.bundle/
+vendor/bundle/
+.rbenv-gemsets
+.sass-cache
+.rake_tasks~
+
+# PHP
+*.phar
+.php_cs.cache
+.phpunit.result.cache
+vendor/composer/installed.json
+
+# Rust
+*.lock
+
+# Scala
+*.class
+*.log
+.libs/
+work/
+
+# C/C++
+*.o
+*.a
+*.so
+*.ilk
+*.iobj
+*.ipdb
+*.pdb
+*.pgc
+*.pgd
+*.tlog
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.pidb
+*.svclog
+
+# Objective-C
+*.dSYM/
+*.exp
+*.lib
+
+# Swift
+*.xcodeproj/
+*.xcworkspace/
+*.swiftpm/
+
+# Android
+*.apk
+*.aar
+*.aab
+local.properties
+captures/
+.gradle/
+app/build/
+
+# Unity
+Temp/
+Obj/
+Build/
+Library/
+Logs/
+MemoryCaptures/
+Packages/packages-lock.json
+
+# Dotnet
+**/bin/
+**/obj/
+*.userprefs
+*.userosscache
+.vs/
+.vscode/
+
+# Docker
+.dockerignore
+!Dockerfile
+!docker-compose.yml
+
+# Vagrant
+.vagrant/
+Vagrantfile
+
+# Ansible
+.retry/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfvars
+
+# Jenkins
+.jenkins/
+jenkins/
+
+# Travis CI
+.travis.yml
+
+# CircleCI
+.circleci/
+
+# GitHub
+.github/
+
+# GitLab
+.gitlab/
+
+# Heroku
+.heroku/
+
+# Netlify
+.netlify/
+
+# Vercel
+.vercel/
+
+# AWS
+.aws/
+
+# Azure
+.azure/
+
+# Google Cloud
+.gcloud/
+
+# Database
+*.db
+*.db-journal
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+*.lock
+*.out
+*.pid
+*.seed
+*.session
+*.sublime-workspace
+
+# Configuration
+config/
+secrets/
+credentials/
+keys/
+certs/
+.ssl/
+
+# Sensitive
+*.key
+*.pem
+*.crt
+*.cer
+*.csr
+*.p12
+*.jks
+*.keystore
+
+# Generated documentation
+docs/_build/
+docs/api/
+
+# Frontend build tools
+public/dist/
+public/build/
+static/css/
+static/js/
+static/media/
+*.min.css
+*.min.js
+*.bundle.js
+
+# Elm
+elm-stuff/
+*.elmo
+
+# Elixir
+*.beam
+*.ez
+.erlang.cookie
+.eex.swp
+.elixir_ls/
+
+# Erlang
+.erlang.cookie
+.eunit/
+ebin/
+priv/
+generated/
+
+# Haskell
+dist-newstyle/
+.cabal-sandbox/
+*.o
+*.hi
+.hie
+.hcr
+.hsig
+.hsig~
+.hsig.hie
+.hsig.hcr
+.hsig.o
+.hsig.dyn_o
+.hsig.prof
+.hsig.tix
+.hsig.eventlog
+.hsig.dump-hi
+.hsig.dump-iface
+.hsig.dump-pkg
+.hsig.dump-splices
+.hsig.dump-tix
+.hsig.dump-vectored
+.hsig.dump-vectored.tix
+.hsig.dump-vectored.eventlog
+.hsig.dump-vectored.hi
+.hsig.dump-vectored.hcr
+.hsig.dump-vectored.hie
+.hsig.dump-vectored.o
+.hsig.dump-vectored.dyn_o
+.hsig.dump-vectored.prof
+.hsig.dump-vectored.tix
+.hsig.dump-vectored.eventlog
+.hsig.dump-vectored.hi
+.hsig.dump-vectored.hcr
+.hsig.dump-vectored.hie
+.hsig.dump-vectored.o
+.hsig.dump-vectored.dyn_o
+.hsig.dump-vectored.prof
+.hsig.dump-vectored.tix
+.hsig.dump-vectored.eventlog
+
+# Julia
+.julia/
+.julia_scratch/
+.julia_compiled/
+.julia_repl_history
+.julia_history
+
+# Kotlin
+*.iml
+*.iws
+*.kotlin_metadata
+*.kotlin_built
+*.kotlin_dsl
+*.kotlin_generated
+*.kotlin_main
+*.kotlin_test
+*.kotlin_js
+*.kotlin_native
+*.kotlin_wasm
+*.kotlin_multiplatform
+*.kotlin_android
+*.kotlin_js_legacy
+*.kotlin_js_ir
+*.kotlin_js_full_stack
+*.kotlin_mpp
+*.kotlin_multiplatform_android
+*.kotlin_multiplatform_ios
+*.kotlin_multiplatform_js
+*.kotlin_multiplatform_jvm
+*.kotlin_multiplatform_native
+*.kotlin_multiplatform_wasm
+*.kotlin_multiplatform_compose
+*.kotlin_multiplatform_desktop
+*.kotlin_multiplatform_server
+*.kotlin_multiplatform_mobile
+*.kotlin_multiplatform_web
+*.kotlin_multiplatform_cloud
+*.kotlin_multiplatform_data
+*.kotlin_multiplatform_ui
+*.kotlin_multiplatform_network
+*.kotlin_multiplatform_storage
+*.kotlin_multiplatform_security
+*.kotlin_multiplatform_testing
+*.kotlin_multiplatform_performance
+*.kotlin_multiplatform_analytics
+*.kotlin_multiplatform_ml
+*.kotlin_multiplatform_ai
+*.kotlin_multiplatform_blockchain
+*.kotlin_multiplatform_iot
+*.kotlin_multiplatform_gaming
+*.kotlin_multiplatform_enterprise
+*.kotlin_multiplatform_microservices
+*.kotlin_multiplatform_spring
+*.kotlin_multiplatform_android_native
+*.kotlin_multiplatform_ios_native
+*.kotlin_multiplatform_flutter
+*.kotlin_multiplatform_react_native
+*.kotlin_multiplatform_unity
+*.kotlin_multiplatform_unreal
+*.kotlin_multiplatform_godot
+*.kotlin_multiplatform_cocos
+*.kotlin_multiplatform_libgdx
+*.kotlin_multiplatform_monogame
+*.kotlin_multiplatform_fna
+*.kotlin_multiplatform_sfml
+*.kotlin_multiplatform_allegro
+*.kotlin_multiplatform_opengl
+*.kotlin_multiplatform_vulkan
+*.kotlin_multiplatform_directx
+*.kotlin_multiplatform_metal
+*.kotlin_multiplatform_wgpu
+*.kotlin_multiplatform_raylib
+*.kotlin_multiplatform_sdl
+*.kotlin_multiplatform_sokol
+*.kotlin_multiplatform_bgfx
+*.kotlin_multiplatform_imgui
+*.kotlin_multiplatform_nanogui
+*.kotlin_multiplatform_nuklear
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes
+*.kotlin_multiplatform_implot
+*.kotlin_multiplatform_imnodes......

@@ -36,6 +36,7 @@ namespace Arrival.Test.Wpf
         private HubConnection? _hubConnection;
         private bool _isConnectedToHub;
         private DispatcherTimer? _messagesPollingTimer;
+        private bool _isDarkTheme = false;
         
         // Текущий выбранный чат
         private ChatItem? _selectedChat;
@@ -150,8 +151,8 @@ namespace Arrival.Test.Wpf
 
                     LoginMessageTextBlock.Text = "";
                     
-                    // Скрываем экран авторизации
-                    AuthOverlay.Visibility = Visibility.Collapsed;
+                    // Скрываем экран авторизации (теперь используется отдельное окно)
+                    // AuthOverlay.Visibility = Visibility.Collapsed;
                     
                     // Обновляем UI
                     UpdateLoggedInUI(_currentUsername, role, status);
@@ -536,6 +537,67 @@ namespace Arrival.Test.Wpf
 
         #endregion
 
+        #region Theme Toggle
+
+        private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isDarkTheme = !_isDarkTheme;
+            ApplyTheme(_isDarkTheme);
+        }
+
+        private void ApplyTheme(bool isDark)
+        {
+            ThemeToggleButton.Content = isDark ? "☀️" : "🌙";
+            
+            Resources["WindowBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(15, 15, 15))
+                : new SolidColorBrush(Color.FromRgb(240, 242, 245));
+            
+            Resources["ChatListBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(33, 33, 33)) 
+                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            
+            Resources["MainText"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) 
+                : new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            
+            Resources["SecondaryText"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(170, 170, 170)) 
+                : new SolidColorBrush(Color.FromRgb(112, 117, 121));
+            
+            Resources["InputBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(33, 33, 33)) 
+                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            
+            Resources["InputForeground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) 
+                : new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            
+            Resources["ChatItemHoverBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(44, 44, 44)) 
+                : new SolidColorBrush(Color.FromRgb(244, 244, 245));
+            
+            Resources["ChatItemSelectedBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(43, 82, 120)) 
+                : new SolidColorBrush(Color.FromRgb(227, 242, 253));
+            
+            Resources["MessageAreaBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(15, 15, 15)) 
+                : new SolidColorBrush(Color.FromRgb(229, 221, 213));
+            
+            Resources["MyMessageBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(43, 82, 120)) 
+                : new SolidColorBrush(Color.FromRgb(238, 255, 222));
+            
+            Resources["OtherMessageBackground"] = isDark 
+                ? new SolidColorBrush(Color.FromRgb(33, 33, 33)) 
+                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+
+            MainGrid?.UpdateLayout();
+        }
+
+        #endregion
+
         #region Logout
 
         private async void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -564,10 +626,12 @@ namespace Arrival.Test.Wpf
                 CurrentChatAvatarText.Text = "";
                 CurrentChatStatusText.Text = "";
                 
-                AuthOverlay.Visibility = Visibility.Visible;
-                LogoutButton.Visibility = Visibility.Collapsed;
+                // AuthOverlay.Visibility = Visibility.Visible; // Теперь используется отдельное окно входа
                 
-                _messagesPollingTimer?.Stop();
+                // Закрываем главное окно и открываем окно входа
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                this.Close();
             }
         }
 
