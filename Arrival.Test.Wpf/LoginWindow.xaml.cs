@@ -38,6 +38,7 @@ namespace Arrival.Test.Wpf
             LoginPanel.Visibility = Visibility.Collapsed;
             RegisterPanel.Visibility = Visibility.Visible;
             AuthMessageTextBlock.Text = "";
+            RegisterUsernameTextBox.Focus();
         }
 
         private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
@@ -45,6 +46,7 @@ namespace Arrival.Test.Wpf
             LoginPanel.Visibility = Visibility.Visible;
             RegisterPanel.Visibility = Visibility.Collapsed;
             LoginMessageTextBlock.Text = "";
+            LoginUsernameTextBox.Focus();
         }
 
         private void LoginUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
