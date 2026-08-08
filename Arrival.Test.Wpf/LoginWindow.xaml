@@ -99,7 +99,8 @@
                             <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBox Grid.Column="1" x:Name="LoginUsernameTextBox" 
                                      BorderThickness="0" Background="Transparent" FontSize="14"
-                                     TextChanged="LoginUsername_TextChanged"/>
+                                     TextChanged="LoginUsername_TextChanged"
+                                     KeyDown="LoginUsername_KeyDown"/>
                         </Grid>
                     </Border>
                     
@@ -114,7 +115,8 @@
                             <TextBlock Grid.Column="0" Text="🔒" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <PasswordBox Grid.Column="1" x:Name="LoginPasswordBox" 
                                          BorderThickness="0" Background="Transparent" FontSize="14"
-                                         PasswordChar="•"/>
+                                         PasswordChar="•"
+                                         KeyDown="LoginPassword_KeyDown"/>
                         </Grid>
                     </Border>
                     

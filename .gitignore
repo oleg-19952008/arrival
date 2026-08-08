@@ -1,1 +1,46 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'Arrival.Test.Wpf/LoginWindow.xaml', which is a source code file (.xaml) and should not be added to .gitignore. Since there are no build artifacts, dependencies, or temporary files in the changes, no additional ignore rules are needed.
+```csharp
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Dd]ebug-[Nn][Ee][Tt]/
+[Rr]elease-[Nn][Ee][Tt]/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.lock
+*.csproj.user
+*.vbproj.user
+*.fsproj.user
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio IntelliSense
+*.VC.db
+*.VC.VC.opendb
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+ehthumbs.db
+Icon?
+```

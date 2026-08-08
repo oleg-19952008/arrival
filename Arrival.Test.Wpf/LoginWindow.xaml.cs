@@ -54,6 +54,22 @@ namespace Arrival.Test.Wpf
                 LoginMessageTextBlock.Text = "";
         }
 
+        private void LoginUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginUsernameTextBox.Text))
+            {
+                LoginPasswordBox.Focus();
+            }
+        }
+
+        private void LoginPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginPasswordBox.Password))
+            {
+                LoginButton_Click(this, new RoutedEventArgs());
+            }
+        }
+
         #endregion
 
         #region Auth Methods
