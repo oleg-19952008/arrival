@@ -150,8 +150,8 @@ namespace Arrival.Test.Wpf
 
                     LoginMessageTextBlock.Text = "";
                     
-                    // Скрываем экран авторизации
-                    AuthOverlay.Visibility = Visibility.Collapsed;
+                    // Скрываем экран авторизации (теперь используется отдельное окно)
+                    // AuthOverlay.Visibility = Visibility.Collapsed;
                     
                     // Обновляем UI
                     UpdateLoggedInUI(_currentUsername, role, status);
@@ -564,10 +564,12 @@ namespace Arrival.Test.Wpf
                 CurrentChatAvatarText.Text = "";
                 CurrentChatStatusText.Text = "";
                 
-                AuthOverlay.Visibility = Visibility.Visible;
-                LogoutButton.Visibility = Visibility.Collapsed;
+                // AuthOverlay.Visibility = Visibility.Visible; // Теперь используется отдельное окно входа
                 
-                _messagesPollingTimer?.Stop();
+                // Закрываем главное окно и открываем окно входа
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                this.Close();
             }
         }
 
