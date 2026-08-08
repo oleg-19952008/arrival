@@ -35,18 +35,14 @@ namespace Arrival.Test.Wpf
 
         private void ShowRegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            LoginPanel.Visibility = Visibility.Collapsed;
-            RegisterPanel.Visibility = Visibility.Visible;
-            AuthMessageTextBlock.Text = "";
-            RegisterUsernameTextBox.Focus();
+            var registerWindow = new RegisterWindow();
+            registerWindow.Show();
         }
 
         private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            LoginPanel.Visibility = Visibility.Visible;
-            RegisterPanel.Visibility = Visibility.Collapsed;
-            LoginMessageTextBlock.Text = "";
-            LoginUsernameTextBox.Focus();
+            // Этот метод больше не нужен в LoginWindow, так как форма регистрации вынесена в отдельное окно
+            // Оставляем пустым для совместимости или можно удалить
         }
 
         private void LoginUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -72,73 +68,9 @@ namespace Arrival.Test.Wpf
             }
         }
 
-        private void RegisterUsername_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterUsernameTextBox.Text))
-            {
-                RegisterPasswordBox.Focus();
-            }
-        }
-
-        private void RegisterPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterPasswordBox.Password))
-            {
-                RegisterButton_Click(this, new RoutedEventArgs());
-            }
-        }
-
         #endregion
 
         #region Auth Methods
-
-        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            var username = RegisterUsernameTextBox.Text.Trim();
-            var password = RegisterPasswordBox.Password;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                AuthMessageTextBlock.Text = "Имя пользователя и пароль не могут быть пустыми.";
-                AuthMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
-                return;
-            }
-
-            try
-            {
-                LoadingBorder.Visibility = Visibility.Visible;
-                var request = new { username, password };
-                var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/auth/register", request);
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    AuthMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(76, 175, 80));
-                    AuthMessageTextBlock.Text = "✓ Регистрация успешна! Ожидайте одобрения администратора.";
-                    RegisterUsernameTextBox.Clear();
-                    RegisterPasswordBox.Clear();
-                    
-                    // Через 2 секунды переключаем на вход
-                    await Task.Delay(2000);
-                    ShowLoginButton_Click(this, new RoutedEventArgs());
-                }
-                else
-                {
-                    var error = ParseErrorMessage(content);
-                    AuthMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
-                    AuthMessageTextBlock.Text = $"✗ Ошибка: {error}";
-                }
-            }
-            catch (Exception ex)
-            {
-                AuthMessageTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(244, 67, 54));
-                AuthMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
-            }
-            finally
-            {
-                LoadingBorder.Visibility = Visibility.Collapsed;
-            }
-        }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
