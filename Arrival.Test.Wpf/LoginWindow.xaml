@@ -43,8 +43,7 @@
                     <Button Grid.Column="1" Content="✕" Width="30" Height="30" 
                             Background="Transparent" BorderThickness="0"
                             Foreground="White" FontSize="14" Cursor="Hand"
-                            Click="CloseButton_Click"
-                            Style="{StaticResource {x:Null}}">
+                            Click="CloseButton_Click">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="15">
@@ -88,7 +87,7 @@
                            Foreground="#707579" HorizontalAlignment="Center" Margin="0,0,0,30"/>
                 
                 <!-- Панель входа -->
-                <StackPanel Grid.Row="3" x:Name="LoginPanel">
+                <StackPanel Grid.Row="3" x:Name="LoginPanel" Visibility="Visible">
                     <TextBlock Text="Имя пользователя" FontSize="13" FontWeight="SemiBold" 
                                Foreground="#555555" Margin="0,0,0,8"/>
                     <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,15">
@@ -100,13 +99,14 @@
                             <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBox Grid.Column="1" x:Name="LoginUsernameTextBox" 
                                      BorderThickness="0" Background="Transparent" FontSize="14"
-                                     TextChanged="LoginUsername_TextChanged"/>
+                                     TextChanged="LoginUsername_TextChanged"
+                                     KeyDown="LoginUsername_KeyDown"/>
                         </Grid>
                     </Border>
                     
                     <TextBlock Text="Пароль" FontSize="13" FontWeight="SemiBold" 
                                Foreground="#555555" Margin="0,0,0,8"/>
-                    <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,20">
+                    <Border Background="#F5F5F5" CornerRadius="10" Padding="15,12" Margin="0,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -115,17 +115,18 @@
                             <TextBlock Grid.Column="0" Text="🔒" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <PasswordBox Grid.Column="1" x:Name="LoginPasswordBox" 
                                          BorderThickness="0" Background="Transparent" FontSize="14"
-                                         PasswordChar="•"/>
+                                         PasswordChar="•"
+                                         KeyDown="LoginPassword_KeyDown"/>
                         </Grid>
                     </Border>
                     
                     <TextBlock x:Name="LoginMessageTextBlock" FontSize="12" 
-                               Foreground="#F44336" Margin="0,0,0,15" TextWrapping="Wrap"/>
+                               Foreground="#F44336" Margin="0,0,0,10" TextWrapping="Wrap"/>
                     
                     <Button Content="Войти" Click="LoginButton_Click" 
                             Background="#2481CC" Foreground="White" BorderThickness="0"
                             Padding="0,14" FontSize="15" FontWeight="SemiBold" Cursor="Hand"
-                            Margin="0,0,0,15">
+                            Margin="0,0,0,10">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
@@ -143,17 +144,17 @@
                         </Button.Template>
                     </Button>
                     
-                    <Button Content="Нет аккаунта? Зарегистрироваться" Click="ShowRegisterButton_Click"
-                            Background="Transparent" Foreground="#2481CC" BorderThickness="0"
-                            FontSize="13" Cursor="Hand" Padding="0,8">
+                    <Button x:Name="RegisterButton" Content="НЕТ АККАУНТА? ЗАРЕГИСТРИРОВАТЬСЯ" Click="ShowRegisterButton_Click"
+                            Background="#FF0000" Foreground="White" BorderThickness="0"
+                            FontSize="14" FontWeight="Bold" Cursor="Hand" Padding="0,10" Margin="0,5,0,0">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="10">
                                     <ContentPresenter HorizontalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Foreground" Value="#1970B3"/>
+                                        <Setter Property="Background" Value="#CC0000"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -173,7 +174,8 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBox Grid.Column="1" x:Name="RegisterUsernameTextBox" 
-                                     BorderThickness="0" Background="Transparent" FontSize="14"/>
+                                     BorderThickness="0" Background="Transparent" FontSize="14"
+                                     KeyDown="RegisterUsername_KeyDown"/>
                         </Grid>
                     </Border>
                     
@@ -188,7 +190,8 @@
                             <TextBlock Grid.Column="0" Text="🔒" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <PasswordBox Grid.Column="1" x:Name="RegisterPasswordBox" 
                                          BorderThickness="0" Background="Transparent" FontSize="14"
-                                         PasswordChar="•"/>
+                                         PasswordChar="•"
+                                         KeyDown="RegisterPassword_KeyDown"/>
                         </Grid>
                     </Border>
                     

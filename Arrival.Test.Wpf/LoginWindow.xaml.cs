@@ -38,6 +38,7 @@ namespace Arrival.Test.Wpf
             LoginPanel.Visibility = Visibility.Collapsed;
             RegisterPanel.Visibility = Visibility.Visible;
             AuthMessageTextBlock.Text = "";
+            RegisterUsernameTextBox.Focus();
         }
 
         private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
@@ -45,6 +46,7 @@ namespace Arrival.Test.Wpf
             LoginPanel.Visibility = Visibility.Visible;
             RegisterPanel.Visibility = Visibility.Collapsed;
             LoginMessageTextBlock.Text = "";
+            LoginUsernameTextBox.Focus();
         }
 
         private void LoginUsername_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -52,6 +54,38 @@ namespace Arrival.Test.Wpf
             // Очистка сообщения об ошибке при вводе
             if (!string.IsNullOrEmpty(LoginUsernameTextBox.Text))
                 LoginMessageTextBlock.Text = "";
+        }
+
+        private void LoginUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginUsernameTextBox.Text))
+            {
+                LoginPasswordBox.Focus();
+            }
+        }
+
+        private void LoginPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(LoginPasswordBox.Password))
+            {
+                LoginButton_Click(this, new RoutedEventArgs());
+            }
+        }
+
+        private void RegisterUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterUsernameTextBox.Text))
+            {
+                RegisterPasswordBox.Focus();
+            }
+        }
+
+        private void RegisterPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(RegisterPasswordBox.Password))
+            {
+                RegisterButton_Click(this, new RoutedEventArgs());
+            }
         }
 
         #endregion

@@ -21,6 +21,7 @@ using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using JsonValueKind = System.Text.Json.JsonValueKind;
 
 namespace Arrival.Test.Wpf
 {
@@ -56,6 +57,37 @@ namespace Arrival.Test.Wpf
             };
             _httpClient.DefaultRequestHeaders.ExpectContinue = false;
             
+            // Инициализация из App статических данных аутентификации
+            if (!string.IsNullOrEmpty(App.CurrentToken))
+            {
+                _token = App.CurrentToken;
+                _currentUserId = App.CurrentUserId;
+                _currentUsername = App.CurrentUsername;
+                var role = App.CurrentRole ?? "User";
+                var status = App.CurrentStatus ?? "Online";
+                
+                _httpClient.DefaultRequestHeaders.Authorization = 
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
+                
+                // Обновляем UI с данными пользователя
+                CurrentUserTextBlock.Text = $"{_currentUsername} | {role}";
+                LogoutButton.Visibility = Visibility.Visible;
+                
+                // Загружаем список пользователей
+                _ = LoadUsers();
+                
+                // Подключаемся к WebSocket
+                _ = ConnectToWebSocket();
+            }
+            else
+            {
+                // Если нет токена - закрываем окно и открываем логин
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                this.Close();
+                return;
+            }
+            
             // Инициализация списка чатов
             ChatListBox.ItemsSource = _chatItems;
             MessagesItemsControl.ItemsSource = _messages;
@@ -66,125 +98,10 @@ namespace Arrival.Test.Wpf
                 Interval = TimeSpan.FromSeconds(3)
             };
             _messagesPollingTimer.Tick += async (s, e) => await LoadMessagesForCurrentChat();
+            _messagesPollingTimer.Start();
         }
 
         #region Auth Methods
-
-        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            var username = RegisterUsernameTextBox.Text.Trim();
-            var password = RegisterPasswordBox.Password;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                AuthMessageTextBlock.Text = "Имя пользователя и пароль не могут быть пустыми.";
-                return;
-            }
-
-            try
-            {
-                var request = new { username, password };
-                var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/auth/register", request);
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    AuthMessageTextBlock.Foreground = Brushes.LightGreen;
-                    AuthMessageTextBlock.Text = "✓ Регистрация успешна! Ожидайте одобрения администратора.";
-                    RegisterUsernameTextBox.Clear();
-                    RegisterPasswordBox.Clear();
-                }
-                else
-                {
-                    var error = ParseErrorMessage(content);
-                    AuthMessageTextBlock.Foreground = Brushes.LightCoral;
-                    AuthMessageTextBlock.Text = $"✗ Ошибка: {error}";
-                }
-            }
-            catch (Exception ex)
-            {
-                AuthMessageTextBlock.Foreground = Brushes.LightCoral;
-                AuthMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
-            }
-        }
-
-        private void ShowRegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            LoginPanel.Visibility = Visibility.Collapsed;
-            RegisterPanel.Visibility = Visibility.Visible;
-        }
-
-        private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            LoginPanel.Visibility = Visibility.Visible;
-            RegisterPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            var username = LoginUsernameTextBox.Text.Trim();
-            var password = LoginPasswordBox.Password;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                LoginMessageTextBlock.Text = "Имя пользователя и пароль не могут быть пустыми.";
-                return;
-            }
-
-            try
-            {
-                var request = new { username, password };
-                var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/auth/login", request);
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonDoc = JsonDocument.Parse(content);
-                    _token = jsonDoc.RootElement.GetProperty("token").GetString();
-                    _currentUserId = jsonDoc.RootElement.GetProperty("userId").GetInt32();
-                    _currentUsername = jsonDoc.RootElement.GetProperty("username").GetString();
-                    var role = jsonDoc.RootElement.GetProperty("role").GetString();
-                    var status = jsonDoc.RootElement.GetProperty("status").GetString();
-
-                    _httpClient.DefaultRequestHeaders.Authorization = 
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
-
-                    LoginMessageTextBlock.Text = "";
-                    
-                    // Скрываем экран авторизации (теперь используется отдельное окно)
-                    // AuthOverlay.Visibility = Visibility.Collapsed;
-                    
-                    // Обновляем UI
-                    UpdateLoggedInUI(_currentUsername, role, status);
-                    
-                    // Загружаем список пользователей
-                    await LoadUsers();
-                    
-                    // Подключаемся к WebSocket
-                    await ConnectToWebSocket();
-                }
-                else
-                {
-                    var error = ParseErrorMessage(content);
-                    LoginMessageTextBlock.Foreground = Brushes.LightCoral;
-                    LoginMessageTextBlock.Text = $"✗ Ошибка входа: {error}";
-                }
-            }
-            catch (Exception ex)
-            {
-                LoginMessageTextBlock.Foreground = Brushes.LightCoral;
-                LoginMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
-            }
-        }
-
-        private void UpdateLoggedInUI(string username, string role, string status)
-        {
-            CurrentUserTextBlock.Text = $"{username} | {role}";
-            LogoutButton.Visibility = Visibility.Visible;
-            
-            // Запускаем таймер
-            _messagesPollingTimer?.Start();
-        }
 
         #endregion
 
