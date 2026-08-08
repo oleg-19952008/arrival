@@ -1,1 +1,1 @@
-Nothing should be ignored in this case, as the only modified file is a source code file (.xaml) without any build artifacts, dependencies, or temporary files in the changes.
+Nothing needs to be added to .gitignore since only a source file (LoginWindow.xaml) was modified and no build artifacts, dependencies, or temporary files were present in the changes.
