@@ -16,7 +16,9 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using Brush = System.Windows.Media.Brush;
+using Brushes = System.Windows.Media.Brushes;
 using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
@@ -486,16 +488,8 @@ namespace Arrival.Test.Wpf
                             var text = root.TryGetProperty("text", out var tEl) 
                                 ? tEl.GetString() : "";
 
-                            // Показываем уведомление
-                            var notify = new System.Windows.Forms.NotifyIcon
-                            {
-                                Icon = System.Drawing.SystemIcons.Information,
-                                Visible = true,
-                                BalloonTipTitle = "Новое сообщение",
-                                BalloonTipText = $"{senderName}: {text}",
-                                BalloonTipIcon = (System.Windows.Forms.ToolTipIcon)1
-                            };
-                            notify.ShowBalloonTip(3000);
+                            // Просто выводим в debug, уведомления убраны
+                            System.Diagnostics.Debug.WriteLine($"Новое сообщение от {senderName}: {text}");
                             
                             // Обновляем сообщения
                             await LoadMessagesForCurrentChat();
