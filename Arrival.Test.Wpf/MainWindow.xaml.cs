@@ -26,8 +26,8 @@ namespace Arrival.Test.Wpf
 {
     public partial class MainWindow : Window
     {
-        private readonly string _baseUrl = "http://89.109.34.250:748/api";
-        private readonly string _signalRUrl = "http://89.109.34.250:748/notificationHub";
+        private readonly string _baseUrl = "http://127.0.0.1:748/api";
+        private readonly string _signalRUrl = "http://127.0.0.1:748/notificationHub";
         
         private readonly HttpClient _httpClient;
         private string? _token;

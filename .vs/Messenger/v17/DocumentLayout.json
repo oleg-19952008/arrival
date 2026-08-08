@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|c:\\users\\nega\\documents\\github\\arrival\\arrival.test.wpf\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|solutionrelative:arrival.test.wpf\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|c:\\users\\nega\\documents\\github\\arrival\\arrival.test.wpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|solutionrelative:arrival.test.wpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|c:\\users\\nega\\documents\\github\\arrival\\arrival.test.wpf\\arrival.test.wpf.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{7A0D9952-DC67-484C-A551-2C167842B961}|Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj|solutionrelative:arrival.test.wpf\\arrival.test.wpf.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6E18E770-F9DB-D5B1-299B-B8DCA9830DBB}|Messenger.Server.Api\\Messenger.Server.Api.csproj|c:\\users\\nega\\documents\\github\\arrival\\messenger.server.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6E18E770-F9DB-D5B1-299B-B8DCA9830DBB}|Messenger.Server.Api\\Messenger.Server.Api.csproj|solutionrelative:messenger.server.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -27,19 +39,57 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Arrival.Test.Wpf\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\MainWindow.xaml.cs*",
+              "RelativeToolTip": "Arrival.Test.Wpf\\MainWindow.xaml.cs*",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-08T19:14:54.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "Arrival.Test.Wpf\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\MainWindow.xaml",
+              "RelativeToolTip": "Arrival.Test.Wpf\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-08-08T19:14:49.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Arrival.Test.Wpf",
+              "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj",
+              "RelativeDocumentMoniker": "Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj",
+              "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj",
+              "RelativeToolTip": "Arrival.Test.Wpf\\Arrival.Test.Wpf.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-08-08T19:14:46.492Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Server.Api\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Messenger.Server.Api\\Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Server.Api\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Messenger.Server.Api\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAAO0AAAAAAAAAAAAMwAcBAABoAAAAAAAAAA==",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAMwPoAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-02T15:36:54.954Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "FileService.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Services\\FileService.cs",
               "RelativeDocumentMoniker": "Messenger.Core.Server\\Services\\FileService.cs",
@@ -51,7 +101,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "NotificationHub.cs",
               "DocumentMoniker": "C:\\Users\\NEGA\\Documents\\GitHub\\arrival\\Messenger.Core.Server\\Hubs\\NotificationHub.cs",
               "RelativeDocumentMoniker": "Messenger.Core.Server\\Hubs\\NotificationHub.cs",

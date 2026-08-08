@@ -1,0 +1,13 @@
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\bin\Debug\net8.0\Messenger.Core.Server.deps.json
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\bin\Debug\net8.0\Messenger.Core.Server.dll
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\bin\Debug\net8.0\Messenger.Core.Server.pdb
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.csproj.AssemblyReference.cache
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.AssemblyInfoInputs.cache
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.AssemblyInfo.cs
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.csproj.CoreCompileInputs.cache
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.sourcelink.json
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.dll
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\refint\Messenger.Core.Server.dll
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\Messenger.Core.Server.pdb
+C:\Users\NEGA\Documents\GitHub\arrival\Messenger.Core.Server\obj\Debug\net8.0\ref\Messenger.Core.Server.dll
