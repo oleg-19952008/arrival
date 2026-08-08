@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -30,73 +29,40 @@ namespace Arrival.Test.Wpf
         private HubConnection? _hubConnection;
         private bool _isConnectedToHub;
         private DispatcherTimer? _messagesPollingTimer;
-        private int _lastMessageCount;
-        private double _lastScrollOffset = -1;
         
-        // Цвета тем (новые цвета из ТЗ)
-        // Фон окна: #1E1E1E
-        private static readonly Color DarkWindowColor = Color.FromRgb(0x1E, 0x1E, 0x1E);
-        // Фон панелей/полей: #252526
-        private static readonly Color DarkPanelColor = Color.FromRgb(0x25, 0x25, 0x26);
-        // Поля ввода фон: #3C3C3C
-        private static readonly Color DarkInputColor = Color.FromRgb(0x3C, 0x3C, 0x3C);
-        // Основной текст: #F1F1F1
-        private static readonly Color DarkTextColor = Color.FromRgb(0xF1, 0xF1, 0xF1);
-        // Второстепенный текст: #CCCCCC
-        private static readonly Color DarkSecondaryTextColor = Color.FromRgb(0xCC, 0xCC, 0xCC);
-        // Акцент (кнопки/ссылки): #007ACC
-        private static readonly Color DarkAccentColor = Color.FromRgb(0x00, 0x7A, 0xCC);
-        // Бордер полей ввода: #3E3E42
-        private static readonly Color DarkInputBorder = Color.FromRgb(0x3E, 0x3E, 0x42);
+        // Текущий выбранный чат
+        private ChatItem? _selectedChat;
+        private ObservableCollection<ChatItem> _chatItems = new();
+        private ObservableCollection<MessageViewModel> _messages = new();
         
-        // Светлая тема (оставляем как запасную)
-        private static readonly Color LightThemeColor = Color.FromRgb(0x34, 0x49, 0x5E);
-        
-        private bool _isDarkTheme = true;
-        private readonly string _configPath;
+        // Все пользователи для фильтрации
+        private List<UserInfo> _allUsers = new();
 
         public MainWindow()
         {
             InitializeComponent();
             
-            // Путь к файлу конфигурации рядом с исполняемым файлом
-            var appPath = AppDomain.CurrentDomain.BaseDirectory;
-            _configPath = Path.Combine(appPath, "config.cfg");
-            
-            // Загружаем тему из конфига
-            LoadThemeFromConfig();
-            
-            // Применяем тему
-            ApplyTheme(_isDarkTheme);
-            
             _httpClient = new HttpClient
             {
                 Timeout = TimeSpan.FromSeconds(60)
             };
-            // Увеличиваем буфер для больших запросов
             _httpClient.DefaultRequestHeaders.ExpectContinue = false;
             
-            MainTabControl.SelectedIndex = 0;
+            // Инициализация списка чатов
+            ChatListBox.ItemsSource = _chatItems;
+            MessagesItemsControl.ItemsSource = _messages;
             
-            // Инициализация таймера для опроса сообщений каждые 5 секунд
+            // Таймер опроса сообщений
             _messagesPollingTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(5)
+                Interval = TimeSpan.FromSeconds(3)
             };
-            _messagesPollingTimer.Tick += async (s, e) => await LoadMessages();
-            
-            // Добавляем кнопку переключения темы в Footer
-            AddThemeToggleButton();
+            _messagesPollingTimer.Tick += async (s, e) => await LoadMessagesForCurrentChat();
         }
 
         #region Auth Methods
 
         private async void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            await PerformRegistration();
-        }
-
-        private async Task PerformRegistration()
         {
             var username = RegisterUsernameTextBox.Text.Trim();
             var password = RegisterPasswordBox.Password;
@@ -115,7 +81,7 @@ namespace Arrival.Test.Wpf
 
                 if (response.IsSuccessStatusCode)
                 {
-                    AuthMessageTextBlock.Foreground = System.Windows.Media.Brushes.Green;
+                    AuthMessageTextBlock.Foreground = Brushes.LightGreen;
                     AuthMessageTextBlock.Text = "✓ Регистрация успешна! Ожидайте одобрения администратора.";
                     RegisterUsernameTextBox.Clear();
                     RegisterPasswordBox.Clear();
@@ -123,69 +89,30 @@ namespace Arrival.Test.Wpf
                 else
                 {
                     var error = ParseErrorMessage(content);
-                    AuthMessageTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                    AuthMessageTextBlock.Foreground = Brushes.LightCoral;
                     AuthMessageTextBlock.Text = $"✗ Ошибка: {error}";
                 }
             }
             catch (Exception ex)
             {
-                AuthMessageTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                AuthMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}\nУбедитесь, что сервер запущен на http://localhost:748";
+                AuthMessageTextBlock.Foreground = Brushes.LightCoral;
+                AuthMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
             }
         }
 
-        private void LoginShowButton_Click(object sender, RoutedEventArgs e)
+        private void ShowRegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            MainTabControl.SelectedItem = LoginTabItem;
+            LoginPanel.Visibility = Visibility.Collapsed;
+            RegisterPanel.Visibility = Visibility.Visible;
         }
 
-        private void BackToRegisterButton_Click(object sender, RoutedEventArgs e)
+        private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            MainTabControl.SelectedItem = AuthTabItem;
+            LoginPanel.Visibility = Visibility.Visible;
+            RegisterPanel.Visibility = Visibility.Collapsed;
         }
-
-        #region KeyDown Handlers for Enter key
-
-        private void RegisterUsername_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                RegisterPasswordBox.Focus();
-            }
-        }
-
-        private void RegisterPassword_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                _ = PerformRegistration();
-            }
-        }
-
-        private void LoginUsername_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                LoginPasswordBox.Focus();
-            }
-        }
-
-        private void LoginPassword_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                _ = PerformLogin();
-            }
-        }
-
-        #endregion
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            await PerformLogin();
-        }
-
-        private async Task PerformLogin()
         {
             var username = LoginUsernameTextBox.Text.Trim();
             var password = LoginPasswordBox.Password;
@@ -204,227 +131,159 @@ namespace Arrival.Test.Wpf
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var data = JsonDocument.Parse(content);
-                    _token = data.RootElement.GetProperty("token").GetString();
-                    
-                    var user = data.RootElement.GetProperty("user");
-                    _currentUserId = user.GetProperty("id").GetInt32();
-                    _currentUsername = user.GetProperty("username").GetString();
-                    var role = user.GetProperty("role").GetString();
-                    var status = user.GetProperty("status").GetString();
+                    var jsonDoc = JsonDocument.Parse(content);
+                    _token = jsonDoc.RootElement.GetProperty("token").GetString();
+                    _currentUserId = jsonDoc.RootElement.GetProperty("userId").GetInt32();
+                    _currentUsername = jsonDoc.RootElement.GetProperty("username").GetString();
+                    var role = jsonDoc.RootElement.GetProperty("role").GetString();
+                    var status = jsonDoc.RootElement.GetProperty("status").GetString();
 
-                    // Сохраняем токен для последующих запросов
                     _httpClient.DefaultRequestHeaders.Authorization = 
-                        new AuthenticationHeaderValue("Bearer", _token);
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
 
-                    // Обновляем UI и переключаемся на вкладку сообщений
+                    LoginMessageTextBlock.Text = "";
+                    
+                    // Скрываем экран авторизации
+                    AuthOverlay.Visibility = Visibility.Collapsed;
+                    
+                    // Обновляем UI
                     UpdateLoggedInUI(_currentUsername, role, status);
                     
-                    // Автоматически подключаемся к WebSocket
-                    await ConnectToWebSocket();
+                    // Загружаем список пользователей
+                    await LoadUsers();
                     
-                    LoginUsernameTextBox.Clear();
-                    LoginPasswordBox.Clear();
+                    // Подключаемся к WebSocket
+                    await ConnectToWebSocket();
                 }
                 else
                 {
                     var error = ParseErrorMessage(content);
-                    LoginMessageTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                    LoginMessageTextBlock.Foreground = Brushes.LightCoral;
                     LoginMessageTextBlock.Text = $"✗ Ошибка входа: {error}";
-                    
-                    if (error.Contains("ожидает") || error.Contains("Pending"))
-                    {
-                        LoginMessageTextBlock.Text += "\nВаш аккаунт ещё не одобрен администратором.\nАдмин-панель: http://localhost:228 (admin/admin123)";
-                    }
                 }
             }
             catch (Exception ex)
             {
-                LoginMessageTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                LoginMessageTextBlock.Foreground = Brushes.LightCoral;
                 LoginMessageTextBlock.Text = $"✗ Ошибка подключения: {ex.Message}";
             }
         }
 
         private void UpdateLoggedInUI(string username, string role, string status)
         {
-            StatusTextBlock.Text = "Авторизован";
-            StatusTextBlock.Foreground = System.Windows.Media.Brushes.Green;
-            UserInfoTextBlock.Text = $"{username} | ID: {_currentUserId} | Роль: {role} | Статус: {status}";
-
-            // Включаем вкладки
-            MessagesTabItem.IsEnabled = true;
-            UsersTabItem.IsEnabled = true;
-            WebSocketTabItem.IsEnabled = true;
-
-            // Показываем кнопку выхода
+            CurrentUserTextBlock.Text = $"{username} | {role}";
             LogoutButton.Visibility = Visibility.Visible;
             
-            // Переключаемся на вкладку сообщений
-            MainTabControl.SelectedItem = MessagesTabItem;
-            
-            // Запускаем таймер опроса сообщений
+            // Запускаем таймер
             _messagesPollingTimer?.Start();
-            
-            // Загружаем сообщения сразу после входа
-            _ = LoadMessages();
-        }
-
-        private void ResetUI()
-        {
-            StatusTextBlock.Text = "Не авторизован";
-            StatusTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-            UserInfoTextBlock.Text = "";
-
-            // Отключаем вкладки
-            MessagesTabItem.IsEnabled = false;
-            UsersTabItem.IsEnabled = false;
-            WebSocketTabItem.IsEnabled = false;
-
-            // Скрываем кнопку выхода
-            LogoutButton.Visibility = Visibility.Collapsed;
-
-            // Переключаемся на вкладку авторизации
-            MainTabControl.SelectedItem = AuthTabItem;
-            
-            // Останавливаем таймер опроса сообщений
-            _messagesPollingTimer?.Stop();
-            
-            // Очищаем поле сообщений
-            MessagesTextBox.Clear();
-            
-            // Сбрасываем счетчики для прокрутки
-            _lastMessageCount = 0;
-            _lastScrollOffset = -1;
         }
 
         #endregion
 
-        #region Logout & Exit
+        #region Users & Chats
 
-        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshUsersButton_Click(object sender, RoutedEventArgs e)
         {
-            await DisconnectFromWebSocket();
+            await LoadUsers();
+        }
 
+        private async Task LoadUsers()
+        {
             try
             {
-                var response = await _httpClient.PostAsync($"{_baseUrl}/auth/logout", null);
-                
+                var response = await _httpClient.GetAsync($"{_baseUrl}/users");
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Вы успешно вышли из системы.", "Выход", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var users = JsonDocument.Parse(content).RootElement;
+
+                    _allUsers.Clear();
+                    foreach (var user in users.EnumerateArray())
+                    {
+                        var id = user.GetProperty("id").GetInt32();
+                        var uname = user.GetProperty("username").GetString();
+                        var userStatus = user.GetProperty("status").GetString();
+                        
+                        // Не добавляем текущего пользователя в список чатов
+                        if (id != _currentUserId)
+                        {
+                            _allUsers.Add(new UserInfo
+                            {
+                                Id = id,
+                                Username = uname ?? "",
+                                Status = userStatus ?? "Offline"
+                            });
+                        }
+                    }
+                    
+                    // Создаем чат "Общий" первым
+                    _chatItems.Clear();
+                    _chatItems.Add(new ChatItem
+                    {
+                        Id = 0,
+                        Username = "Общий чат",
+                        AvatarText = "📢",
+                        IsOnline = true,
+                        LastMessagePreview = "Нажмите для просмотра общих сообщений",
+                        LastTime = ""
+                    });
+                    
+                    // Добавляем личные чаты
+                    foreach (var user in _allUsers)
+                    {
+                        _chatItems.Add(new ChatItem
+                        {
+                            Id = user.Id,
+                            Username = user.Username,
+                            AvatarText = GetAvatarText(user.Username),
+                            IsOnline = user.Status == "Online",
+                            LastMessagePreview = "Нет сообщений",
+                            LastTime = ""
+                        });
+                    }
+                    
+                    ChatListBox.Items.Refresh();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при выходе: {ex.Message}", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            finally
-            {
-                _token = null;
-                _currentUserId = null;
-                _currentUsername = null;
-                _httpClient.DefaultRequestHeaders.Authorization = null;
-                ResetUI();
+                MessageBox.Show($"Ошибка загрузки пользователей: {ex.Message}", "Ошибка", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Application.Current.Shutdown();
-        }
-
-        #endregion
-
-        #region Theme Methods
-
-        private void AddThemeToggleButton()
-        {
-            // Кнопка переключения темы теперь объявлена в XAML, этот метод больше не нужен
-            // Метод оставлен пустым для обратной совместимости
-        }
-
-        private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-            _isDarkTheme = !_isDarkTheme;
-            ApplyTheme(_isDarkTheme);
-            SaveThemeToConfig();
+            var searchText = SearchTextBox.Text.ToLower().Trim();
             
-            // Обновляем текст кнопки
-            if (sender is Button btn)
+            var view = CollectionViewSource.GetDefaultView(ChatListBox.ItemsSource);
+            if (view != null)
             {
-                btn.Content = _isDarkTheme ? "☀ Светлая" : "☾ Тёмная";
-            }
-        }
-
-        private void ApplyTheme(bool isDark)
-        {
-            if (isDark)
-            {
-                // Применяем темную тему через обновление ресурсов
-                Resources["WindowBackground"] = new SolidColorBrush(DarkWindowColor);
-                Resources["PanelBackground"] = new SolidColorBrush(DarkPanelColor);
-                Resources["InputBackground"] = new SolidColorBrush(DarkInputColor);
-                Resources["InputForeground"] = Brushes.White;
-                Resources["InputBorder"] = new SolidColorBrush(DarkInputBorder);
-                Resources["MainText"] = new SolidColorBrush(DarkTextColor);
-                Resources["SecondaryText"] = new SolidColorBrush(DarkSecondaryTextColor);
-                Resources["AccentColor"] = new SolidColorBrush(DarkAccentColor);
-                Resources["TabInactiveBackground"] = new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x30));
-                Resources["TabActiveBackground"] = new SolidColorBrush(DarkWindowColor);
-                Resources["TabHoverBackground"] = new SolidColorBrush(Color.FromRgb(0x3C, 0x3C, 0x3C));
-                
-                Background = new SolidColorBrush(DarkWindowColor);
-            }
-            else
-            {
-                // Светлая тема - используем стандартные цвета WPF
-                Resources["WindowBackground"] = Brushes.White;
-                Resources["PanelBackground"] = Brushes.White;
-                Resources["InputBackground"] = Brushes.White;
-                Resources["InputForeground"] = Brushes.Black;
-                Resources["InputBorder"] = Brushes.Gray;
-                Resources["MainText"] = Brushes.Black;
-                Resources["SecondaryText"] = Brushes.DarkGray;
-                Resources["AccentColor"] = new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
-                Resources["TabInactiveBackground"] = Brushes.LightGray;
-                Resources["TabActiveBackground"] = Brushes.White;
-                Resources["TabHoverBackground"] = Brushes.Gainsboro;
-                
-                Background = Brushes.White;
-            }
-        }
-
-        private void LoadThemeFromConfig()
-        {
-            try
-            {
-                if (File.Exists(_configPath))
+                view.Filter = item =>
                 {
-                    var content = File.ReadAllText(_configPath).Trim().ToLower();
-                    _isDarkTheme = content != "light";
-                }
-                else
-                {
-                    // По умолчанию темная тема
-                    _isDarkTheme = true;
-                }
-            }
-            catch
-            {
-                // При ошибке используем тему по умолчанию
-                _isDarkTheme = true;
+                    if (item is ChatItem chat)
+                    {
+                        return string.IsNullOrEmpty(searchText) || 
+                               chat.Username.ToLower().Contains(searchText);
+                    }
+                    return true;
+                };
             }
         }
 
-        private void SaveThemeToConfig()
+        private async void ChatListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (ChatListBox.SelectedItem is ChatItem selectedChat)
             {
-                File.WriteAllText(_configPath, _isDarkTheme ? "dark" : "light");
-            }
-            catch
-            {
-                // Игнорируем ошибки записи
+                _selectedChat = selectedChat;
+                
+                // Обновляем заголовок чата
+                CurrentChatNameText.Text = selectedChat.Username;
+                CurrentChatAvatarText.Text = selectedChat.AvatarText;
+                CurrentChatStatusText.Text = selectedChat.IsOnline ? "Онлайн" : "Офлайн";
+                
+                // Загружаем сообщения для выбранного чата
+                await LoadMessagesForCurrentChat();
             }
         }
 
@@ -435,14 +294,11 @@ namespace Arrival.Test.Wpf
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             await SendMessage();
-            
-            // Сразу обновляем сообщения после отправки
-            await LoadMessages();
         }
 
-        private async void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        private async void MessageInputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
+            if (e.Key == Key.Enter)
             {
                 await SendMessage();
             }
@@ -450,58 +306,23 @@ namespace Arrival.Test.Wpf
 
         private async Task SendMessage()
         {
-            var recipientInput = RecipientTextBox.Text.Trim();
-            var content = MessageTextBox.Text.Trim();
-
+            var content = MessageInputTextBox.Text.Trim();
             if (string.IsNullOrEmpty(content))
+                return;
+
+            if (_selectedChat == null)
             {
-                MessageBox.Show("Сообщение не может быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Выберите чат для отправки сообщения.", "Предупреждение", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
                 int? recipientId = null;
-                string? recipientLogin = null;
-
-                if (!string.IsNullOrEmpty(recipientInput))
+                if (_selectedChat.Id != 0) // Не общий чат
                 {
-                    // Проверяем, является ли ввод числом (ID)
-                    if (int.TryParse(recipientInput, out int parsedId))
-                    {
-                        recipientId = parsedId;
-                    }
-                    else
-                    {
-                        // Пытаемся найти пользователя по логину
-                        var response = await _httpClient.GetAsync($"{_baseUrl}/users");
-                        if (response.IsSuccessStatusCode)
-                        {
-                            var readContent = await response.Content.ReadAsStringAsync();
-                            var users = JsonDocument.Parse(readContent).RootElement;
-
-                            foreach (var user in users.EnumerateArray())
-                            {
-                                var username = user.GetProperty("username").GetString();
-                                if (username == recipientInput)
-                                {
-                                    recipientId = user.GetProperty("id").GetInt32();
-                                    break;
-                                }
-                            }
-
-                            if (!recipientId.HasValue)
-                            {
-                                MessageBox.Show($"Пользователь с логином '{recipientInput}' не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Ошибка получения списка пользователей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            return;
-                        }
-                    }
+                    recipientId = _selectedChat.Id;
                 }
 
                 var request = new
@@ -509,76 +330,59 @@ namespace Arrival.Test.Wpf
                     content,
                     type = "text",
                     recipientId,
-                    recipientLogin
+                    recipientLogin = recipientId.HasValue ? _selectedChat.Username : null
                 };
 
-                // Используем StringContent с явным указанием UTF-8 для корректной отправки больших текстов
-                var jsonRequest = System.Text.Json.JsonSerializer.Serialize(request);
+                var jsonRequest = JsonSerializer.Serialize(request);
                 var stringContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-                
-                var sendResponse = await _httpClient.PostAsync($"{_baseUrl}/messages", stringContent);
-                var sendContent = await sendResponse.Content.ReadAsStringAsync();
 
+                var sendResponse = await _httpClient.PostAsync($"{_baseUrl}/messages", stringContent);
+                
                 if (sendResponse.IsSuccessStatusCode)
                 {
-                    MessageTextBox.Clear();
-
-                    // Сразу обновляем список сообщений после отправки
-                    await LoadMessages();
+                    MessageInputTextBox.Clear();
+                    await LoadMessagesForCurrentChat();
                 }
                 else
                 {
-                    var error = ParseErrorMessage(sendContent);
-                    MessageBox.Show($"✗ Ошибка отправки: {error}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    var errorContent = await sendResponse.Content.ReadAsStringAsync();
+                    var error = ParseErrorMessage(errorContent);
+                    MessageBox.Show($"Ошибка отправки: {error}", "Ошибка", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"✗ Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        private async void RefreshMessagesButton_Click(object sender, RoutedEventArgs e)
+        private async Task LoadMessagesForCurrentChat()
         {
-            await LoadMessages();
-        }
+            if (_selectedChat == null)
+                return;
 
-        private async Task LoadMessages()
-        {
             try
             {
-                MessagesStatusTextBlock.Text = "Загрузка...";
-                
-                var response = await _httpClient.GetAsync($"{_baseUrl}/messages/my");
-                
+                string endpoint;
+                if (_selectedChat.Id == 0) // Общий чат
+                {
+                    endpoint = $"{_baseUrl}/messages/my";
+                }
+                else // Личный чат
+                {
+                    endpoint = $"{_baseUrl}/messages/my?recipientId={_selectedChat.Id}";
+                }
+
+                var response = await _httpClient.GetAsync(endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var messagesDoc = JsonDocument.Parse(content);
                     var messagesArray = messagesDoc.RootElement.EnumerateArray().ToList();
 
-                    // Сохраняем текущую позицию прокрутки, если количество сообщений не изменилось
-                    bool shouldRestoreScroll = _lastMessageCount > 0 && 
-                                               messagesArray.Count == _lastMessageCount &&
-                                               _lastScrollOffset >= 0;
-                    
-                    double currentScrollOffset = 0;
-                    if (shouldRestoreScroll)
-                    {
-                        currentScrollOffset = MessagesTextBox.VerticalOffset;
-                    }
-
-                    MessagesTextBox.Clear();
-
-                    if (messagesArray.Count == 0)
-                    {
-                        MessagesTextBox.Text = "Сообщений нет.";
-                        MessagesStatusTextBlock.Text = "";
-                        _lastMessageCount = 0;
-                        return;
-                    }
-
-                    var messagesText = new StringBuilder();
+                    _messages.Clear();
                     
                     foreach (var msg in messagesArray)
                     {
@@ -588,94 +392,48 @@ namespace Arrival.Test.Wpf
                         var textContent = msg.GetProperty("content").GetString();
                         var createdAt = msg.GetProperty("createdAt").GetDateTime().ToLocalTime();
 
-                        bool isPersonal = msg.TryGetProperty("recipientId", out var recipientEl) && 
-                                         recipientEl.ValueKind != JsonValueKind.Null;
-
-                        string prefix = isPersonal ? "[ЛИЧНОЕ]" : "[ОБЩЕЕ]";
-                        string displayName = (senderId == _currentUserId) ? "Вы" : senderName;
+                        bool isMyMessage = senderId == _currentUserId;
                         
-                        messagesText.AppendLine($"{prefix} [{createdAt:dd.MM.yyyy HH:mm:ss}] {displayName}:");
-                        messagesText.AppendLine(textContent);
-                        messagesText.AppendLine(new string('-', 80));
-                    }
-
-                    MessagesTextBox.Text = messagesText.ToString().TrimEnd();
-                    
-                    // Восстанавливаем позицию прокрутки, если сообщения не изменились
-                    if (shouldRestoreScroll)
-                    {
-                        MessagesTextBox.ScrollToVerticalOffset(currentScrollOffset);
-                    }
-                    else
-                    {
-                        // Прокрутка вниз к последнему сообщению только при новых сообщениях
-                        MessagesTextBox.CaretIndex = MessagesTextBox.Text.Length;
-                        MessagesTextBox.ScrollToEnd();
-                    }
-                    
-                    _lastMessageCount = messagesArray.Count;
-                    MessagesStatusTextBlock.Text = $"Загружено сообщений: {messagesArray.Count}";
-                }
-                else
-                {
-                    MessagesStatusTextBlock.Text = "Ошибка получения сообщений.";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessagesStatusTextBlock.Text = $"Ошибка: {ex.Message}";
-            }
-        }
-
-        #endregion
-
-        #region Users
-
-        private async void RefreshUsersButton_Click(object sender, RoutedEventArgs e)
-        {
-            await LoadUsers();
-        }
-
-        private async Task LoadUsers(bool showError = true)
-        {
-            try
-            {
-                var response = await _httpClient.GetAsync($"{_baseUrl}/users");
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var users = JsonDocument.Parse(content).RootElement;
-
-                    UsersListBox.Items.Clear();
-
-                    foreach (var user in users.EnumerateArray())
-                    {
-                        var id = user.GetProperty("id").GetInt32();
-                        var username = user.GetProperty("username").GetString();
-                        var status = user.GetProperty("status").GetString();
-                        var role = user.GetProperty("role").GetString();
-
-                        UsersListBox.Items.Add(new
+                        _messages.Add(new MessageViewModel
                         {
                             Id = id,
-                            Username = username,
-                            Status = status,
-                            Role = role
+                            SenderId = senderId,
+                            SenderName = isMyMessage ? "Вы" : (senderName ?? "Неизвестный"),
+                            Content = textContent ?? "",
+                            Time = createdAt,
+                            IsMyMessage = isMyMessage,
+                            Alignment = isMyMessage ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+                            TimeAlignment = isMyMessage ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+                            MessageBackground = isMyMessage ? 
+                                Application.Current.Resources["MyMessageBackground"] as Brush : 
+                                Application.Current.Resources["OtherMessageBackground"] as Brush,
+                            ShowSender = Visibility.Collapsed // В личных чатах имя не показываем
                         });
                     }
-                }
-                else if (showError)
-                {
-                    MessageBox.Show("Ошибка получения списка пользователей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    
+                    // Прокрутка вниз
+                    MessagesScrollViewer.ScrollToEnd();
+                    
+                    // Обновляем превью последнего сообщения в списке чатов
+                    if (messagesArray.Count > 0 && _selectedChat != null)
+                    {
+                        var lastMsg = messagesArray[^1];
+                        var lastContent = lastMsg.GetProperty("content").GetString();
+                        var lastTime = lastMsg.GetProperty("createdAt").GetDateTime().ToLocalTime();
+                        
+                        _selectedChat.LastMessagePreview = lastContent?.Length > 30 
+                            ? lastContent[..30] + "..." 
+                            : lastContent;
+                        _selectedChat.LastTime = lastTime.ToString("HH:mm");
+                        
+                        ChatListBox.Items.Refresh();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (showError)
-                {
-                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                // Тихо игнорируем ошибки при автообновлении
+                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки сообщений: {ex.Message}");
             }
         }
 
@@ -683,110 +441,83 @@ namespace Arrival.Test.Wpf
 
         #region WebSocket
 
-        private async void ConnectWebSocketButton_Click(object sender, RoutedEventArgs e)
+        private async void WebSocketConnectButton_Click(object sender, RoutedEventArgs e)
         {
             await ConnectToWebSocket();
         }
 
-        private async void DisconnectWebSocketButton_Click(object sender, RoutedEventArgs e)
+        private async void WebSocketDisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await DisconnectFromWebSocket();
         }
 
         private async Task ConnectToWebSocket()
         {
-            if (_isConnectedToHub)
-            {
-                WebSocketStatusTextBlock.Text = "Статус: Уже подключено";
+            if (_isConnectedToHub || _currentUserId == null)
                 return;
-            }
-
-            if (_currentUserId == null)
-            {
-                MessageBox.Show("Сначала войдите в систему.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
 
             try
             {
-                WebSocketStatusTextBlock.Text = "Статус: Подключение...";
-                
+                WebSocketConnectButton.Visibility = Visibility.Collapsed;
+                WebSocketDisconnectButton.Visibility = Visibility.Visible;
+
                 _hubConnection = new HubConnectionBuilder()
                     .WithUrl($"{_signalRUrl}?userId={_currentUserId}&token={_token}")
                     .WithAutomaticReconnect()
                     .Build();
 
-                // Обработчик входящих сообщений (формат из NotificationHub.SendMessageToUserAsync)
-                _hubConnection.On<object>("message", 
-                    (messageData) =>
+                _hubConnection.On<object>("message", (messageData) =>
                 {
                     Dispatcher.Invoke(async () =>
                     {
                         try
                         {
-                            var json = System.Text.Json.JsonSerializer.Serialize(messageData);
+                            var json = JsonSerializer.Serialize(messageData);
                             using var doc = JsonDocument.Parse(json);
                             var root = doc.RootElement;
-                            
-                            var messageId = root.TryGetProperty("id", out var idEl) ? idEl.GetInt32() : 0;
-                            var senderId = root.TryGetProperty("senderId", out var sidEl) ? sidEl.GetInt32() : 0;
-                            var senderName = root.TryGetProperty("senderName", out var snEl) ? snEl.GetString() : "Неизвестный";
-                            var text = root.TryGetProperty("text", out var tEl) ? tEl.GetString() : "";
-                            var timestamp = root.TryGetProperty("timestamp", out var tsEl) ? DateTime.Parse(tsEl.GetString()) : DateTime.Now;
-                            
-                            RealTimeMessagesListBox.Items.Add($"[{timestamp.ToLocalTime():HH:mm}] {senderName}: {text}");
-                            
-                            // Автоматически обновляем список сообщений
-                            await LoadMessages();
-                            
+
+                            var senderName = root.TryGetProperty("senderName", out var snEl) 
+                                ? snEl.GetString() : "Неизвестный";
+                            var text = root.TryGetProperty("text", out var tEl) 
+                                ? tEl.GetString() : "";
+
                             // Показываем уведомление
-                            MessageBox.Show(
-                                $"Новое сообщение от {senderName}:\n{text}",
-                                "Новое сообщение",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Information);
+                            var notify = new System.Windows.Forms.NotifyIcon
+                            {
+                                Icon = System.Drawing.SystemIcons.Information,
+                                Visible = true,
+                                BalloonTipTitle = "Новое сообщение",
+                                BalloonTipText = $"{senderName}: {text}",
+                                BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info
+                            };
+                            notify.ShowBalloonTip(3000);
+                            
+                            // Обновляем сообщения
+                            await LoadMessagesForCurrentChat();
                         }
                         catch (Exception ex)
                         {
-                            RealTimeMessagesListBox.Items.Add($"[Ошибка обработки сообщения] {ex.Message}");
+                            System.Diagnostics.Debug.WriteLine($"Ошибка обработки сообщения: {ex.Message}");
                         }
-                    });
-                });
-
-                // Обработчик уведомлений
-                _hubConnection.On<string, string>("NotificationReceived", 
-                    (type, data) =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        RealTimeMessagesListBox.Items.Add($"[УВЕДОМЛЕНИЕ] {type}: {data}");
                     });
                 });
 
                 await _hubConnection.StartAsync();
                 _isConnectedToHub = true;
-                
-                WebSocketStatusTextBlock.Text = "Статус: Подключено";
-                WebSocketInfoTextBlock.Text = $"Пользователь ID: {_currentUserId}";
-                
-                MessageBox.Show("✓ Успешно подключено к WebSocket для real-time сообщений!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                WebSocketStatusTextBlock.Text = "Статус: Ошибка подключения";
-                WebSocketInfoTextBlock.Text = ex.Message;
-                _isConnectedToHub = false;
-                
-                MessageBox.Show($"✗ Ошибка подключения к WebSocket: {ex.Message}\nПродолжение работы без real-time уведомлений.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Ошибка подключения к уведомлениям: {ex.Message}", 
+                    "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                WebSocketConnectButton.Visibility = Visibility.Visible;
+                WebSocketDisconnectButton.Visibility = Visibility.Collapsed;
             }
         }
 
         private async Task DisconnectFromWebSocket()
         {
             if (!_isConnectedToHub || _hubConnection == null)
-            {
                 return;
-            }
 
             try
             {
@@ -794,19 +525,66 @@ namespace Arrival.Test.Wpf
                 await _hubConnection.DisposeAsync();
                 _hubConnection = null;
                 _isConnectedToHub = false;
-                
-                WebSocketStatusTextBlock.Text = "Статус: Отключено";
-                WebSocketInfoTextBlock.Text = "";
+
+                WebSocketConnectButton.Visibility = Visibility.Visible;
+                WebSocketDisconnectButton.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"✗ Ошибка отключения: {ex.Message}", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Diagnostics.Debug.WriteLine($"Ошибка отключения: {ex.Message}");
             }
         }
 
         #endregion
 
-        #region Helper Methods
+        #region Logout
+
+        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            await DisconnectFromWebSocket();
+
+            try
+            {
+                await _httpClient.PostAsync($"{_baseUrl}/auth/logout", null);
+            }
+            catch { /* Игнорируем ошибки выхода */ }
+            finally
+            {
+                _token = null;
+                _currentUserId = null;
+                _currentUsername = null;
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+                
+                _chatItems.Clear();
+                _messages.Clear();
+                _allUsers.Clear();
+                _selectedChat = null;
+                
+                CurrentUserTextBlock.Text = "";
+                CurrentChatNameText.Text = "";
+                CurrentChatAvatarText.Text = "";
+                CurrentChatStatusText.Text = "";
+                
+                AuthOverlay.Visibility = Visibility.Visible;
+                LogoutButton.Visibility = Visibility.Collapsed;
+                
+                _messagesPollingTimer?.Stop();
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private string GetAvatarText(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return "?";
+            
+            // Берем первые две буквы или первую букву + символ
+            var letters = username.Take(2).Select(char.ToUpper).ToArray();
+            return letters.Length > 0 ? new string(letters) : "?";
+        }
 
         private string ParseErrorMessage(string json)
         {
@@ -818,13 +596,47 @@ namespace Arrival.Test.Wpf
                     return messageProp.GetString() ?? "Неизвестная ошибка";
                 }
             }
-            catch
-            {
-                // Игнорируем ошибки парсинга
-            }
+            catch { }
             return "Неизвестная ошибка";
         }
 
         #endregion
     }
+
+    #region Models
+
+    public class ChatItem
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = "";
+        public string AvatarText { get; set; } = "";
+        public bool IsOnline { get; set; }
+        public string LastMessagePreview { get; set; } = "";
+        public string LastTime { get; set; } = "";
+    }
+
+    public class UserInfo
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = "";
+        public string Status { get; set; } = "";
+    }
+
+    public class MessageViewModel
+    {
+        public int Id { get; set; }
+        public int SenderId { get; set; }
+        public string SenderName { get; set; } = "";
+        public string Content { get; set; } = "";
+        public DateTime Time { get; set; }
+        public bool IsMyMessage { get; set; }
+        public HorizontalAlignment Alignment { get; set; }
+        public HorizontalAlignment TimeAlignment { get; set; }
+        public Brush? MessageBackground { get; set; }
+        public Visibility ShowSender { get; set; } = Visibility.Collapsed;
+        
+        public string TimeText => Time.ToString("HH:mm");
+    }
+
+    #endregion
 }
