@@ -189,7 +189,8 @@
                         <Button Grid.Column="2" x:Name="LogoutButton" Content="🚪" 
                                 Style="{StaticResource IconButton}"
                                 Click="LogoutButton_Click"
-                                ToolTip="Выйти"/>
+                                ToolTip="Выйти"
+                                Visibility="Collapsed"/>
                     </Grid>
                 </Border>
                 
@@ -435,105 +436,6 @@
                             FontSize="18"
                             Padding="12"/>
                 </Grid>
-            </Border>
-        </Grid>
-        
-        <!-- Экран авторизации (оверлей) -->
-        <Grid x:Name="AuthOverlay" 
-              Background="{DynamicResource WindowBackground}"
-              Visibility="Visible">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Border Grid.Row="1" Grid.Column="1"
-                    Background="{DynamicResource ChatListBackground}"
-                    CornerRadius="16"
-                    Padding="32"
-                    MinWidth="350">
-                <StackPanel>
-                    <TextBlock Text="Добро пожаловать" FontSize="24" FontWeight="Bold" 
-                               Foreground="{DynamicResource MainText}"
-                               HorizontalAlignment="Center"
-                               Margin="0,0,0,24"/>
-                    
-                    <!-- Вкладка входа -->
-                    <StackPanel x:Name="LoginPanel">
-                        <TextBlock Text="Вход в систему" FontSize="18" FontWeight="Semibold" 
-                                   Foreground="{DynamicResource MainText}"
-                                   Margin="0,0,0,16"/>
-                        
-                        <TextBlock Text="Логин" FontSize="13" 
-                                   Foreground="{DynamicResource SecondaryText}"
-                                   Margin="0,0,0,4"/>
-                        <TextBox x:Name="LoginUsernameTextBox" Margin="0,0,0,16"/>
-                        
-                        <TextBlock Text="Пароль" FontSize="13" 
-                                   Foreground="{DynamicResource SecondaryText}"
-                                   Margin="0,0,0,4"/>
-                        <PasswordBox x:Name="LoginPasswordBox" Margin="0,0,0,16"/>
-                        
-                        <Button Content="Войти" Style="{StaticResource PrimaryButton}"
-                                Click="LoginButton_Click"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,0,0,12"/>
-                        
-                        <Button Content="Нет аккаунта? Зарегистрироваться" 
-                                Background="Transparent"
-                                Foreground="{DynamicResource AccentColor}"
-                                BorderThickness="0"
-                                Padding="8"
-                                Cursor="Hand"
-                                Click="ShowRegisterButton_Click"/>
-                        
-                        <TextBlock x:Name="LoginMessageTextBlock" 
-                                   Foreground="#FF6B6B"
-                                   TextWrapping="Wrap"
-                                   Margin="0,12,0,0"/>
-                    </StackPanel>
-                    
-                    <!-- Вкладка регистрации -->
-                    <StackPanel x:Name="RegisterPanel" Visibility="Collapsed">
-                        <TextBlock Text="Регистрация" FontSize="18" FontWeight="Semibold" 
-                                   Foreground="{DynamicResource MainText}"
-                                   Margin="0,0,0,16"/>
-                        
-                        <TextBlock Text="Логин" FontSize="13" 
-                                   Foreground="{DynamicResource SecondaryText}"
-                                   Margin="0,0,0,4"/>
-                        <TextBox x:Name="RegisterUsernameTextBox" Margin="0,0,0,16"/>
-                        
-                        <TextBlock Text="Пароль" FontSize="13" 
-                                   Foreground="{DynamicResource SecondaryText}"
-                                   Margin="0,0,0,4"/>
-                        <PasswordBox x:Name="RegisterPasswordBox" Margin="0,0,0,16"/>
-                        
-                        <Button Content="Зарегистрироваться" Style="{StaticResource PrimaryButton}"
-                                Click="RegisterButton_Click"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,0,0,12"/>
-                        
-                        <Button Content="Есть аккаунт? Войти" 
-                                Background="Transparent"
-                                Foreground="{DynamicResource AccentColor}"
-                                BorderThickness="0"
-                                Padding="8"
-                                Cursor="Hand"
-                                Click="ShowLoginButton_Click"/>
-                        
-                        <TextBlock x:Name="AuthMessageTextBlock" 
-                                   Foreground="#FF6B6B"
-                                   TextWrapping="Wrap"
-                                   Margin="0,12,0,0"/>
-                    </StackPanel>
-                </StackPanel>
             </Border>
         </Grid>
     </Grid>

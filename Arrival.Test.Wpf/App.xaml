@@ -1,7 +1,7 @@
 <Application x:Class="Arrival.Test.Wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             StartupUri="LoginWindow.xaml">
     <Application.Resources>
         <!-- Базовые стили для всех кнопок -->
         <Style TargetType="Button">
