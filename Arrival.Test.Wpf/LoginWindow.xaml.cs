@@ -36,7 +36,7 @@ namespace Arrival.Test.Wpf
         private void ShowRegisterButton_Click(object sender, RoutedEventArgs e)
         {
             var registerWindow = new RegisterWindow();
-            registerWindow.Show();
+            registerWindow.ShowDialog();
         }
 
         private void ShowLoginButton_Click(object sender, RoutedEventArgs e)
