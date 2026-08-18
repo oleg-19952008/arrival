@@ -146,7 +146,7 @@
                     
                     <Button x:Name="RegisterButton" Content="➤ НЕТ АККАУНТА? ЗАРЕГИСТРИРОВАТЬСЯ" Click="ShowRegisterButton_Click"
                             Background="#FF5722" Foreground="White" BorderThickness="0"
-                            FontSize="14" FontWeight="Bold" Cursor="Hand" Padding="0,12" Margin="0,15,0,0">
+                            FontSize="14" FontWeight="Bold" Cursor="Hand" Padding="0,12" Margin="0,15,0,20">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="10" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
@@ -167,7 +167,7 @@
                 
                 <!-- Индикатор загрузки -->
                 <Border Grid.Row="4" x:Name="LoadingBorder" Visibility="Collapsed" 
-                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                        HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
                     <ProgressBar IsIndeterminate="True" Width="200" Height="4" 
                                  Background="#E0E0E0" Foreground="#2481CC"/>
                 </Border>

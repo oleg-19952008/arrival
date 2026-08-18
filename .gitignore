@@ -1,1 +1,72 @@
-Nothing should be ignored since only a source code file (.cs) was modified and no build artifacts, dependencies, or temporary files were detected in the changes.
+```csharp
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Dd]epends/
+intermediate/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+*.user.DotSettings
+*.DotSettings.user
+
+# IDE - Visual Studio Code
+.vscode/
+
+# IDE - Visual Studio
+*.VC.db
+*.VC.VC.opendb
+*.VC.VC.opendb-shm
+*.VC.VC.opendb-wal
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+$RECYCLE.BIN/
+*.backup.log
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Test results
+TestResults/
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+NuGet.Config
+
+# Output of coverage tools
+coverage/
+*.coverage
+*.gcov
+*.lcov
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.cache
+*.compiled
+[Tt]emp/
+```
